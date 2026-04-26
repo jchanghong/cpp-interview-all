@@ -495,7 +495,7 @@ g++ -std=c++17 -Wall -o smart_pointer_demo smart_pointer_demo.cpp
 
 ## 上一节 | 下一节
 
-[2.3 多态与虚函数](../polymorphism/README.md) | [2.5 虚函数深度剖析](../virtual/README.md)
+[2.3 多态与虚函数](docs__02-cpp-oop__polymorphism__README.md) | [2.5 虚函数深度剖析](docs__02-cpp-oop__virtual__README.md)
 
 ---
 

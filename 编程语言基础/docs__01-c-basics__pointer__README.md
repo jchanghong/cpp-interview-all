@@ -497,4 +497,4 @@ gcc -Wall -o pointer_demo pointer_demo.c && ./pointer_demo
 
 ---
 
-> 下一节：[1.2 数组与字符串](../array/README.md)
+> 下一节：[1.2 数组与字符串](docs__01-c-basics__array__README.md)

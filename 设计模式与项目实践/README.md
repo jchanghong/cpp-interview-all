@@ -189,13 +189,13 @@ yarn build
 
 > 代码均在 server 目录中
 
-请阅读 [参考文档](./server/README.md)
+请阅读 [参考文档](server__README.md)
 
 ### 云函数后端
 
 > 代码均在 cloudfunctions 目录中
 
-请阅读 [参考文档](./cloudfunctions/README.md)
+请阅读 [参考文档](cloudfunctions__README.md)
 
 ## 🍊 进一步学习
 

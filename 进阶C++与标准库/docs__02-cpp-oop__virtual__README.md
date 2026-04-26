@@ -481,7 +481,7 @@ g++ -std=c++17 -Wall -o virtual_demo virtual_demo.cpp
 
 ## 上一节
 
-[2.4 智能指针](../smart-pointer/README.md)
+[2.4 智能指针](docs__02-cpp-oop__smart-pointer__README.md)
 
 ---
 

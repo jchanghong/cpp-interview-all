@@ -473,7 +473,7 @@ g++ -std=c++17 -Wall -o polymorphism_demo polymorphism_demo.cpp
 
 ## 上一节 | 下一节
 
-[2.2 继承与组合](../inheritance/README.md) | [2.4 智能指针](../smart-pointer/README.md)
+[2.2 继承与组合](docs__02-cpp-oop__inheritance__README.md) | [2.4 智能指针](docs__02-cpp-oop__smart-pointer__README.md)
 
 ---
 

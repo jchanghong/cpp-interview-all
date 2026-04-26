@@ -422,4 +422,4 @@ gcc -Wall -o array_demo array_demo.c && ./array_demo
 
 ---
 
-> 上一节：[1.1 指针与引用](../pointer/README.md) | 下一节：[1.3 内存管理](../memory/README.md)
+> 上一节：[1.1 指针与引用](docs__01-c-basics__pointer__README.md) | 下一节：[1.3 内存管理](docs__01-c-basics__memory__README.md)

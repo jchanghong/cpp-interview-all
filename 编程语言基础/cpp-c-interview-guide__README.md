@@ -43,21 +43,21 @@
 
 | 章节 | 标题 | 核心内容 | 状态 |
 |------|------|----------|------|
-| 1.1 | [指针与引用](docs/01-c-basics/pointer/README.md) | 指针本质、多级指针、函数指针、指针与引用区别 | ✅ |
-| 1.2 | [数组与字符串](docs/01-c-basics/array/README.md) | 数组内存布局、字符串操作、越界问题 | ✅ |
-| 1.3 | [内存管理](docs/01-c-basics/memory/README.md) | malloc/free、内存泄漏、堆栈区别、内存对齐 | ✅ |
-| 1.4 | [struct与union](docs/01-c-basics/struct/README.md) | 结构体内存对齐、位域、大小端 | ✅ |
-| 1.5 | [预处理与编译链接](docs/01-c-basics/string/README.md) | 宏定义、条件编译、编译链接过程 | ✅ |
+| 1.1 | [指针与引用](docs__01-c-basics__pointer__README.md) | 指针本质、多级指针、函数指针、指针与引用区别 | ✅ |
+| 1.2 | [数组与字符串](docs__01-c-basics__array__README.md) | 数组内存布局、字符串操作、越界问题 | ✅ |
+| 1.3 | [内存管理](docs__01-c-basics__memory__README.md) | malloc/free、内存泄漏、堆栈区别、内存对齐 | ✅ |
+| 1.4 | [struct与union](docs__01-c-basics__struct__README.md) | 结构体内存对齐、位域、大小端 | ✅ |
+| 1.5 | [预处理与编译链接](docs__01-c-basics__string__README.md) | 宏定义、条件编译、编译链接过程 | ✅ |
 
 ### 第二部分：C++面向对象
 
 | 章节 | 标题 | 核心内容 | 状态 |
 |------|------|----------|------|
-| 2.1 | [类与对象](docs/02-cpp-oop/class/README.md) | 构造/析构函数、拷贝控制、this指针 | ✅ |
-| 2.2 | [继承与组合](docs/02-cpp-oop/inheritance/README.md) | 单继承/多继承、虚继承、菱形问题 | ✅ |
-| 2.3 | [多态与虚函数](docs/02-cpp-oop/polymorphism/README.md) | 虚函数表、纯虚函数、动态绑定原理 | ✅ |
-| 2.4 | [智能指针](docs/02-cpp-oop/smart-pointer/README.md) | unique_ptr/shared_ptr/weak_ptr、循环引用 | ✅ |
-| 2.5 | [虚函数深度剖析](docs/02-cpp-oop/virtual/README.md) | 虚函数表内存布局、多重继承下的vtable | ✅ |
+| 2.1 | [类与对象](../进阶C%2B%2B与标准库/docs__02-cpp-oop__class__README.md) | 构造/析构函数、拷贝控制、this指针 | ✅ |
+| 2.2 | [继承与组合](../进阶C%2B%2B与标准库/docs__02-cpp-oop__inheritance__README.md) | 单继承/多继承、虚继承、菱形问题 | ✅ |
+| 2.3 | [多态与虚函数](../进阶C%2B%2B与标准库/docs__02-cpp-oop__polymorphism__README.md) | 虚函数表、纯虚函数、动态绑定原理 | ✅ |
+| 2.4 | [智能指针](../进阶C%2B%2B与标准库/docs__02-cpp-oop__smart-pointer__README.md) | unique_ptr/shared_ptr/weak_ptr、循环引用 | ✅ |
+| 2.5 | [虚函数深度剖析](../进阶C%2B%2B与标准库/docs__02-cpp-oop__virtual__README.md) | 虚函数表内存布局、多重继承下的vtable | ✅ |
 
 ### 第三部分：C++进阶
 

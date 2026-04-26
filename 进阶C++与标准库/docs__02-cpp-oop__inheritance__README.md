@@ -458,7 +458,7 @@ g++ -std=c++17 -Wall -o inheritance_demo inheritance_demo.cpp
 
 ## 上一节 | 下一节
 
-[2.1 类与对象](../class/README.md) | [2.3 多态与虚函数](../polymorphism/README.md)
+[2.1 类与对象](docs__02-cpp-oop__class__README.md) | [2.3 多态与虚函数](docs__02-cpp-oop__polymorphism__README.md)
 
 ---
 

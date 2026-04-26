@@ -503,7 +503,7 @@ g++ -std=c++17 -Wall -o class_demo class_demo.cpp
 
 ## 下一节
 
-[2.2 继承与组合](../inheritance/README.md)
+[2.2 继承与组合](docs__02-cpp-oop__inheritance__README.md)
 
 ---
 

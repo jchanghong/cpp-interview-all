@@ -492,4 +492,4 @@ gcc -Wall -o memory_demo memory_demo.c && ./memory_demo
 
 ---
 
-> 上一节：[1.2 数组与字符串](../array/README.md) | 下一节：[1.4 struct与union](../struct/README.md)
+> 上一节：[1.2 数组与字符串](docs__01-c-basics__array__README.md) | 下一节：[1.4 struct与union](docs__01-c-basics__struct__README.md)

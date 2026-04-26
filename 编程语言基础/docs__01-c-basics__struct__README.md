@@ -473,4 +473,4 @@ gcc -Wall -o struct_demo struct_demo.c && ./struct_demo
 
 ---
 
-> 上一节：[1.3 内存管理](../memory/README.md) | 下一节：[1.5 预处理与编译链接](../string/README.md)
+> 上一节：[1.3 内存管理](docs__01-c-basics__memory__README.md) | 下一节：[1.5 预处理与编译链接](docs__01-c-basics__string__README.md)

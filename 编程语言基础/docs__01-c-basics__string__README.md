@@ -482,4 +482,4 @@ gcc -Wall -o preprocessor_demo preprocessor_demo.c && ./preprocessor_demo
 
 ---
 
-> 上一节：[1.4 struct与union](../struct/README.md) | 下一节：[2.1 类与对象](../../02-cpp-oop/class/README.md)
+> 上一节：[1.4 struct与union](docs__01-c-basics__struct__README.md) | 下一节：[2.1 类与对象](../进阶C%2B%2B与标准库/docs__02-cpp-oop__class__README.md)
