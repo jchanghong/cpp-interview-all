@@ -1,0 +1,19 @@
+Start testing: Apr 21 22:30 CST
+----------------------------------------------------------
+1/1 Testing: cross_process_unit_tests
+1/1 Test: cross_process_unit_tests
+Command: "/home/wj/Code/C++/Interview/CrossProcess/build/cross_process_tests"
+Directory: /home/wj/Code/C++/Interview/CrossProcess/build
+"cross_process_unit_tests" start time: Apr 21 22:30 CST
+Output:
+----------------------------------------------------------
+All cross-process tests passed.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"cross_process_unit_tests" end time: Apr 21 22:30 CST
+"cross_process_unit_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Apr 21 22:30 CST

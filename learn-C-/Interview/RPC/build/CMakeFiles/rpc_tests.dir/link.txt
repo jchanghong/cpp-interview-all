@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/rpc_tests.dir/tests/test_rpc.cpp.o  -o rpc_tests  librpc_lib.a 

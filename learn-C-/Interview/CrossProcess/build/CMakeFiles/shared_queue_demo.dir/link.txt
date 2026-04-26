@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/shared_queue_demo.dir/src/shared_queue_demo.cpp.o  -o shared_queue_demo  libcross_process_lib.a -lpthread /usr/lib/x86_64-linux-gnu/librt.so 

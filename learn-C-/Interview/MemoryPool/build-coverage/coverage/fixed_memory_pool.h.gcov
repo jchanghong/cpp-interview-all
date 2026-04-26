@@ -1,0 +1,193 @@
+        -:    0:Source:/home/wj/Code/C++/Interview/MemoryPool/include/fixed_memory_pool.h
+        -:    0:Graph:/home/wj/Code/C++/Interview/MemoryPool/build-coverage/CMakeFiles/memory_pool_tests.dir/tests/test_memory_pool.cpp.gcno
+        -:    0:Data:/home/wj/Code/C++/Interview/MemoryPool/build-coverage/CMakeFiles/memory_pool_tests.dir/tests/test_memory_pool.cpp.gcda
+        -:    0:Runs:1
+        -:    1:#ifndef FIXED_MEMORY_POOL_H
+        -:    2:#define FIXED_MEMORY_POOL_H
+        -:    3:
+        -:    4:#include <cstddef>
+        -:    5:#include <memory>
+        -:    6:#include <new>
+        -:    7:#include <stdexcept>
+        -:    8:#include <type_traits>
+        -:    9:#include <utility>
+        -:   10:#include <vector>
+        -:   11:
+        -:   12:class FixedMemoryPool {
+        -:   13:public:
+        -:   14:    // 构造函数：初始化定长块大小与每批次块数量。
+        -:   15:    FixedMemoryPool(std::size_t block_size, std::size_t blocks_per_chunk);
+        -:   16:
+        -:   17:    // 析构函数：释放所有批次申请的大块内存。
+        -:   18:    ~FixedMemoryPool();
+        -:   19:
+        -:   20:    // 复制构造函数：禁用拷贝，避免多个池共享同一片底层内存。
+        -:   21:    FixedMemoryPool(const FixedMemoryPool&) = delete;
+        -:   22:
+        -:   23:    // 复制赋值函数：禁用拷贝赋值，避免重复释放问题。
+        -:   24:    FixedMemoryPool& operator=(const FixedMemoryPool&) = delete;
+        -:   25:
+        -:   26:    // 移动构造函数：禁用移动，保持池对象地址与生命周期语义简单清晰。
+        -:   27:    FixedMemoryPool(FixedMemoryPool&&) = delete;
+        -:   28:
+        -:   29:    // 移动赋值函数：禁用移动赋值，避免资源转移带来的状态复杂度。
+        -:   30:    FixedMemoryPool& operator=(FixedMemoryPool&&) = delete;
+        -:   31:
+        -:   32:    // 分配函数：返回一个可用的固定大小内存块。
+        -:   33:    void* Allocate();
+        -:   34:
+        -:   35:    // 归还函数：将固定大小内存块放回空闲链表。
+        -:   36:    void Deallocate(void* ptr);
+        -:   37:
+        -:   38:    // 查询函数：返回空闲块数量。
+        -:   39:    std::size_t GetFreeBlockCount() const;
+        -:   40:
+        -:   41:    // 查询函数：返回总块数量。
+        -:   42:    std::size_t GetTotalBlockCount() const;
+        -:   43:
+        -:   44:    // 查询函数：返回对齐后的单个块大小。
+        -:   45:    std::size_t GetBlockSize() const;
+        -:   46:
+        -:   47:private:
+        -:   48:    // 空闲节点结构：复用块内存本身维护单链表。
+        -:   49:    struct FreeNode {
+        -:   50:        // 指针变量：指向下一个空闲块。
+        -:   51:        FreeNode* next;
+        -:   52:    };
+        -:   53:
+        -:   54:    // 扩容函数：按批次申请并切分新的内存块。
+        -:   55:    void AllocateChunk();
+        -:   56:
+        -:   57:    // 计算函数：把大小向上对齐到最大对齐边界。
+        -:   58:    static std::size_t AlignUp(std::size_t value);
+        -:   59:
+        -:   60:    // 常量变量：统一使用的块对齐粒度。
+        -:   61:    static constexpr std::size_t kAlignment = alignof(std::max_align_t);
+        -:   62:
+        -:   63:    // 大小变量：单个块的对齐后大小。
+        -:   64:    std::size_t block_size_;
+        -:   65:
+        -:   66:    // 数量变量：每次扩容申请的块数量。
+        -:   67:    std::size_t blocks_per_chunk_;
+        -:   68:
+        -:   69:    // 指针变量：空闲链表头节点。
+        -:   70:    FreeNode* free_list_;
+        -:   71:
+        -:   72:    // 容器变量：保存所有大块内存的首地址，便于析构统一释放。
+        -:   73:    std::vector<void*> chunks_;
+        -:   74:
+        -:   75:    // 数量变量：当前空闲块数量。
+        -:   76:    std::size_t free_block_count_;
+        -:   77:
+        -:   78:    // 数量变量：历史累计总块数量。
+        -:   79:    std::size_t total_block_count_;
+        -:   80:};
+        -:   81:
+        -:   82:template <typename T>
+        -:   83:class ObjectPool;
+        -:   84:
+        -:   85:template <typename T>
+        -:   86:struct PoolDeleter {
+        -:   87:    // 指针变量：记录对象所属对象池。
+        -:   88:    ObjectPool<T>* pool;
+        -:   89:
+        -:   90:    // 调用函数：在智能指针释放时把对象归还到对象池。
+        -:   91:    void operator()(T* object) const;
+        -:   92:};
+        -:   93:
+        -:   94:template <typename T>
+        -:   95:using UniquePoolPtr = std::unique_ptr<T, PoolDeleter<T>>;
+        -:   96:
+        -:   97:template <typename T>
+        -:   98:class ObjectPool {
+        -:   99:public:
+        -:  100:    // 构造函数：按对象类型大小初始化底层定长内存池。
+function _ZN10ObjectPoolI10TestEntityEC2Em called 2 returned 100% blocks executed 100%
+        2:  101:    explicit ObjectPool(std::size_t objects_per_chunk)
+        2:  102:        : pool_(sizeof(T), objects_per_chunk) {}
+call    0 returned 2
+        -:  103:
+        -:  104:    // 创建函数：从池中获取内存并原地构造对象。
+        -:  105:    template <typename... Args>
+function _ZN10ObjectPoolI10TestEntityE6CreateIJiEEEPS0_DpOT_ called 802 returned 100% blocks executed 100%
+      802:  106:    T* Create(Args&&... args) {
+        -:  107:        // 指针变量：接收池中分配出的原始内存地址。
+      802:  108:        void* memory = pool_.Allocate();
+call    0 returned 802
+        -:  109:        try {
+      802:  110:            return new (memory) T(std::forward<Args>(args)...);
+call    0 returned 802
+call    1 returned 802
+call    2 returned 802
+        -:  111:        } catch (...) {
+        -:  112:            pool_.Deallocate(memory);
+        -:  113:            throw;
+        -:  114:        }
+        -:  115:    }
+        -:  116:
+        -:  117:    // 创建函数：返回一个离开作用域后会自动归还对象的智能指针。
+        -:  118:    template <typename... Args>
+function _ZN10ObjectPoolI10TestEntityE12CreateUniqueIJiEEESt10unique_ptrIS0_11PoolDeleterIS0_EEDpOT_ called 1 returned 100% blocks executed 100%
+        1:  119:    UniquePoolPtr<T> CreateUnique(Args&&... args) {
+        -:  120:        // 指针变量：创建原始对象。
+        1:  121:        T* object = Create(std::forward<Args>(args)...);
+call    0 returned 1
+call    1 returned 1
+        1:  122:        return UniquePoolPtr<T>(object, PoolDeleter<T>{this});
+call    0 returned 1
+        -:  123:    }
+        -:  124:
+        -:  125:    // 销毁函数：显式调用析构并归还对象占用的内存块。
+function _ZN10ObjectPoolI10TestEntityE7DestroyEPS0_ called 802 returned 100% blocks executed 80%
+      802:  126:    void Destroy(T* object) {
+      802:  127:        if (object == nullptr) {
+branch  0 taken 0 (fallthrough)
+branch  1 taken 802
+    #####:  128:            return;
+        -:  129:        }
+        -:  130:
+      802:  131:        object->~T();
+call    0 returned 802
+      802:  132:        pool_.Deallocate(object);
+call    0 returned 802
+        -:  133:    }
+        -:  134:
+        -:  135:    // 查询函数：返回底层对象块大小。
+        -:  136:    std::size_t GetBlockSize() const {
+        -:  137:        return pool_.GetBlockSize();
+        -:  138:    }
+        -:  139:
+        -:  140:    // 查询函数：返回当前空闲对象数量。
+function _ZNK10ObjectPoolI10TestEntityE12GetFreeCountEv called 2 returned 100% blocks executed 100%
+        2:  141:    std::size_t GetFreeCount() const {
+        2:  142:        return pool_.GetFreeBlockCount();
+call    0 returned 2
+        -:  143:    }
+        -:  144:
+        -:  145:    // 查询函数：返回池中总对象容量。
+function _ZNK10ObjectPoolI10TestEntityE13GetTotalCountEv called 2 returned 100% blocks executed 100%
+        2:  146:    std::size_t GetTotalCount() const {
+        2:  147:        return pool_.GetTotalBlockCount();
+call    0 returned 2
+        -:  148:    }
+        -:  149:
+        -:  150:private:
+        -:  151:    static_assert(!std::is_reference<T>::value, "T must not be a reference type.");
+        -:  152:    static_assert(!std::is_void<T>::value, "T must not be void.");
+        -:  153:
+        -:  154:    // 成员变量：底层定长块内存池。
+        -:  155:    FixedMemoryPool pool_;
+        -:  156:};
+        -:  157:
+        -:  158:template <typename T>
+function _ZNK11PoolDeleterI10TestEntityEclEPS0_ called 1 returned 100% blocks executed 100%
+        1:  159:void PoolDeleter<T>::operator()(T* object) const {
+        1:  160:    if (pool != nullptr) {
+branch  0 taken 1 (fallthrough)
+branch  1 taken 0
+        1:  161:        pool->Destroy(object);
+call    0 returned 1
+        -:  162:    }
+        1:  163:}
+        -:  164:
+        -:  165:#endif

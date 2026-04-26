@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/timer_scheduler.h
+chrono
+-
+condition_variable
+-
+cstddef
+-
+functional
+-
+mutex
+-
+queue
+-
+thread
+-
+vector
+-
+
+/home/wj/Code/C++/Interview/Timer/src/timer_scheduler.cpp
+timer_scheduler.h
+/home/wj/Code/C++/Interview/Timer/src/timer_scheduler.h
+

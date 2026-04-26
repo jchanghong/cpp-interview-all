@@ -1,0 +1,38 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/thread_pool.h
+condition_variable
+-
+cstddef
+-
+functional
+-
+future
+-
+mutex
+-
+queue
+-
+thread
+-
+type_traits
+-
+utility
+-
+vector
+-
+
+/home/wj/Code/C++/Interview/ThreadPool/src/main.cpp
+thread_pool.h
+/home/wj/Code/C++/Interview/ThreadPool/src/thread_pool.h
+iostream
+-
+vector
+-
+

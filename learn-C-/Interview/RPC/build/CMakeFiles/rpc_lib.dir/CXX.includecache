@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/rpc_framework.h
+functional
+-
+string
+-
+unordered_map
+-
+vector
+-
+
+/home/wj/Code/C++/Interview/RPC/src/rpc_framework.cpp
+rpc_framework.h
+/home/wj/Code/C++/Interview/RPC/src/rpc_framework.h
+sstream
+-
+stdexcept
+-
+

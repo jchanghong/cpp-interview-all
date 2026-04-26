@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>C++ 面试笔记 · 第 3 页 · 并发、新标准与工程实践</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="hero">
+    <div class="page-shell">
+      <div class="hero-card">
+        <span class="eyebrow">第 3 页 / 4</span>
+        <h1>并发、新标准与工程实践</h1>
+        <p class="lead">
+          这是很多中高级岗位真正拉开差距的部分。线程、原子、内存序和工程实践不是单纯的“会用 API”，而是是否能在复杂系统里写出正确、稳定、可维护代码的体现。
+        </p>
+        <div class="pagination">
+          <a href="./page-2-modern.html">上一页：现代 C++ 与 STL</a>
+          <a href="./page-4-design-patterns.html">下一页：常用设计模式</a>
+          <a href="./index.html">返回总览</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <div class="layout">
+      <aside class="toc">
+        <h3>本页目录</h3>
+        <ol>
+          <li><a href="#threading">线程、锁与条件变量</a></li>
+          <li><a href="#atomic">原子、CAS 与内存序</a></li>
+          <li><a href="#cpp17-23">C++17 / 20 / 23 热点</a></li>
+          <li><a href="#practice">工程实践追问</a></li>
+          <li><a href="#sprint">面试前冲刺清单</a></li>
+        </ol>
+      </aside>
+
+      <div class="content-stack">
+        <section class="section-card" id="threading">
+          <h2>线程、锁与条件变量</h2>
+          <p>
+            并发问题真正的难点不在 API 名称，而在“什么时候要同步”“同步的粒度多大”“唤醒条件是否正确”。面试官很喜欢用生产者-消费者、线程安全队列、死锁分析来追问这一块。
+          </p>
+          <div class="grid-3">
+            <article class="stat-card">
+              <h4><code>std::thread</code></h4>
+              <p>最基础的线程封装。使用时要注意 join/detach 责任，否则析构时会触发终止。</p>
+            </article>
+            <article class="stat-card">
+              <h4><code>std::jthread</code></h4>
+              <p>C++20 更现代的线程类型，析构时会自动请求停止并 join，减少忘记回收线程的风险。</p>
+            </article>
+            <article class="stat-card">
+              <h4>条件变量</h4>
+              <p>用于线程间等待和通知，典型用于生产者-消费者模型。</p>
+            </article>
+          </div>
+          <pre><code class="language-cpp">class SafeQueue {
+public:
+    void push(int value) {
+        {
+            std::lock_guard&lt;std::mutex&gt; lock(mutex_);
+            queue_.push(value);
+        }
+        cv_.notify_one();
+    }
+
+    int pop() {
+        std::unique_lock&lt;std::mutex&gt; lock(mutex_);
+        cv_.wait(lock, [this] { return !queue_.empty(); });
+        int value = queue_.front();
+        queue_.pop();
+        return value;
+    }
+
+private:
+    std::mutex mutex_;
+    std::condition_variable cv_;
+    std::queue&lt;int&gt; queue_;
+};</code></pre>
+          <div class="note">
+            <code>wait</code> 配合谓词非常重要，因为条件变量可能发生虚假唤醒。正确思路不是“被唤醒就执行”，而是“被唤醒后重新检查条件是否成立”。
+          </div>
+          <div class="diagram">
+            <svg viewBox="0 0 920 260" xmlns="http://www.w3.org/2000/svg" aria-label="条件变量示意图">
+              <rect x="70" y="55" width="220" height="110" rx="18" fill="#dff5f1" stroke="#0f766e" />
+              <rect x="350" y="55" width="220" height="110" rx="18" fill="#fff1de" stroke="#b45309" />
+              <rect x="630" y="55" width="220" height="110" rx="18" fill="#f7f4ef" stroke="#7a6d5b" />
+              <text x="180" y="95" text-anchor="middle" font-size="20" fill="#164e48">生产者</text>
+              <text x="180" y="122" text-anchor="middle" font-size="14" fill="#164e48">push + notify_one()</text>
+              <text x="460" y="95" text-anchor="middle" font-size="20" fill="#8a4b0f">共享队列</text>
+              <text x="460" y="122" text-anchor="middle" font-size="14" fill="#8a4b0f">mutex 保护</text>
+              <text x="740" y="95" text-anchor="middle" font-size="20" fill="#444">消费者</text>
+              <text x="740" y="122" text-anchor="middle" font-size="14" fill="#444">wait(predicate)</text>
+              <path d="M290 110 H350" stroke="#0f766e" stroke-width="4" marker-end="url(#arrow4)" />
+              <path d="M570 110 H630" stroke="#b45309" stroke-width="4" marker-end="url(#arrow4)" />
+              <defs>
+                <marker id="arrow4" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+                  <path d="M0 0 L12 6 L0 12 Z" fill="#36454f" />
+                </marker>
+              </defs>
+            </svg>
+          </div>
+          <div class="warning">
+            死锁的四个必要条件分别是互斥、占有且等待、不可剥夺、循环等待。实际回答时，可以顺手补上避免方式：固定加锁顺序、缩小临界区、使用 <code>std::lock</code> 一次拿多个锁。
+          </div>
+        </section>
+
+        <section class="section-card" id="atomic">
+          <h2>原子、CAS 与 memory_order</h2>
+          <p>
+            这是底层面试很常见的加深追问。真正的重点不是把枚举值背下来，而是明白原子性、可见性和顺序性不是同一件事。
+          </p>
+          <div class="grid-2">
+            <article class="compare-card">
+              <h4>原子操作</h4>
+              <p>适合保护简单共享状态，例如计数器、标志位。它能避免数据竞争，但不自动替代所有复杂同步需求。</p>
+            </article>
+            <article class="compare-card">
+              <h4>CAS</h4>
+              <p>Compare-And-Swap，先比较内存中的当前值是否等于预期值，若相等则更新。很多无锁结构都依赖它。</p>
+            </article>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>内存序</th>
+                  <th>直观理解</th>
+                  <th>典型建议</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>memory_order_relaxed</code></td>
+                  <td>只保证原子性，不强制顺序与可见性关系</td>
+                  <td>除非真的清楚同步模型，否则不要轻易上来就用</td>
+                </tr>
+                <tr>
+                  <td><code>memory_order_acquire</code></td>
+                  <td>获取语义，确保后续读取看到发布前的结果</td>
+                  <td>常与 release 配对使用</td>
+                </tr>
+                <tr>
+                  <td><code>memory_order_release</code></td>
+                  <td>发布语义，保证之前写入对 acquire 方可见</td>
+                  <td>常用于发布已初始化数据</td>
+                </tr>
+                <tr>
+                  <td><code>memory_order_seq_cst</code></td>
+                  <td>最强一致顺序语义，最容易理解</td>
+                  <td>业务代码里优先保证正确性时非常常见</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="answer-box">
+            一个很稳妥的回答方式是：如果没有非常明确的性能瓶颈和同步模型，我会优先用 <code>seq_cst</code> 保证正确性；只有在理解 happens-before 关系且确有收益时，才会考虑 acquire/release 或 relaxed。
+          </div>
+        </section>
+
+        <section class="section-card" id="cpp17-23">
+          <h2>C++17 / C++20 / C++23 热点</h2>
+          <p>
+            新标准在面试中的角色通常是“加分项”和“追问项”。如果岗位强调 modern C++，建议至少把 C++20 的核心能力说清楚，再补一句 C++23 的代表性特性。
+          </p>
+          <div class="grid-3">
+            <article class="topic-card">
+              <h4>C++17</h4>
+              <p><code>optional</code>、<code>variant</code>、<code>any</code>、<code>string_view</code>、结构化绑定。重点追问常在 <code>string_view</code> 的生命周期风险。</p>
+            </article>
+            <article class="topic-card">
+              <h4>C++20</h4>
+              <p><code>concepts</code>、<code>ranges</code>、<code>coroutines</code>、<code>span</code>、<code>jthread</code>、<code>modules</code>。最值得主动提的是 Concepts 与 Ranges。</p>
+            </article>
+            <article class="topic-card">
+              <h4>C++23</h4>
+              <p><code>expected</code>、<code>mdspan</code>、<code>print</code> 方向增强，以及 ranges 生态继续完善。最常见的切入点是 <code>expected</code>。</p>
+            </article>
+          </div>
+          <pre><code class="language-cpp">std::expected&lt;int, std::string&gt; parse_positive(std::string_view text) {
+    int value = std::stoi(std::string(text));
+    if (value &lt;= 0) {
+        return std::unexpected("value must be positive");
+    }
+    return value;
+}</code></pre>
+          <div class="note">
+            <code>expected</code> 和 <code>optional</code> 的关键区别是：<code>optional</code> 只能表达“有值/没值”，而 <code>expected</code> 能显式携带错误信息，因此在工程代码里往往更有表达力。
+          </div>
+          <div class="warning">
+            <code>span</code> 和 <code>string_view</code> 都是不拥有底层数据的视图类型。它们的优势是零拷贝，但风险是底层对象一旦失效，视图就悬空。
+          </div>
+        </section>
+
+        <section class="section-card" id="practice">
+          <h2>工程实践与项目追问</h2>
+          <div class="grid-2">
+            <article class="compare-card">
+              <h4>如何避免内存泄漏</h4>
+              <p>优先使用 RAII，把资源交给标准库类型管理。必要时配合 AddressSanitizer、Valgrind、代码审查和单元测试。</p>
+            </article>
+            <article class="compare-card">
+              <h4>如何做性能优化</h4>
+              <p>减少不必要拷贝，善用 move 语义，给容器预留容量，降低锁竞争，减少堆分配，关注缓存局部性。</p>
+            </article>
+            <article class="compare-card">
+              <h4>如何定位线上崩溃</h4>
+              <p>结合 core dump、gdb、日志、最小复现、ASan / TSan，优先缩小问题范围，再定位生命周期、越界或并发竞态。</p>
+            </article>
+            <article class="compare-card">
+              <h4>如何设计线程安全队列</h4>
+              <p>最常见方案是 mutex + condition_variable。若要进一步讨论，可延伸到无锁队列、CAS、ABA 问题与回收机制。</p>
+            </article>
+          </div>
+          <div class="answer-box">
+            项目追问的一个很实用答题框架是：问题背景 -> 为什么会出错或慢 -> 你做了什么修改 -> 如何验证效果。这个结构比单纯罗列技术名词更有说服力。
+          </div>
+        </section>
+
+        <section class="section-card" id="sprint">
+          <h2>面试前 1 小时冲刺清单</h2>
+          <div class="grid-2">
+            <article class="topic-card">
+              <h4>必须会讲清楚</h4>
+              <ul>
+                <li>RAII 与所有权</li>
+                <li>Rule of 3/5/0</li>
+                <li>左值、右值、move、forward</li>
+                <li>unique_ptr / shared_ptr / weak_ptr</li>
+                <li>vector / unordered_map 的底层原理</li>
+                <li>虚函数、多态、虚析构</li>
+                <li>线程、锁、条件变量、原子</li>
+              </ul>
+            </article>
+            <article class="topic-card">
+              <h4>建议补一句的加分点</h4>
+              <ul>
+                <li>string_view / span 是非拥有视图，要注意生命周期</li>
+                <li>Concepts 比 enable_if 更易读</li>
+                <li>Ranges 更适合表达可组合的数据流</li>
+                <li>expected 比 optional 更适合显式返回错误</li>
+                <li>如果没有明确收益，优先保证并发正确性而不是过早压榨内存序性能</li>
+              </ul>
+            </article>
+          </div>
+          <div class="pagination">
+            <a href="./page-2-modern.html">上一页：现代 C++ 与 STL</a>
+            <a href="./page-4-design-patterns.html">下一页：常用设计模式</a>
+            <a href="./index.html">返回总览</a>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>C++ 面试笔记总览</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="hero">
+    <div class="page-shell">
+      <div class="hero-card">
+        <span class="eyebrow">C++ Interview Notes · HTML 版</span>
+        <h1>C++ 面试笔记总览</h1>
+        <p class="lead">
+          这套页面基于现有的文本笔记扩展而成，重点不是“把 txt 放进网页”，而是把常考知识点重新组织成适合面试复习的阅读结构。
+          你可以按分页系统性学习，也可以从目录直接跳到某个专题。内容尽量兼顾定义、原理、代码、图示和面试回答方式。
+        </p>
+        <div class="tag-row">
+          <span class="tag">基础语法</span>
+          <span class="tag">对象模型</span>
+          <span class="tag">现代 C++</span>
+          <span class="tag">STL 与模板</span>
+          <span class="tag">并发与内存模型</span>
+          <span class="tag">设计模式</span>
+          <span class="tag">C++20 / C++23</span>
+        </div>
+        <div class="quick-links">
+          <a href="./page-1-basics.html">第 1 页：基础与 OOP</a>
+          <a href="./page-2-modern.html">第 2 页：现代 C++ 与 STL</a>
+          <a href="./page-3-concurrency.html">第 3 页：并发、新标准与工程实践</a>
+          <a href="./page-4-design-patterns.html">第 4 页：常用设计模式</a>
+          <a href="../C++面试笔记_2026-04.txt">原始 txt 笔记</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <div class="content-stack">
+      <section class="section-card">
+        <h2>怎么使用这份 HTML 笔记</h2>
+        <div class="grid-3">
+          <article class="stat-card">
+            <h4>第一轮复习</h4>
+            <p>先看每页顶部的“面试官为什么爱问”，理解题目背后的考察目标，不要只背结论。</p>
+          </article>
+          <article class="stat-card">
+            <h4>第二轮复习</h4>
+            <p>重点看表格、示意图和代码块，把容易混淆的概念拉开，例如拷贝与移动、值捕获与引用捕获、map 与 unordered_map。</p>
+          </article>
+          <article class="stat-card">
+            <h4>面试前冲刺</h4>
+            <p>只看每节的回答模板与风险点，练习在 30 到 60 秒内说清楚定义、场景和代价。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-card">
+        <h2>高频主题地图</h2>
+        <div class="grid-2">
+          <article class="topic-card">
+            <h4>1. 基础语法与对象模型</h4>
+            <p>指针/引用、const/static、构造析构、虚函数、重载/重写/隐藏。这部分用于检验你是否真的理解 C++ 对象的生命周期和类型系统。</p>
+          </article>
+          <article class="topic-card">
+            <h4>2. 现代 C++ 核心</h4>
+            <p>RAII、move 语义、右值引用、智能指针、auto、decltype、constexpr、lambda。这里考查你是否停留在“会写 C 风格 C++”的阶段。</p>
+          </article>
+          <article class="topic-card">
+            <h4>3. STL 与模板</h4>
+            <p>容器底层结构、迭代器失效、复杂度、模板约束、SFINAE 与 concepts。这部分常被用来判断抽象能力与工程判断力。</p>
+          </article>
+          <article class="topic-card">
+            <h4>4. 并发与底层</h4>
+            <p>线程、互斥量、条件变量、原子、CAS、死锁、memory_order。偏中高级岗位中，这一部分区分度很高。</p>
+          </article>
+          <article class="topic-card">
+            <h4>5. C++20 / C++23</h4>
+            <p>Concepts、Ranges、Coroutines、Modules、jthread、span、expected。新标准通常不是一上来就问，但很容易在追问中出现。</p>
+          </article>
+          <article class="topic-card">
+            <h4>6. 工程实践</h4>
+            <p>异常安全、资源泄漏、性能优化、日志与调试、线上故障定位。真正的项目经验通常通过这部分体现出来。</p>
+          </article>
+          <article class="topic-card">
+            <h4>7. 设计模式</h4>
+            <p>单例、工厂、策略、观察者、适配器、装饰器。这里重点考查抽象设计能力，以及你是否知道“什么时候该用、什么时候别滥用”。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-card">
+        <h2>一张图看懂复习优先级</h2>
+        <div class="diagram">
+          <svg viewBox="0 0 920 280" xmlns="http://www.w3.org/2000/svg" aria-label="C++ 面试复习优先级图">
+            <rect x="20" y="30" width="160" height="80" rx="18" fill="#dff5f1" stroke="#0f766e" />
+            <rect x="210" y="30" width="160" height="80" rx="18" fill="#eaf8f5" stroke="#0f766e" />
+            <rect x="400" y="30" width="160" height="80" rx="18" fill="#fff1de" stroke="#b45309" />
+            <rect x="590" y="30" width="160" height="80" rx="18" fill="#fff7ea" stroke="#b45309" />
+            <rect x="780" y="30" width="120" height="80" rx="18" fill="#f7f4ef" stroke="#7a6d5b" />
+            <text x="100" y="62" text-anchor="middle" font-size="22" fill="#164e48">RAII</text>
+            <text x="100" y="90" text-anchor="middle" font-size="14" fill="#164e48">资源管理核心</text>
+            <text x="290" y="62" text-anchor="middle" font-size="22" fill="#164e48">move</text>
+            <text x="290" y="90" text-anchor="middle" font-size="14" fill="#164e48">现代 C++ 分水岭</text>
+            <text x="480" y="62" text-anchor="middle" font-size="20" fill="#8a4b0f">STL</text>
+            <text x="480" y="90" text-anchor="middle" font-size="14" fill="#8a4b0f">容器与复杂度</text>
+            <text x="670" y="62" text-anchor="middle" font-size="20" fill="#8a4b0f">并发</text>
+            <text x="670" y="90" text-anchor="middle" font-size="14" fill="#8a4b0f">同步与可见性</text>
+            <text x="840" y="62" text-anchor="middle" font-size="18" fill="#4b5563">新标准</text>
+            <text x="840" y="90" text-anchor="middle" font-size="13" fill="#4b5563">C++20/23</text>
+            <path d="M180 70 H210" stroke="#5f6b73" stroke-width="4" />
+            <path d="M370 70 H400" stroke="#5f6b73" stroke-width="4" />
+            <path d="M560 70 H590" stroke="#5f6b73" stroke-width="4" />
+            <path d="M750 70 H780" stroke="#5f6b73" stroke-width="4" />
+            <text x="460" y="165" text-anchor="middle" font-size="20" fill="#1f2428">建议复习顺序：基础对象模型 → RAII / 智能指针 → move 语义 → STL → 并发 → 新标准</text>
+            <text x="460" y="205" text-anchor="middle" font-size="15" fill="#5f6b73">越靠左越是“必答核心”，越靠右越容易作为加分追问出现</text>
+          </svg>
+          <div class="caption">经验上，面试官往往先从左侧基础和现代核心切入，再逐渐深入到并发、模板和新标准。</div>
+        </div>
+      </section>
+
+      <section class="section-card">
+        <h2>分页导航</h2>
+        <div class="grid-3">
+          <article class="compare-card">
+            <h4><a href="./page-1-basics.html">第 1 页：基础与 OOP</a></h4>
+            <p>指针/引用、const/static、构造析构、虚函数、多态、Rule of 3/5/0、内存布局。</p>
+          </article>
+          <article class="compare-card">
+            <h4><a href="./page-2-modern.html">第 2 页：现代 C++ 与 STL</a></h4>
+            <p>move 语义、完美转发、智能指针、容器、迭代器失效、模板、SFINAE、concepts、lambda。</p>
+          </article>
+          <article class="compare-card">
+            <h4><a href="./page-3-concurrency.html">第 3 页：并发、新标准与工程实践</a></h4>
+            <p>线程同步、原子操作、内存模型、C++17/20/23、新标准热点、工程实践与项目追问。</p>
+          </article>
+          <article class="compare-card">
+            <h4><a href="./page-4-design-patterns.html">第 4 页：常用设计模式</a></h4>
+            <p>单例、工厂、策略、观察者、适配器、装饰器，附定义、结构图、适用场景和 C++ 示例。</p>
+          </article>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="page-shell">
+      <div class="footer-card">
+        生成位置：<code>/home/wj/Code/C++/Interview/html</code>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

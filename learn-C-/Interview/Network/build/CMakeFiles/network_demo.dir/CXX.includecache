@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/network_echo.h
+string
+-
+
+/home/wj/Code/C++/Interview/Network/src/main.cpp
+network_echo.h
+/home/wj/Code/C++/Interview/Network/src/network_echo.h
+chrono
+-
+iostream
+-
+thread
+-
+

@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/cas_primitives.h
+atomic
+-
+cstddef
+-
+
+/home/wj/Code/C++/Interview/CAS/src/cas_primitives.cpp
+cas_primitives.h
+/home/wj/Code/C++/Interview/CAS/src/cas_primitives.h
+thread
+-
+

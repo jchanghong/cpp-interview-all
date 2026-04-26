@@ -1,0 +1,502 @@
+===== fixed_memory_pool.cpp =====
+File '/usr/include/c++/9/bits/stl_uninitialized.h'
+Lines executed:100.00% of 8
+Branches executed:100.00% of 2
+Taken at least once:100.00% of 2
+Calls executed:100.00% of 4
+Creating 'stl_uninitialized.h.gcov'
+
+File '/usr/include/c++/9/bits/stl_algobase.h'
+Lines executed:90.00% of 10
+Branches executed:100.00% of 4
+Taken at least once:75.00% of 4
+No calls
+Creating 'stl_algobase.h.gcov'
+
+File '/usr/include/c++/9/ext/new_allocator.h'
+Lines executed:91.67% of 12
+Branches executed:100.00% of 2
+Taken at least once:50.00% of 2
+Calls executed:83.33% of 6
+Creating 'new_allocator.h.gcov'
+
+File '/usr/include/c++/9/bits/alloc_traits.h'
+Lines executed:100.00% of 8
+No branches
+Calls executed:100.00% of 5
+Creating 'alloc_traits.h.gcov'
+
+File '/usr/include/c++/9/bits/stl_vector.h'
+Lines executed:94.34% of 53
+Branches executed:100.00% of 12
+Taken at least once:58.33% of 12
+Calls executed:90.32% of 31
+Creating 'stl_vector.h.gcov'
+
+File '/usr/include/c++/9/bits/stl_construct.h'
+Lines executed:100.00% of 7
+No branches
+Calls executed:100.00% of 2
+Creating 'stl_construct.h.gcov'
+
+File '/usr/include/c++/9/bits/stl_iterator.h'
+Lines executed:100.00% of 13
+No branches
+Calls executed:100.00% of 4
+Creating 'stl_iterator.h.gcov'
+
+File '/usr/include/c++/9/bits/move.h'
+Lines executed:100.00% of 2
+No branches
+No calls
+Creating 'move.h.gcov'
+
+File '/usr/include/c++/9/bits/vector.tcc'
+Lines executed:100.00% of 21
+No branches
+Calls executed:100.00% of 13
+Creating 'vector.tcc.gcov'
+
+File '/usr/include/c++/9/bits/allocator.h'
+Lines executed:100.00% of 2
+No branches
+Calls executed:100.00% of 2
+Creating 'allocator.h.gcov'
+
+File '/home/wj/Code/C++/Interview/MemoryPool/src/fixed_memory_pool.cpp'
+Lines executed:91.30% of 46
+Branches executed:90.00% of 20
+Taken at least once:65.00% of 20
+Calls executed:77.27% of 22
+Creating 'fixed_memory_pool.cpp.gcov'
+
+File '/usr/include/c++/9/new'
+Lines executed:100.00% of 2
+No branches
+No calls
+Creating 'new.gcov'
+
+
+===== memory_pool_extensions.cpp =====
+File '/usr/include/c++/9/ext/new_allocator.h'
+Lines executed:92.86% of 14
+No branches
+No calls
+Creating 'new_allocator.h.gcov'
+
+File '/usr/include/c++/9/tuple'
+Lines executed:100.00% of 50
+No branches
+Calls executed:100.00% of 28
+Creating 'tuple.gcov'
+
+File '/usr/include/c++/9/bits/predefined_ops.h'
+Lines executed:72.73% of 11
+No branches
+Calls executed:75.00% of 4
+Creating 'predefined_ops.h.gcov'
+
+File '/usr/include/c++/9/ext/aligned_buffer.h'
+Lines executed:100.00% of 8
+No branches
+Calls executed:100.00% of 2
+Creating 'aligned_buffer.h.gcov'
+
+File '/usr/include/c++/9/bits/move.h'
+Lines executed:61.54% of 13
+No branches
+Calls executed:0.00% of 3
+Creating 'move.h.gcov'
+
+File '/usr/include/c++/9/bits/stl_algobase.h'
+Lines executed:65.62% of 32
+Branches executed:33.33% of 6
+Taken at least once:16.67% of 6
+Calls executed:78.57% of 14
+Creating 'stl_algobase.h.gcov'
+
+File '/usr/include/c++/9/bits/stl_heap.h'
+Lines executed:0.00% of 48
+Branches executed:0.00% of 26
+Taken at least once:0.00% of 26
+Calls executed:0.00% of 45
+Creating 'stl_heap.h.gcov'
+
+File '/usr/include/c++/9/utility'
+Lines executed:100.00% of 8
+No branches
+Calls executed:100.00% of 2
+Creating 'utility.gcov'
+
+File '/usr/include/c++/9/bits/ptr_traits.h'
+Lines executed:100.00% of 4
+No branches
+No calls
+Creating 'ptr_traits.h.gcov'
+
+File '/usr/include/c++/9/bits/alloc_traits.h'
+Lines executed:100.00% of 10
+No branches
+Calls executed:100.00% of 1
+Creating 'alloc_traits.h.gcov'
+
+File '/usr/include/c++/9/bits/stl_uninitialized.h'
+Lines executed:100.00% of 12
+Branches executed:100.00% of 2
+Taken at least once:100.00% of 2
+Calls executed:100.00% of 11
+Creating 'stl_uninitialized.h.gcov'
+
+File '/usr/include/c++/9/bits/stl_iterator.h'
+Lines executed:92.31% of 26
+No branches
+Calls executed:66.67% of 6
+Creating 'stl_iterator.h.gcov'
+
+File '/usr/include/c++/9/bits/hashtable_policy.h'
+Lines executed:94.06% of 101
+Branches executed:83.33% of 24
+Taken at least once:45.83% of 24
+Calls executed:89.61% of 77
+Creating 'hashtable_policy.h.gcov'
+
+File '/usr/include/c++/9/bits/stl_function.h'
+Lines executed:100.00% of 2
+No branches
+No calls
+Creating 'stl_function.h.gcov'
+
+File '/usr/include/c++/9/bits/cpp_type_traits.h'
+Lines executed:100.00% of 2
+No branches
+No calls
+Creating 'cpp_type_traits.h.gcov'
+
+File '/usr/include/c++/9/bits/hashtable.h'
+Lines executed:74.29% of 140
+Branches executed:71.88% of 64
+Taken at least once:42.19% of 64
+Calls executed:70.77% of 65
+Creating 'hashtable.h.gcov'
+
+File '/usr/include/c++/9/bits/stl_vector.h'
+Lines executed:98.31% of 59
+Branches executed:100.00% of 10
+Taken at least once:60.00% of 10
+Calls executed:93.10% of 29
+Creating 'stl_vector.h.gcov'
+
+File '/usr/include/c++/9/bits/unique_ptr.h'
+Lines executed:100.00% of 32
+Branches executed:100.00% of 6
+Taken at least once:66.67% of 6
+Calls executed:96.55% of 29
+Creating 'unique_ptr.h.gcov'
+
+File '/usr/include/c++/9/bits/stl_algo.h'
+Lines executed:40.00% of 85
+Branches executed:32.14% of 56
+Taken at least once:21.43% of 56
+Calls executed:42.86% of 77
+Creating 'stl_algo.h.gcov'
+
+File '/usr/include/c++/9/bits/stl_construct.h'
+Lines executed:100.00% of 12
+Branches executed:100.00% of 2
+Taken at least once:100.00% of 2
+Calls executed:100.00% of 5
+Creating 'stl_construct.h.gcov'
+
+File '/usr/include/c++/9/bits/allocator.h'
+Lines executed:100.00% of 3
+No branches
+Calls executed:100.00% of 1
+Creating 'allocator.h.gcov'
+
+File '/usr/include/c++/9/bits/functional_hash.h'
+Lines executed:100.00% of 2
+No branches
+No calls
+Creating 'functional_hash.h.gcov'
+
+File '/usr/include/c++/9/bits/vector.tcc'
+Lines executed:92.59% of 27
+Branches executed:100.00% of 2
+Taken at least once:50.00% of 2
+Calls executed:89.47% of 19
+Creating 'vector.tcc.gcov'
+
+File '/home/wj/Code/C++/Interview/MemoryPool/include/memory_pool_extensions.h'
+No executable lines
+No branches
+No calls
+Removing 'memory_pool_extensions.h.gcov'
+
+File '/usr/include/c++/9/bits/unordered_map.h'
+Lines executed:81.82% of 11
+No branches
+Calls executed:83.33% of 6
+Creating 'unordered_map.h.gcov'
+
+File '/usr/include/c++/9/bits/std_mutex.h'
+Lines executed:92.86% of 14
+Branches executed:100.00% of 2
+Taken at least once:50.00% of 2
+Calls executed:83.33% of 6
+Creating 'std_mutex.h.gcov'
+
+File '/home/wj/Code/C++/Interview/MemoryPool/src/memory_pool_extensions.cpp'
+Lines executed:81.15% of 122
+Branches executed:73.91% of 92
+Taken at least once:53.26% of 92
+Calls executed:65.55% of 119
+Creating 'memory_pool_extensions.cpp.gcov'
+
+File '/usr/include/x86_64-linux-gnu/c++/9/bits/gthr-default.h'
+Lines executed:80.00% of 10
+Branches executed:100.00% of 4
+Taken at least once:50.00% of 4
+Calls executed:100.00% of 4
+Creating 'gthr-default.h.gcov'
+
+File '/usr/include/c++/9/new'
+Lines executed:0.00% of 3
+No branches
+No calls
+Creating 'new.gcov'
+
+
+===== test_memory_pool.cpp =====
+File '/home/wj/Code/C++/Interview/MemoryPool/tests/test_memory_pool.cpp'
+Lines executed:94.24% of 139
+Branches executed:95.92% of 294
+Taken at least once:49.32% of 294
+Calls executed:74.12% of 340
+Creating 'test_memory_pool.cpp.gcov'
+
+File '/usr/include/c++/9/tuple'
+Lines executed:97.44% of 39
+No branches
+Calls executed:100.00% of 15
+Creating 'tuple.gcov'
+
+File '/usr/include/c++/9/bits/invoke.h'
+Lines executed:100.00% of 5
+No branches
+Calls executed:100.00% of 4
+Creating 'invoke.h.gcov'
+
+File '/usr/include/c++/9/bits/move.h'
+Lines executed:46.15% of 13
+No branches
+Calls executed:0.00% of 3
+Creating 'move.h.gcov'
+
+File '/usr/include/c++/9/thread'
+Lines executed:83.33% of 30
+Branches executed:100.00% of 6
+Taken at least once:50.00% of 6
+Calls executed:82.14% of 28
+Creating 'thread.gcov'
+
+File '/usr/include/c++/9/iostream'
+No executable lines
+No branches
+No calls
+Removing 'iostream.gcov'
+
+File '/usr/include/c++/9/bits/stl_algobase.h'
+Lines executed:68.00% of 25
+Branches executed:33.33% of 6
+Taken at least once:16.67% of 6
+Calls executed:100.00% of 9
+Creating 'stl_algobase.h.gcov'
+
+File '/usr/include/c++/9/bits/std_function.h'
+Lines executed:89.71% of 68
+Branches executed:100.00% of 8
+Taken at least once:50.00% of 8
+Calls executed:77.78% of 9
+Creating 'std_function.h.gcov'
+
+File '/usr/include/c++/9/bits/unique_ptr.h'
+Lines executed:88.89% of 27
+No branches
+Calls executed:100.00% of 6
+Creating 'unique_ptr.h.gcov'
+
+File '/usr/include/c++/9/ext/new_allocator.h'
+Lines executed:80.00% of 15
+No branches
+No calls
+Creating 'new_allocator.h.gcov'
+
+File '/home/wj/Code/C++/Interview/MemoryPool/include/memory_pool_extensions.h'
+Lines executed:100.00% of 20
+Branches executed:100.00% of 18
+Taken at least once:50.00% of 18
+Calls executed:80.95% of 21
+Creating 'memory_pool_extensions.h.gcov'
+
+File '/usr/include/c++/9/bits/cpp_type_traits.h'
+Lines executed:100.00% of 2
+No branches
+No calls
+Creating 'cpp_type_traits.h.gcov'
+
+File '/usr/include/c++/9/ext/aligned_buffer.h'
+Lines executed:0.00% of 4
+No branches
+Calls executed:0.00% of 1
+Creating 'aligned_buffer.h.gcov'
+
+File '/usr/include/c++/9/bits/alloc_traits.h'
+Lines executed:66.67% of 12
+No branches
+Calls executed:0.00% of 1
+Creating 'alloc_traits.h.gcov'
+
+File '/usr/include/c++/9/bits/stl_construct.h'
+Lines executed:100.00% of 15
+Branches executed:100.00% of 2
+Taken at least once:50.00% of 2
+Calls executed:75.00% of 4
+Creating 'stl_construct.h.gcov'
+
+File '/usr/include/c++/9/bits/ptr_traits.h'
+Lines executed:0.00% of 2
+No branches
+No calls
+Creating 'ptr_traits.h.gcov'
+
+File '/usr/include/c++/9/bits/hashtable_policy.h'
+Lines executed:0.00% of 28
+Branches executed:0.00% of 6
+Taken at least once:0.00% of 6
+Calls executed:0.00% of 17
+Creating 'hashtable_policy.h.gcov'
+
+File '/usr/include/c++/9/bits/stl_uninitialized.h'
+Lines executed:70.37% of 27
+Branches executed:75.00% of 8
+Taken at least once:50.00% of 8
+Calls executed:38.89% of 18
+Creating 'stl_uninitialized.h.gcov'
+
+File '/usr/include/c++/9/bits/stl_iterator_base_funcs.h'
+Lines executed:100.00% of 5
+No branches
+No calls
+Creating 'stl_iterator_base_funcs.h.gcov'
+
+File '/usr/include/c++/9/bits/stl_iterator_base_types.h'
+Lines executed:100.00% of 2
+No branches
+No calls
+Creating 'stl_iterator_base_types.h.gcov'
+
+File '/usr/include/c++/9/ext/type_traits.h'
+Lines executed:100.00% of 2
+No branches
+No calls
+Creating 'type_traits.h.gcov'
+
+File '/usr/include/c++/9/bits/allocator.h'
+Lines executed:80.00% of 5
+No branches
+Calls executed:0.00% of 1
+Creating 'allocator.h.gcov'
+
+File '/usr/include/c++/9/bits/basic_string.tcc'
+Lines executed:69.23% of 13
+No branches
+No calls
+Creating 'basic_string.tcc.gcov'
+
+File '/usr/include/c++/9/bits/stl_vector.h'
+Lines executed:92.31% of 78
+Branches executed:0.00% of 6
+Taken at least once:0.00% of 6
+Calls executed:55.00% of 20
+Creating 'stl_vector.h.gcov'
+
+File '/usr/include/c++/9/bits/hashtable.h'
+Lines executed:0.00% of 20
+Branches executed:0.00% of 2
+Taken at least once:0.00% of 2
+Calls executed:0.00% of 8
+Creating 'hashtable.h.gcov'
+
+File '/usr/include/c++/9/bits/basic_string.h'
+Lines executed:69.23% of 13
+Branches executed:75.00% of 8
+Taken at least once:37.50% of 8
+Calls executed:57.14% of 7
+Creating 'basic_string.h.gcov'
+
+File '/usr/include/c++/9/initializer_list'
+Lines executed:100.00% of 3
+No branches
+No calls
+Creating 'initializer_list.gcov'
+
+File '/usr/include/c++/9/bits/stl_iterator.h'
+Lines executed:86.67% of 15
+No branches
+Calls executed:33.33% of 3
+Creating 'stl_iterator.h.gcov'
+
+File '/usr/include/c++/9/ext/alloc_traits.h'
+Lines executed:0.00% of 2
+No branches
+Calls executed:0.00% of 1
+Creating 'alloc_traits.h.gcov'
+
+File '/usr/include/c++/9/bits/vector.tcc'
+Lines executed:38.78% of 49
+Branches executed:42.86% of 14
+Taken at least once:21.43% of 14
+Calls executed:29.41% of 34
+Creating 'vector.tcc.gcov'
+
+File '/usr/include/c++/9/bits/std_mutex.h'
+Lines executed:0.00% of 14
+Branches executed:0.00% of 2
+Taken at least once:0.00% of 2
+Calls executed:0.00% of 6
+Creating 'std_mutex.h.gcov'
+
+File '/home/wj/Code/C++/Interview/MemoryPool/include/fixed_memory_pool.h'
+Lines executed:95.24% of 21
+Branches executed:100.00% of 4
+Taken at least once:50.00% of 4
+Calls executed:100.00% of 13
+Creating 'fixed_memory_pool.h.gcov'
+
+File '/usr/include/c++/9/bits/char_traits.h'
+Lines executed:33.33% of 12
+Branches executed:50.00% of 4
+Taken at least once:25.00% of 4
+Calls executed:0.00% of 2
+Creating 'char_traits.h.gcov'
+
+File '/usr/include/c++/9/bits/unordered_map.h'
+No executable lines
+No branches
+No calls
+Removing 'unordered_map.h.gcov'
+
+File '/usr/include/x86_64-linux-gnu/c++/9/bits/gthr-default.h'
+Lines executed:0.00% of 10
+Branches executed:0.00% of 4
+Taken at least once:0.00% of 4
+Calls executed:0.00% of 4
+Creating 'gthr-default.h.gcov'
+
+File '/usr/include/c++/9/new'
+Lines executed:0.00% of 3
+No branches
+No calls
+Creating 'new.gcov'
+
+

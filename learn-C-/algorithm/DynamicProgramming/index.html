@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>动态规划常用知识点与 C++ 实现</title>
+  <style>
+    :root {
+      --bg: #eef4ee;
+      --paper: #fffefb;
+      --ink: #1f221d;
+      --muted: #60675b;
+      --line: #d4ddd0;
+      --primary: #2f855a;
+      --primary-soft: #e3f5ea;
+      --accent: #d97706;
+      --accent-soft: #fff0d8;
+      --violet: #4c63d2;
+      --violet-soft: #e8ecff;
+      --warn: #c05621;
+      --code-bg: #f2f5ef;
+      --shadow: 0 18px 40px rgba(36, 53, 31, 0.1);
+      --radius: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Noto Serif SC", "Source Han Serif SC", "PingFang SC", serif;
+      color: var(--ink);
+      line-height: 1.75;
+      background:
+        radial-gradient(circle at 10% 8%, rgba(47, 133, 90, 0.14), transparent 24%),
+        radial-gradient(circle at 86% 12%, rgba(76, 99, 210, 0.12), transparent 22%),
+        linear-gradient(180deg, #f5faf4 0%, #edf3ea 100%);
+    }
+
+    .hero {
+      padding: 56px 24px 28px;
+    }
+
+    .hero-inner,
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    .hero-card {
+      background: linear-gradient(135deg, rgba(255, 254, 251, 0.97), rgba(227, 245, 234, 0.92));
+      border: 1px solid rgba(47, 133, 90, 0.16);
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+      padding: 36px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      right: -60px;
+      bottom: -80px;
+      width: 230px;
+      height: 230px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(76, 99, 210, 0.18), transparent 70%);
+      pointer-events: none;
+    }
+
+    h1, h2, h3, h4 {
+      line-height: 1.25;
+      margin: 0 0 16px;
+    }
+
+    h1 {
+      font-size: clamp(2.1rem, 4vw, 3.4rem);
+      letter-spacing: 0.02em;
+    }
+
+    h2 {
+      font-size: clamp(1.5rem, 2vw, 2rem);
+    }
+
+    h3 {
+      font-size: 1.2rem;
+    }
+
+    h4 {
+      font-size: 1rem;
+    }
+
+    p {
+      margin: 0 0 16px;
+    }
+
+    .lead {
+      max-width: 930px;
+      color: var(--muted);
+      font-size: 1.06rem;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 18px 0 22px;
+    }
+
+    .tag {
+      display: inline-flex;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(31, 34, 29, 0.08);
+    }
+
+    .quick-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .quick-nav a {
+      text-decoration: none;
+      color: var(--ink);
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(31, 34, 29, 0.08);
+      background: rgba(255, 255, 255, 0.74);
+      transition: transform 0.18s ease, border-color 0.18s ease;
+    }
+
+    .quick-nav a:hover {
+      transform: translateY(-2px);
+      border-color: rgba(47, 133, 90, 0.38);
+    }
+
+    main {
+      padding: 0 24px 60px;
+      display: grid;
+      gap: 22px;
+    }
+
+    section {
+      background: var(--paper);
+      border-radius: var(--radius);
+      border: 1px solid rgba(31, 34, 29, 0.08);
+      box-shadow: var(--shadow);
+      padding: 30px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 22px;
+      align-items: start;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .concept-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin: 18px 0;
+    }
+
+    .card,
+    .concept-card {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(247, 250, 243, 0.92));
+      border: 1px solid rgba(31, 34, 29, 0.08);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .diagram,
+    .mini-diagram {
+      width: 100%;
+      background: linear-gradient(180deg, #fcfdf9, #f0f5ec);
+      border: 1px solid rgba(31, 34, 29, 0.08);
+      border-radius: 18px;
+      padding: 12px;
+    }
+
+    .mini-diagram {
+      padding: 10px;
+      margin-bottom: 10px;
+      background: rgba(255, 255, 255, 0.58);
+    }
+
+    .note {
+      border-left: 4px solid var(--primary);
+      background: var(--primary-soft);
+      padding: 14px 16px;
+      border-radius: 12px;
+      margin: 14px 0;
+    }
+
+    .warning {
+      border-left-color: var(--warn);
+      background: #fff1e8;
+    }
+
+    .caption {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    ul, ol {
+      margin: 0 0 16px;
+      padding-left: 24px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    code {
+      font-family: "JetBrains Mono", "Fira Code", monospace;
+      background: rgba(76, 99, 210, 0.08);
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 0.92em;
+    }
+
+    pre {
+      margin: 16px 0;
+      padding: 18px;
+      background: var(--code-bg);
+      border-radius: 16px;
+      overflow-x: auto;
+      border: 1px solid rgba(31, 34, 29, 0.08);
+    }
+
+    pre code {
+      background: transparent;
+      padding: 0;
+      border-radius: 0;
+      font-size: 0.92rem;
+      line-height: 1.65;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+    }
+
+    th, td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+
+    th {
+      background: #ecf7ef;
+    }
+
+    .foot {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.95rem;
+      padding: 6px 0 22px;
+    }
+
+    @media (max-width: 720px) {
+      .hero-card,
+      section {
+        padding: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="hero-card">
+        <h1>动态规划常用知识点与 C++ 实现</h1>
+        <p class="lead">
+          这份文档面向算法学习与面试准备，系统整理动态规划的核心思想、判定条件、状态设计、转移方程、
+          初始化、空间优化以及背包、序列、区间、树形 DP 等常见模型。动态规划最关键的不是背题，
+          而是把“暴力递归的重复计算”转成“状态复用”，所以这里会重点解释原理，并配上图示帮助理解状态如何流动。
+        </p>
+        <div class="tag-row">
+          <span class="tag">状态定义</span>
+          <span class="tag">状态转移</span>
+          <span class="tag">初始化 / 滚动数组</span>
+          <span class="tag">背包 DP</span>
+          <span class="tag">序列 / 区间 / 树形 DP</span>
+          <span class="tag">C++ 模板</span>
+        </div>
+        <nav class="quick-nav">
+          <a href="#basic">1. DP 基础</a>
+          <a href="#design">2. 设计思路</a>
+          <a href="#linear">3. 线性 DP</a>
+          <a href="#bag">4. 背包 DP</a>
+          <a href="#advanced">5. 其他常见模型</a>
+          <a href="#templates">6. 模板与总结</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="basic">
+      <h2>1. 什么是动态规划</h2>
+      <div class="grid-2">
+        <div>
+          <p>
+            动态规划，简称 DP，本质上是在解决这样一类问题：
+            <strong>一个大问题可以拆成若干个更小的子问题，而这些子问题会被重复计算。</strong>
+            如果我们把每个子问题的答案存下来，后面直接复用，就能把指数级暴力递归优化成多项式时间。
+          </p>
+          <p>
+            所以 DP 不是一种固定模板，而是一种“避免重复计算”的思维方式。
+            它通常适用于具有两个典型特征的问题：
+          </p>
+          <ul>
+            <li><strong>最优子结构</strong>：原问题的最优解可以由子问题的最优解组合得到。</li>
+            <li><strong>重叠子问题</strong>：同一个子问题会在递归中被多次求解。</li>
+          </ul>
+          <div class="note">
+            很多题一开始看起来像搜索或递归，但只要你发现“同样的状态会反复出现”，就该考虑 DP。
+          </div>
+        </div>
+        <div class="diagram">
+          <svg viewBox="0 0 560 320" width="100%" aria-label="暴力递归与动态规划对比图">
+            <defs>
+              <style>
+                .line { stroke: #9aa79b; stroke-width: 3; }
+                .node { fill: #fff; stroke: #2f855a; stroke-width: 3; }
+                .dup { fill: #ffe8dc; stroke: #d97706; stroke-width: 3; }
+                .txt { font: 700 17px sans-serif; fill: #222; text-anchor: middle; dominant-baseline: middle; }
+                .cap { font: 15px sans-serif; fill: #4d564a; }
+              </style>
+            </defs>
+            <line class="line" x1="112" y1="60" x2="62" y2="120"></line>
+            <line class="line" x1="112" y1="60" x2="162" y2="120"></line>
+            <line class="line" x1="62" y1="120" x2="32" y2="196"></line>
+            <line class="line" x1="62" y1="120" x2="92" y2="196"></line>
+            <line class="line" x1="162" y1="120" x2="132" y2="196"></line>
+            <line class="line" x1="162" y1="120" x2="192" y2="196"></line>
+            <circle class="node" cx="112" cy="52" r="24"></circle>
+            <circle class="node" cx="62" cy="120" r="22"></circle>
+            <circle class="node" cx="162" cy="120" r="22"></circle>
+            <circle class="dup" cx="32" cy="196" r="20"></circle>
+            <circle class="dup" cx="92" cy="196" r="20"></circle>
+            <circle class="dup" cx="132" cy="196" r="20"></circle>
+            <circle class="dup" cx="192" cy="196" r="20"></circle>
+            <text class="txt" x="112" y="52">f(5)</text>
+            <text class="txt" x="62" y="120">f(4)</text>
+            <text class="txt" x="162" y="120">f(3)</text>
+            <text class="txt" x="32" y="196">f(3)</text>
+            <text class="txt" x="92" y="196">f(2)</text>
+            <text class="txt" x="132" y="196">f(2)</text>
+            <text class="txt" x="192" y="196">f(1)</text>
+            <rect x="302" y="62" width="210" height="148" rx="18" fill="#e3f5ea" stroke="#2f855a" stroke-width="3"></rect>
+            <text class="cap" x="322" y="92">DP 的做法：</text>
+            <text class="cap" x="322" y="122">把 f(1), f(2), f(3)...</text>
+            <text class="cap" x="322" y="152">这些状态只计算一次，</text>
+            <text class="cap" x="322" y="182">之后直接查表复用。</text>
+            <text class="cap" x="24" y="274">左边：暴力递归会重复算很多相同子问题</text>
+            <text class="cap" x="24" y="300">右边：DP 把状态缓存起来，避免重复</text>
+          </svg>
+        </div>
+      </div>
+
+      <h3>1.1 记忆化搜索与递推 DP</h3>
+      <div class="concept-grid">
+        <div class="concept-card">
+          <h4>记忆化搜索</h4>
+          <div class="mini-diagram">
+            <svg viewBox="0 0 260 120" width="100%" aria-label="记忆化搜索示意图">
+              <defs>
+                <style>
+                  .m1 { fill: #fff; stroke: #2f855a; stroke-width: 3; }
+                  .m2 { stroke: #4c63d2; stroke-width: 3; fill: none; marker-end: url(#ma1); }
+                  .t1 { font: 700 15px sans-serif; fill: #222; text-anchor: middle; dominant-baseline: middle; }
+                  .c1 { font: 13px sans-serif; fill: #4d564a; }
+                </style>
+                <marker id="ma1" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                  <path d="M0,0 L8,3 L0,6 Z" fill="#4c63d2"></path>
+                </marker>
+              </defs>
+              <circle class="m1" cx="52" cy="56" r="18"></circle>
+              <circle class="m1" cx="128" cy="56" r="18"></circle>
+              <circle class="m1" cx="204" cy="56" r="18"></circle>
+              <path class="m2" d="M70 56 L106 56"></path>
+              <path class="m2" d="M146 56 L182 56"></path>
+              <text class="t1" x="52" y="56">搜</text>
+              <text class="t1" x="128" y="56">算</text>
+              <text class="t1" x="204" y="56">存</text>
+              <text class="c1" x="18" y="98">从目标状态出发递归，算过的结果缓存起来。</text>
+            </svg>
+          </div>
+          <p class="caption">写法接近递归，适合从“暴力搜索”自然改造。</p>
+        </div>
+        <div class="concept-card">
+          <h4>递推 DP</h4>
+          <div class="mini-diagram">
+            <svg viewBox="0 0 260 120" width="100%" aria-label="递推 DP 示意图">
+              <defs>
+                <style>
+                  .r1 { fill: #fff; stroke: #d97706; stroke-width: 3; rx: 10; }
+                  .r2 { stroke: #2f855a; stroke-width: 3; fill: none; marker-end: url(#ra1); }
+                  .t2 { font: 700 15px sans-serif; fill: #222; text-anchor: middle; dominant-baseline: middle; }
+                  .c2 { font: 13px sans-serif; fill: #4d564a; }
+                </style>
+                <marker id="ra1" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                  <path d="M0,0 L8,3 L0,6 Z" fill="#2f855a"></path>
+                </marker>
+              </defs>
+              <rect class="r1" x="10" y="40" width="44" height="32"></rect>
+              <rect class="r1" x="74" y="40" width="44" height="32"></rect>
+              <rect class="r1" x="138" y="40" width="44" height="32"></rect>
+              <rect class="r1" x="202" y="40" width="44" height="32"></rect>
+              <path class="r2" d="M54 56 L70 56"></path>
+              <path class="r2" d="M118 56 L134 56"></path>
+              <path class="r2" d="M182 56 L198 56"></path>
+              <text class="t2" x="32" y="56">dp0</text>
+              <text class="t2" x="96" y="56">dp1</text>
+              <text class="t2" x="160" y="56">dp2</text>
+              <text class="t2" x="224" y="56">dp3</text>
+              <text class="c2" x="10" y="98">按拓扑顺序从已知小状态推到大状态。</text>
+            </svg>
+          </div>
+          <p class="caption">更适合面试和竞赛中直接写表格或数组状态转移。</p>
+        </div>
+      </div>
+
+      <h3>1.2 一个最经典的例子：斐波那契</h3>
+      <pre><code class="language-cpp">int fib(int n) {
+    if (n <= 1) return n;
+    vector&lt;int&gt; dp(n + 1);
+    dp[0] = 0;
+    dp[1] = 1;
+    for (int i = 2; i <= n; ++i) {
+        dp[i] = dp[i - 1] + dp[i - 2];
+    }
+    return dp[n];
+}</code></pre>
+      <p>
+        这里的 <code>dp[i]</code> 表示第 <code>i</code> 个斐波那契数。状态转移很自然：
+        <code>dp[i] = dp[i - 1] + dp[i - 2]</code>。
+        斐波那契虽然简单，但几乎包含了 DP 的全部骨架：状态、转移、初始化、遍历顺序。
+      </p>
+    </section>
+
+    <section id="design">
+      <h2>2. 动态规划如何设计</h2>
+      <p>
+        多数人学 DP 卡住，不是因为代码难，而是因为不知道状态怎么定义。一个稳定的思考顺序是：
+      </p>
+      <ol>
+        <li>先问自己：原问题能不能拆成更小的同类问题？</li>
+        <li>定义 <code>dp[i]</code>、<code>dp[i][j]</code> 或更复杂状态到底表示什么。</li>
+        <li>思考最后一步是怎么来的，从而写出状态转移。</li>
+        <li>确定哪些状态是已知的，也就是初始化。</li>
+        <li>确定必须按什么顺序推，保证用到的子状态已经算好。</li>
+      </ol>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>2.1 “最后一步”思想</h3>
+          <p>
+            很多 DP 的转移都可以从“最后一步做了什么”入手。例如爬楼梯到第 <code>i</code> 级，
+            最后一步要么从 <code>i-1</code> 迈 1 步过来，要么从 <code>i-2</code> 迈 2 步过来。
+            于是答案就是这两种情况之和。
+          </p>
+          <pre><code class="language-cpp">int climbStairs(int n) {
+    vector&lt;int&gt; dp(n + 1);
+    dp[0] = 1;
+    dp[1] = 1;
+    for (int i = 2; i <= n; ++i) {
+        dp[i] = dp[i - 1] + dp[i - 2];
+    }
+    return dp[n];
+}</code></pre>
+        </div>
+        <div class="diagram">
+          <svg viewBox="0 0 560 260" width="100%" aria-label="最后一步思想示意图">
+            <defs>
+              <style>
+                .step { fill: #fff; stroke: #2f855a; stroke-width: 3; rx: 12; }
+                .arrow { stroke: #d97706; stroke-width: 4; fill: none; marker-end: url(#sa1); }
+                .tt { font: 700 18px sans-serif; fill: #222; text-anchor: middle; dominant-baseline: middle; }
+                .cc { font: 15px sans-serif; fill: #4d564a; }
+              </style>
+              <marker id="sa1" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                <path d="M0,0 L8,3 L0,6 Z" fill="#d97706"></path>
+              </marker>
+            </defs>
+            <rect class="step" x="40" y="150" width="88" height="44"></rect>
+            <rect class="step" x="180" y="100" width="88" height="44"></rect>
+            <rect class="step" x="180" y="186" width="88" height="44"></rect>
+            <rect class="step" x="340" y="142" width="88" height="44"></rect>
+            <text class="tt" x="84" y="172">dp[i-2]</text>
+            <text class="tt" x="224" y="122">dp[i-1]</text>
+            <text class="tt" x="224" y="208">其他</text>
+            <text class="tt" x="384" y="164">dp[i]</text>
+            <path class="arrow" d="M128 168 C 168 168, 156 202, 180 202"></path>
+            <path class="arrow" d="M268 122 L332 154"></path>
+            <path class="arrow" d="M128 168 C 198 168, 212 126, 180 126"></path>
+            <text class="cc" x="26" y="42">想 dp[i] 时，先问：最后一步从哪里来？</text>
+            <text class="cc" x="26" y="70">很多题都能拆成若干个“上一个状态 + 一次选择”。</text>
+          </svg>
+        </div>
+      </div>
+
+      <div class="concept-grid">
+        <div class="concept-card">
+          <h4>状态定义</h4>
+          <p class="caption">例如 <code>dp[i]</code> 表示前 i 个元素的最优值，或到位置 i 的方案数。</p>
+        </div>
+        <div class="concept-card">
+          <h4>状态转移</h4>
+          <p class="caption">考虑当前决策后，状态如何从已知子问题转移而来。</p>
+        </div>
+        <div class="concept-card">
+          <h4>初始化</h4>
+          <p class="caption">最小规模问题的答案必须先给出来，否则大状态无法推出。</p>
+        </div>
+        <div class="concept-card">
+          <h4>遍历顺序</h4>
+          <p class="caption">保证转移所依赖的状态已经先被计算出来。</p>
+        </div>
+      </div>
+
+      <h3>2.2 空间优化为什么可行</h3>
+      <p>
+        如果一个状态只依赖前面有限几个状态，就没必要把整张表都留着。比如斐波那契只依赖前两项，
+        那就可以把 <code>O(n)</code> 空间优化成 <code>O(1)</code>。
+      </p>
+      <pre><code class="language-cpp">int fibOptimized(int n) {
+    if (n <= 1) return n;
+    int a = 0, b = 1;
+    for (int i = 2; i <= n; ++i) {
+        int c = a + b;
+        a = b;
+        b = c;
+    }
+    return b;
+}</code></pre>
+
+      <div class="warning note">
+        空间优化的前提是你非常清楚当前状态依赖谁。否则一旦覆盖过早，转移就会出错。
+      </div>
+    </section>
+
+    <section id="linear">
+      <h2>3. 线性 DP 与序列类问题</h2>
+
+      <h3>3.1 打家劫舍</h3>
+      <p>
+        这是“选或不选”型 DP 的代表。到第 <code>i</code> 个房子时，要么不偷它，答案就是前一个房子的最优解；
+        要么偷它，那么前一个房子不能偷，答案是 <code>dp[i-2] + nums[i]</code>。
+      </p>
+      <pre><code class="language-cpp">int rob(vector&lt;int&gt;& nums) {
+    int n = nums.size();
+    if (n == 0) return 0;
+    if (n == 1) return nums[0];
+
+    vector&lt;int&gt; dp(n);
+    dp[0] = nums[0];
+    dp[1] = max(nums[0], nums[1]);
+
+    for (int i = 2; i < n; ++i) {
+        dp[i] = max(dp[i - 1], dp[i - 2] + nums[i]);
+    }
+    return dp[n - 1];
+}</code></pre>
+
+      <div class="concept-grid">
+        <div class="concept-card">
+          <h4>不选当前</h4>
+          <div class="mini-diagram">
+            <svg viewBox="0 0 260 100" width="100%" aria-label="不选当前示意图">
+              <defs>
+                <style>
+                  .a1 { fill: #fff; stroke: #2f855a; stroke-width: 3; rx: 10; }
+                  .t1 { font: 700 15px sans-serif; fill: #222; text-anchor: middle; dominant-baseline: middle; }
+                </style>
+              </defs>
+              <rect class="a1" x="18" y="32" width="70" height="34"></rect>
+              <rect class="a1" x="100" y="32" width="70" height="34"></rect>
+              <rect class="a1" x="182" y="32" width="60" height="34"></rect>
+              <text class="t1" x="53" y="49">dp[i-1]</text>
+              <text class="t1" x="135" y="49">跳过 i</text>
+              <text class="t1" x="212" y="49">dp[i]</text>
+            </svg>
+          </div>
+          <p class="caption">当前不拿，答案直接继承前一个状态。</p>
+        </div>
+        <div class="concept-card">
+          <h4>选当前</h4>
+          <div class="mini-diagram">
+            <svg viewBox="0 0 260 100" width="100%" aria-label="选当前示意图">
+              <defs>
+                <style>
+                  .b1 { fill: #fff; stroke: #d97706; stroke-width: 3; rx: 10; }
+                  .t2 { font: 700 15px sans-serif; fill: #222; text-anchor: middle; dominant-baseline: middle; }
+                </style>
+              </defs>
+              <rect class="b1" x="18" y="32" width="70" height="34"></rect>
+              <rect class="b1" x="100" y="32" width="70" height="34"></rect>
+              <rect class="b1" x="182" y="32" width="60" height="34"></rect>
+              <text class="t2" x="53" y="49">dp[i-2]</text>
+              <text class="t2" x="135" y="49">+ nums[i]</text>
+              <text class="t2" x="212" y="49">dp[i]</text>
+            </svg>
+          </div>
+          <p class="caption">当前拿了，就必须从隔一个的位置转移过来。</p>
+        </div>
+      </div>
+
+      <h3>3.2 最大子数组和</h3>
+      <p>
+        这题的状态可以定义为：<code>dp[i]</code> 表示“必须以 i 结尾”的最大子数组和。
+        那么要么把前面的连续段接上，要么从当前位置重新开始。
+      </p>
+      <pre><code class="language-cpp">int maxSubArray(vector&lt;int&gt;& nums) {
+    int cur = nums[0], ans = nums[0];
+    for (int i = 1; i < (int)nums.size(); ++i) {
+        cur = max(nums[i], cur + nums[i]);
+        ans = max(ans, cur);
+    }
+    return ans;
+}</code></pre>
+
+      <h3>3.3 最长递增子序列 LIS</h3>
+      <p>
+        经典 <code>O(n^2)</code> DP 定义是：
+        <code>dp[i]</code> 表示以 <code>nums[i]</code> 结尾的最长递增子序列长度。
+        枚举所有 <code>j &lt; i</code>，如果 <code>nums[j] &lt; nums[i]</code>，就可以从 <code>j</code> 转移到 <code>i</code>。
+      </p>
+      <pre><code class="language-cpp">int lengthOfLIS(vector&lt;int&gt;& nums) {
+    int n = nums.size();
+    vector&lt;int&gt; dp(n, 1);
+    int ans = 1;
+
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < i; ++j) {
+            if (nums[j] < nums[i]) {
+                dp[i] = max(dp[i], dp[j] + 1);
+            }
+        }
+        ans = max(ans, dp[i]);
+    }
+    return ans;
+}</code></pre>
+    </section>
+
+    <section id="bag">
+      <h2>4. 背包 DP</h2>
+      <p>
+        背包是 DP 中最重要的模型之一。它的本质是：
+        在容量限制下，从若干物品中做选择，使得总价值最大或方案数满足要求。
+      </p>
+
+      <div class="grid-2">
+        <div>
+          <h3>4.1 0/1 背包</h3>
+          <p>
+            每个物品只能选 0 次或 1 次。设 <code>dp[j]</code> 表示容量恰为或不超过 <code>j</code> 时的最大价值，
+            对每个物品都尝试“选”或“不选”。
+          </p>
+          <pre><code class="language-cpp">int zeroOneKnapsack(vector&lt;int&gt;& weight, vector&lt;int&gt;& value, int bag) {
+    vector&lt;int&gt; dp(bag + 1, 0);
+    int n = weight.size();
+
+    for (int i = 0; i < n; ++i) {
+        for (int j = bag; j >= weight[i]; --j) {
+            dp[j] = max(dp[j], dp[j - weight[i]] + value[i]);
+        }
+    }
+    return dp[bag];
+}</code></pre>
+          <p>
+            这里容量必须<strong>从大到小</strong>枚举，否则同一件物品会被重复使用，变成完全背包。
+          </p>
+        </div>
+        <div class="diagram">
+          <svg viewBox="0 0 560 280" width="100%" aria-label="0/1 背包示意图">
+            <defs>
+              <style>
+                .cell { fill: #fff; stroke: #2f855a; stroke-width: 2.5; }
+                .pick { fill: #fff0d8; stroke: #d97706; stroke-width: 2.5; }
+                .tx { font: 700 16px sans-serif; fill: #222; text-anchor: middle; dominant-baseline: middle; }
+                .lb { font: 15px sans-serif; fill: #4d564a; }
+                .ar { stroke: #4c63d2; stroke-width: 3; fill: none; marker-end: url(#ba1); }
+              </style>
+              <marker id="ba1" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                <path d="M0,0 L8,3 L0,6 Z" fill="#4c63d2"></path>
+              </marker>
+            </defs>
+            <rect class="cell" x="32" y="82" width="62" height="46"></rect>
+            <rect class="cell" x="104" y="82" width="62" height="46"></rect>
+            <rect class="pick" x="176" y="82" width="62" height="46"></rect>
+            <rect class="cell" x="248" y="82" width="62" height="46"></rect>
+            <rect class="pick" x="320" y="82" width="62" height="46"></rect>
+            <rect class="cell" x="392" y="82" width="62" height="46"></rect>
+            <text class="tx" x="63" y="105">0</text>
+            <text class="tx" x="135" y="105">1</text>
+            <text class="tx" x="207" y="105">2</text>
+            <text class="tx" x="279" y="105">3</text>
+            <text class="tx" x="351" y="105">4</text>
+            <text class="tx" x="423" y="105">5</text>
+            <path class="ar" d="M352 144 C 352 210, 206 210, 206 132"></path>
+            <text class="lb" x="28" y="38">对于某个物品，dp[j] 可能来自：</text>
+            <text class="lb" x="28" y="62">不选它：dp[j]；选它：dp[j-weight] + value</text>
+            <text class="lb" x="28" y="252">倒序枚举容量，是为了避免同一轮重复使用当前物品。</text>
+          </svg>
+        </div>
+      </div>
+
+      <div class="concept-grid">
+        <div class="concept-card">
+          <h4>0/1 背包</h4>
+          <p class="caption">每个物品最多用一次，容量通常倒序枚举。</p>
+        </div>
+        <div class="concept-card">
+          <h4>完全背包</h4>
+          <p class="caption">每个物品可无限次使用，容量通常正序枚举。</p>
+        </div>
+        <div class="concept-card">
+          <h4>多重背包</h4>
+          <p class="caption">每个物品可用有限多次，可转成多件 0/1 物品或用优化技巧。</p>
+        </div>
+      </div>
+
+      <h3>4.2 完全背包</h3>
+      <pre><code class="language-cpp">int completeKnapsack(vector&lt;int&gt;& weight, vector&lt;int&gt;& value, int bag) {
+    vector&lt;int&gt; dp(bag + 1, 0);
+    int n = weight.size();
+
+    for (int i = 0; i < n; ++i) {
+        for (int j = weight[i]; j <= bag; ++j) {
+            dp[j] = max(dp[j], dp[j - weight[i]] + value[i]);
+        }
+    }
+    return dp[bag];
+}</code></pre>
+
+      <h3>4.3 组合数 / 方案数类型</h3>
+      <p>
+        有些背包不是求最大值，而是求多少种方法，比如零钱兑换 II。此时转移从 <code>max</code> 变成“累加方案数”。
+      </p>
+      <pre><code class="language-cpp">int change(int amount, vector&lt;int&gt;& coins) {
+    vector&lt;int&gt; dp(amount + 1, 0);
+    dp[0] = 1;
+
+    for (int coin : coins) {
+        for (int j = coin; j <= amount; ++j) {
+            dp[j] += dp[j - coin];
+        }
+    }
+    return dp[amount];
+}</code></pre>
+
+      <div class="warning note">
+        背包题特别容易混淆“组合”和“排列”。外层循环先物品还是先容量，会影响答案含义。
+      </div>
+    </section>
+
+    <section id="advanced">
+      <h2>5. 其他常见 DP 模型</h2>
+
+      <h3>5.1 二维 DP：最长公共子序列 LCS</h3>
+      <p>
+        设 <code>dp[i][j]</code> 表示字符串 <code>s[0..i-1]</code> 和 <code>t[0..j-1]</code> 的最长公共子序列长度。
+        如果当前字符相等，就从左上角加一；否则从上方和左方取最大值。
+      </p>
+      <pre><code class="language-cpp">int longestCommonSubsequence(string text1, string text2) {
+    int n = text1.size(), m = text2.size();
+    vector&lt;vector&lt;int&gt;&gt; dp(n + 1, vector&lt;int&gt;(m + 1, 0));
+
+    for (int i = 1; i <= n; ++i) {
+        for (int j = 1; j <= m; ++j) {
+            if (text1[i - 1] == text2[j - 1]) {
+                dp[i][j] = dp[i - 1][j - 1] + 1;
+            } else {
+                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+            }
+        }
+    }
+    return dp[n][m];
+}</code></pre>
+
+      <div class="concept-grid">
+        <div class="concept-card">
+          <h4>字符相等</h4>
+          <p class="caption"><code>dp[i][j] = dp[i-1][j-1] + 1</code></p>
+        </div>
+        <div class="concept-card">
+          <h4>字符不等</h4>
+          <p class="caption"><code>dp[i][j] = max(dp[i-1][j], dp[i][j-1])</code></p>
+        </div>
+      </div>
+
+      <h3>5.2 区间 DP：回文子串 / 戳气球 / 矩阵连乘</h3>
+      <p>
+        区间 DP 的状态一般是 <code>dp[l][r]</code>，表示区间 <code>[l, r]</code> 的答案。
+        关键在于枚举区间长度，保证短区间先算出来，再推长区间。
+      </p>
+      <div class="grid-2">
+        <div>
+          <pre><code class="language-cpp">int countSubstrings(string s) {
+    int n = s.size(), ans = 0;
+    vector&lt;vector&lt;bool&gt;&gt; dp(n, vector&lt;bool&gt;(n, false));
+
+    for (int len = 1; len <= n; ++len) {
+        for (int l = 0; l + len - 1 < n; ++l) {
+            int r = l + len - 1;
+            if (s[l] == s[r]) {
+                if (len <= 2) dp[l][r] = true;
+                else dp[l][r] = dp[l + 1][r - 1];
+            }
+            if (dp[l][r]) ++ans;
+        }
+    }
+    return ans;
+}</code></pre>
+        </div>
+        <div class="diagram">
+          <svg viewBox="0 0 560 280" width="100%" aria-label="区间 DP 示意图">
+            <defs>
+              <style>
+                .sq { fill: #fff; stroke: #4c63d2; stroke-width: 2.5; }
+                .hl { fill: #e3f5ea; stroke: #2f855a; stroke-width: 2.5; }
+                .tx { font: 700 16px sans-serif; fill: #222; text-anchor: middle; dominant-baseline: middle; }
+                .lb { font: 15px sans-serif; fill: #4d564a; }
+              </style>
+            </defs>
+            <rect class="hl" x="58" y="54" width="56" height="56"></rect>
+            <rect class="sq" x="116" y="54" width="56" height="56"></rect>
+            <rect class="sq" x="174" y="54" width="56" height="56"></rect>
+            <rect class="sq" x="232" y="54" width="56" height="56"></rect>
+            <rect class="sq" x="116" y="112" width="56" height="56"></rect>
+            <rect class="hl" x="174" y="112" width="56" height="56"></rect>
+            <rect class="sq" x="232" y="112" width="56" height="56"></rect>
+            <rect class="hl" x="232" y="170" width="56" height="56"></rect>
+            <text class="tx" x="86" y="82">len=1</text>
+            <text class="tx" x="202" y="140">len=2</text>
+            <text class="tx" x="260" y="198">len=3</text>
+            <text class="lb" x="22" y="256">区间 DP 常按长度从短到长枚举，因为长区间依赖短区间。</text>
+          </svg>
+        </div>
+      </div>
+
+      <h3>5.3 树形 DP</h3>
+      <p>
+        树形 DP 常见于二叉树或一般树上。典型思路是：
+        每个节点返回若干状态，父节点根据子节点状态进行合并。
+        比如打家劫舍 III 中，每个节点维护“偷这个点”和“不偷这个点”两种情况。
+      </p>
+      <pre><code class="language-cpp">pair&lt;int, int&gt; dfs(TreeNode* root) {
+    if (!root) return {0, 0};
+    auto [l0, l1] = dfs(root->left);
+    auto [r0, r1] = dfs(root->right);
+
+    int rob = root->val + l0 + r0;
+    int notRob = max(l0, l1) + max(r0, r1);
+    return {notRob, rob};
+}</code></pre>
+
+      <h3>5.4 状态机 DP</h3>
+      <p>
+        某些题里，状态不只是位置，还包括“当前处于什么状态”。最典型的是股票买卖问题：
+        每一天你可能处于持有股票、不持有股票、冷冻期等状态，然后按状态转移。
+      </p>
+      <pre><code class="language-cpp">int maxProfit(vector&lt;int&gt;& prices) {
+    int hold = -prices[0];
+    int sold = 0;
+    for (int i = 1; i < (int)prices.size(); ++i) {
+        hold = max(hold, -prices[i]);
+        sold = max(sold, hold + prices[i]);
+    }
+    return sold;
+}</code></pre>
+    </section>
+
+    <section id="templates">
+      <h2>6. 常用模板、复杂度与总结</h2>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3>一维 DP 模板</h3>
+          <pre><code class="language-cpp">vector&lt;int&gt; dp(n + 1, 0);
+dp[0] = base;
+for (int i = 1; i <= n; ++i) {
+    dp[i] = ... dp[i - 1] ...
+}</code></pre>
+        </div>
+        <div class="card">
+          <h3>二维 DP 模板</h3>
+          <pre><code class="language-cpp">vector&lt;vector&lt;int&gt;&gt; dp(n + 1, vector&lt;int&gt;(m + 1, 0));
+for (int i = 1; i <= n; ++i) {
+    for (int j = 1; j <= m; ++j) {
+        dp[i][j] = ...;
+    }
+}</code></pre>
+        </div>
+        <div class="card">
+          <h3>记忆化搜索模板</h3>
+          <pre><code class="language-cpp">int dfs(int state) {
+    if (memo.count(state)) return memo[state];
+    int ans = ...;
+    return memo[state] = ans;
+}</code></pre>
+        </div>
+      </div>
+
+      <h3>6.1 复杂度怎么分析</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>模型</th>
+            <th>时间复杂度</th>
+            <th>空间复杂度</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>一维线性 DP</td>
+            <td>通常 <code>O(n)</code></td>
+            <td><code>O(n)</code> 或优化到 <code>O(1)</code></td>
+          </tr>
+          <tr>
+            <td>二维字符串 DP</td>
+            <td>通常 <code>O(nm)</code></td>
+            <td><code>O(nm)</code></td>
+          </tr>
+          <tr>
+            <td>0/1 背包</td>
+            <td><code>O(n * bag)</code></td>
+            <td><code>O(bag)</code></td>
+          </tr>
+          <tr>
+            <td>区间 DP</td>
+            <td>常见为 <code>O(n^2)</code> 或 <code>O(n^3)</code></td>
+            <td><code>O(n^2)</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>6.2 刷题时最常见的错误</h3>
+      <ul>
+        <li>状态定义含糊，不知道 <code>dp[i]</code> 到底表示什么。</li>
+        <li>初始化不完整，导致后续转移建立在错误边界上。</li>
+        <li>遍历顺序写反，使用了还没计算出来的状态。</li>
+        <li>背包题把倒序和正序枚举混用，导致物品使用次数错了。</li>
+        <li>看见最优解就盲目上 DP，但问题实际上没有合适的最优子结构。</li>
+      </ul>
+
+      <div class="note">
+        学 DP 最有效的方法，不是背每道题的代码，而是反复练这四件事：
+        定义状态、找最后一步、写转移、定遍历顺序。
+        只要这套思路稳定下来，很多题都只是模型的变形。
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>背诵版总结</h3>
+          <ul>
+            <li>DP 是把重复子问题的答案存下来复用。</li>
+            <li>先定义状态，再谈转移。</li>
+            <li>转移通常从“最后一步”或“当前决策”出发。</li>
+            <li>初始化决定了整个 DP 的边界是否正确。</li>
+            <li>遍历顺序必须满足依赖关系。</li>
+            <li>空间优化前要先明确依赖范围。</li>
+            <li>背包题关键在于物品是否可重复使用，以及循环顺序。</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>推荐刷题顺序</h3>
+          <ol>
+            <li>先练斐波那契、爬楼梯、打家劫舍这类一维 DP。</li>
+            <li>再练最大子数组和、LIS、编辑距离、LCS。</li>
+            <li>然后系统练 0/1 背包、完全背包、零钱兑换。</li>
+            <li>最后再练区间 DP、树形 DP、状态机 DP。</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <div class="foot">
+      文档生成位置：<code>/home/wj/Code/C++/algorithm/DynamicProgramming/index.html</code>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,1130 @@
+        -:    0:Source:/home/wj/Code/C++/Interview/MemoryPool/tests/test_memory_pool.cpp
+        -:    0:Graph:/home/wj/Code/C++/Interview/MemoryPool/build-coverage/CMakeFiles/memory_pool_tests.dir/tests/test_memory_pool.cpp.gcno
+        -:    0:Data:/home/wj/Code/C++/Interview/MemoryPool/build-coverage/CMakeFiles/memory_pool_tests.dir/tests/test_memory_pool.cpp.gcda
+        -:    0:Runs:1
+        -:    1:#include "fixed_memory_pool.h"
+        -:    2:#include "memory_pool_extensions.h"
+        -:    3:
+        -:    4:#include <cstddef>
+        -:    5:#include <cstdint>
+        -:    6:#include <exception>
+        -:    7:#include <functional>
+        -:    8:#include <iostream>
+        -:    9:#include <stdexcept>
+        -:   10:#include <string>
+        -:   11:#include <thread>
+        -:   12:#include <utility>
+        -:   13:#include <vector>
+        -:   14:
+        -:   15:// 测试结构体：用于验证对象池的构造、析构与复用行为。
+        -:   16:struct TestEntity {
+        -:   17:    // 静态变量：统计当前存活对象数量。
+        -:   18:    static int alive_count;
+        -:   19:
+        -:   20:    // 成员变量：对象编号。
+        -:   21:    int id;
+        -:   22:
+        -:   23:    // 构造函数：创建测试对象并增加存活计数。
+function _ZN10TestEntityC2Ei called 802 returned 100% blocks executed 100%
+      802:   24:    explicit TestEntity(int value)
+      802:   25:        : id(value) {
+      802:   26:        ++alive_count;
+      802:   27:    }
+        -:   28:
+        -:   29:    // 析构函数：销毁测试对象并减少存活计数。
+function _ZN10TestEntityD2Ev called 802 returned 100% blocks executed 100%
+      802:   30:    ~TestEntity() {
+      802:   31:        --alive_count;
+      802:   32:    }
+        -:   33:};
+        -:   34:
+        -:   35:// 静态变量定义：初始化测试对象存活计数。
+        -:   36:int TestEntity::alive_count = 0;
+        -:   37:
+        -:   38:// 测试函数类型：统一保存测试函数签名。
+        -:   39:using TestFunction = std::function<void()>;
+        -:   40:
+        -:   41:// 断言函数：在条件不成立时抛出带描述的异常。
+function _Z10ExpectTruebRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE called 3 returned 100% blocks executed 43%
+        3:   42:void ExpectTrue(bool condition, const std::string& message) {
+        3:   43:    if (!condition) {
+branch  0 taken 0 (fallthrough)
+branch  1 taken 3
+    #####:   44:        throw std::runtime_error(message);
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+call    5 never executed
+        -:   45:    }
+        3:   46:}
+        -:   47:
+        -:   48:// 断言函数：校验两个值是否相等。
+        -:   49:template <typename T, typename U>
+       18:   50:void ExpectEqual(const T& left, const U& right, const std::string& message) {
+       18:   51:    if (!(left == right)) {
+    #####:   52:        throw std::runtime_error(message);
+        -:   53:    }
+       18:   54:}
+------------------
+_Z11ExpectEqualIiiEvRKT_RKT0_RKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE:
+function _Z11ExpectEqualIiiEvRKT_RKT0_RKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE called 7 returned 100% blocks executed 43%
+        7:   50:void ExpectEqual(const T& left, const U& right, const std::string& message) {
+        7:   51:    if (!(left == right)) {
+branch  0 taken 0 (fallthrough)
+branch  1 taken 7
+    #####:   52:        throw std::runtime_error(message);
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+call    5 never executed
+        -:   53:    }
+        7:   54:}
+------------------
+_Z11ExpectEqualImmEvRKT_RKT0_RKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE:
+function _Z11ExpectEqualImmEvRKT_RKT0_RKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE called 11 returned 100% blocks executed 43%
+       11:   50:void ExpectEqual(const T& left, const U& right, const std::string& message) {
+       11:   51:    if (!(left == right)) {
+branch  0 taken 0 (fallthrough)
+branch  1 taken 11
+    #####:   52:        throw std::runtime_error(message);
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+call    5 never executed
+        -:   53:    }
+       11:   54:}
+------------------
+        -:   55:
+        -:   56:// 断言函数：校验给定操作会抛出指定异常。
+        -:   57:template <typename ExceptionType>
+        6:   58:void ExpectThrows(const TestFunction& function, const std::string& message) {
+        -:   59:    try {
+        6:   60:        function();
+        6:   61:    } catch (const ExceptionType&) {
+        6:   62:        return;
+    =====:   63:    } catch (...) {
+    =====:   64:        throw std::runtime_error(message + " (threw unexpected exception type)");
+        -:   65:    }
+        -:   66:
+    #####:   67:    throw std::runtime_error(message + " (no exception thrown)");
+        -:   68:}
+------------------
+_Z12ExpectThrowsISt12out_of_rangeEvRKSt8functionIFvvEERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE:
+function _Z12ExpectThrowsISt12out_of_rangeEvRKSt8functionIFvvEERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE called 1 returned 100% blocks executed 24%
+        1:   58:void ExpectThrows(const TestFunction& function, const std::string& message) {
+        -:   59:    try {
+        1:   60:        function();
+call    0 returned 1
+branch  1 taken 0 (fallthrough)
+branch  2 taken 1 (throw)
+        1:   61:    } catch (const ExceptionType&) {
+call    0 returned 1
+call    1 returned 1
+        1:   62:        return;
+    =====:   63:    } catch (...) {
+call    0 never executed
+call    1 never executed
+    =====:   64:        throw std::runtime_error(message + " (threw unexpected exception type)");
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+branch  5 never executed
+branch  6 never executed
+call    7 never executed
+call    8 never executed
+call    9 never executed
+call   10 never executed
+        -:   65:    }
+        -:   66:
+    #####:   67:    throw std::runtime_error(message + " (no exception thrown)");
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+branch  5 never executed
+branch  6 never executed
+call    7 never executed
+call    8 never executed
+call    9 never executed
+call   10 never executed
+        -:   68:}
+------------------
+_Z12ExpectThrowsISt16invalid_argumentEvRKSt8functionIFvvEERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE:
+function _Z12ExpectThrowsISt16invalid_argumentEvRKSt8functionIFvvEERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE called 3 returned 100% blocks executed 24%
+        3:   58:void ExpectThrows(const TestFunction& function, const std::string& message) {
+        -:   59:    try {
+        3:   60:        function();
+call    0 returned 3
+branch  1 taken 0 (fallthrough)
+branch  2 taken 3 (throw)
+        3:   61:    } catch (const ExceptionType&) {
+call    0 returned 3
+call    1 returned 3
+        3:   62:        return;
+    =====:   63:    } catch (...) {
+call    0 never executed
+call    1 never executed
+    =====:   64:        throw std::runtime_error(message + " (threw unexpected exception type)");
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+branch  5 never executed
+branch  6 never executed
+call    7 never executed
+call    8 never executed
+call    9 never executed
+call   10 never executed
+        -:   65:    }
+        -:   66:
+    #####:   67:    throw std::runtime_error(message + " (no exception thrown)");
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+branch  5 never executed
+branch  6 never executed
+call    7 never executed
+call    8 never executed
+call    9 never executed
+call   10 never executed
+        -:   68:}
+------------------
+_Z12ExpectThrowsISt13runtime_errorEvRKSt8functionIFvvEERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE:
+function _Z12ExpectThrowsISt13runtime_errorEvRKSt8functionIFvvEERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE called 2 returned 100% blocks executed 24%
+        2:   58:void ExpectThrows(const TestFunction& function, const std::string& message) {
+        -:   59:    try {
+        2:   60:        function();
+call    0 returned 2
+branch  1 taken 0 (fallthrough)
+branch  2 taken 2 (throw)
+        2:   61:    } catch (const ExceptionType&) {
+call    0 returned 2
+call    1 returned 2
+        2:   62:        return;
+    =====:   63:    } catch (...) {
+call    0 never executed
+call    1 never executed
+    =====:   64:        throw std::runtime_error(message + " (threw unexpected exception type)");
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+branch  5 never executed
+branch  6 never executed
+call    7 never executed
+call    8 never executed
+call    9 never executed
+call   10 never executed
+        -:   65:    }
+        -:   66:
+    #####:   67:    throw std::runtime_error(message + " (no exception thrown)");
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+branch  5 never executed
+branch  6 never executed
+call    7 never executed
+call    8 never executed
+call    9 never executed
+call   10 never executed
+        -:   68:}
+------------------
+        -:   69:
+        -:   70:// 测试函数：验证定长内存池的基础分配与回收行为。
+function _Z35TestFixedMemoryPoolAllocateAndReusev called 1 returned 100% blocks executed 49%
+        1:   71:void TestFixedMemoryPoolAllocateAndReuse() {
+        -:   72:    // 对象变量：创建每批次含 2 个块的定长池。
+        1:   73:    FixedMemoryPool pool(8, 2);
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+call    3 never executed
+        -:   74:
+        -:   75:    // 指针变量：申请第一个块。
+        1:   76:    void* first = pool.Allocate();
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+        -:   77:
+        -:   78:    // 指针变量：申请第二个块。
+        1:   79:    void* second = pool.Allocate();
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+        -:   80:
+        1:   81:    ExpectEqual(pool.GetTotalBlockCount(), static_cast<std::size_t>(2), "total block count should be 2");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 1
+branch  5 taken 1 (fallthrough)
+branch  6 taken 0 (throw)
+call    7 returned 1
+branch  8 taken 1 (fallthrough)
+branch  9 taken 0 (throw)
+call   10 returned 1
+call   11 returned 1
+call   12 never executed
+call   13 never executed
+        1:   82:    ExpectEqual(pool.GetFreeBlockCount(), static_cast<std::size_t>(0), "free block count should be 0");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 1
+branch  5 taken 1 (fallthrough)
+branch  6 taken 0 (throw)
+call    7 returned 1
+branch  8 taken 1 (fallthrough)
+branch  9 taken 0 (throw)
+call   10 returned 1
+call   11 returned 1
+call   12 never executed
+call   13 never executed
+        -:   83:
+        1:   84:    pool.Deallocate(first);
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+        1:   85:    ExpectEqual(pool.GetFreeBlockCount(), static_cast<std::size_t>(1), "free block count should become 1");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 1
+branch  5 taken 1 (fallthrough)
+branch  6 taken 0 (throw)
+call    7 returned 1
+branch  8 taken 1 (fallthrough)
+branch  9 taken 0 (throw)
+call   10 returned 1
+call   11 returned 1
+call   12 never executed
+call   13 never executed
+        -:   86:
+        -:   87:    // 指针变量：再次申请块，验证已释放地址会被复用。
+        1:   88:    void* reused = pool.Allocate();
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+        -:   89:
+        1:   90:    ExpectTrue(reused == first, "pool should reuse the most recently returned block");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 1
+branch  5 taken 1 (fallthrough)
+branch  6 taken 0 (throw)
+call    7 returned 1
+call    8 returned 1
+call    9 never executed
+call   10 never executed
+        1:   91:    pool.Deallocate(second);
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+        1:   92:    pool.Deallocate(reused);
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+        1:   93:    ExpectEqual(pool.GetFreeBlockCount(), static_cast<std::size_t>(2), "all blocks should be returned");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 1
+branch  5 taken 1 (fallthrough)
+branch  6 taken 0 (throw)
+call    7 returned 1
+branch  8 taken 1 (fallthrough)
+branch  9 taken 0 (throw)
+call   10 returned 1
+call   11 returned 1
+call   12 returned 1
+call   13 never executed
+call   14 never executed
+        1:   94:}
+        -:   95:
+        -:   96:// 测试函数：验证定长池在容量不足时会自动扩容。
+function _Z39TestFixedMemoryPoolExpandsWhenExhaustedv called 1 returned 100% blocks executed 55%
+        1:   97:void TestFixedMemoryPoolExpandsWhenExhausted() {
+        -:   98:    // 对象变量：创建每批次只含 2 个块的定长池。
+        1:   99:    FixedMemoryPool pool(16, 2);
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+call    3 never executed
+        -:  100:
+        -:  101:    // 指针变量：申请第一个块。
+        1:  102:    void* first = pool.Allocate();
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+        -:  103:
+        -:  104:    // 指针变量：申请第二个块。
+        1:  105:    void* second = pool.Allocate();
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+        -:  106:
+        -:  107:    // 指针变量：申请第三个块，触发扩容。
+        1:  108:    void* third = pool.Allocate();
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+        -:  109:
+       1*:  110:    ExpectTrue(first != nullptr && second != nullptr && third != nullptr, "allocated blocks should be valid");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+branch  4 taken 1 (fallthrough)
+branch  5 taken 0
+branch  6 taken 1 (fallthrough)
+branch  7 taken 0
+branch  8 taken 1 (fallthrough)
+branch  9 taken 0
+call   10 returned 1
+branch 11 taken 1 (fallthrough)
+branch 12 taken 0 (throw)
+call   13 returned 1
+call   14 returned 1
+call   15 never executed
+call   16 never executed
+        1:  111:    ExpectEqual(pool.GetTotalBlockCount(), static_cast<std::size_t>(4), "pool should allocate a second chunk");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 1
+branch  5 taken 1 (fallthrough)
+branch  6 taken 0 (throw)
+call    7 returned 1
+branch  8 taken 1 (fallthrough)
+branch  9 taken 0 (throw)
+call   10 returned 1
+call   11 returned 1
+call   12 never executed
+call   13 never executed
+        -:  112:
+        1:  113:    pool.Deallocate(first);
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+        1:  114:    pool.Deallocate(second);
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+        1:  115:    pool.Deallocate(third);
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+        1:  116:    ExpectEqual(pool.GetFreeBlockCount(), static_cast<std::size_t>(4), "all expanded blocks should be free");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 1
+branch  5 taken 1 (fallthrough)
+branch  6 taken 0 (throw)
+call    7 returned 1
+branch  8 taken 1 (fallthrough)
+branch  9 taken 0 (throw)
+call   10 returned 1
+call   11 returned 1
+call   12 returned 1
+call   13 never executed
+call   14 never executed
+        1:  117:}
+        -:  118:
+        -:  119:// 测试函数：验证对象池会正确执行构造、析构和自动归还。
+function _Z36TestObjectPoolCreateDestroyAndUniquev called 1 returned 100% blocks executed 44%
+        1:  120:void TestObjectPoolCreateDestroyAndUnique() {
+        -:  121:    // 对象变量：创建测试对象池。
+        1:  122:    ObjectPool<TestEntity> pool(2);
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+call    3 never executed
+        -:  123:
+        1:  124:    ExpectEqual(TestEntity::alive_count, 0, "alive count should start at 0");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 1
+branch  5 taken 1 (fallthrough)
+branch  6 taken 0 (throw)
+call    7 returned 1
+call    8 returned 1
+call    9 never executed
+call   10 never executed
+        -:  125:
+        -:  126:    // 指针变量：手动创建测试对象。
+        1:  127:    TestEntity* raw = pool.Create(7);
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+        1:  128:    ExpectEqual(TestEntity::alive_count, 1, "alive count should become 1 after raw create");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 1
+branch  5 taken 1 (fallthrough)
+branch  6 taken 0 (throw)
+call    7 returned 1
+call    8 returned 1
+call    9 never executed
+call   10 never executed
+        -:  129:
+        1:  130:    pool.Destroy(raw);
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+        1:  131:    ExpectEqual(TestEntity::alive_count, 0, "alive count should return to 0 after destroy");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 1
+branch  5 taken 1 (fallthrough)
+branch  6 taken 0 (throw)
+call    7 returned 1
+call    8 returned 1
+call    9 never executed
+call   10 never executed
+        -:  132:
+        -:  133:    {
+        -:  134:        // 智能指针变量：创建自动归还的测试对象。
+        1:  135:        UniquePoolPtr<TestEntity> unique = pool.CreateUnique(11);
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+call    3 never executed
+        1:  136:        ExpectEqual(unique->id, 11, "unique object id should match constructor argument");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 1
+call    5 returned 1
+branch  6 taken 1 (fallthrough)
+branch  7 taken 0 (throw)
+call    8 returned 1
+call    9 returned 1
+call   10 never executed
+call   11 never executed
+        1:  137:        ExpectEqual(TestEntity::alive_count, 1, "alive count should become 1 after unique create");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 1
+branch  5 taken 1 (fallthrough)
+branch  6 taken 0 (throw)
+call    7 returned 1
+call    8 returned 1
+call    9 returned 1
+call   10 never executed
+call   11 never executed
+        -:  138:    }
+        -:  139:
+        1:  140:    ExpectEqual(TestEntity::alive_count, 0, "alive count should return to 0 after unique pointer scope");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 1
+branch  5 taken 1 (fallthrough)
+branch  6 taken 0 (throw)
+call    7 returned 1
+call    8 returned 1
+call    9 never executed
+call   10 never executed
+        1:  141:    ExpectEqual(pool.GetFreeCount(), pool.GetTotalCount(), "all object blocks should be returned");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 1
+branch  5 taken 1 (fallthrough)
+branch  6 taken 0 (throw)
+call    7 returned 1
+branch  8 taken 1 (fallthrough)
+branch  9 taken 0 (throw)
+call   10 returned 1
+branch 11 taken 1 (fallthrough)
+branch 12 taken 0 (throw)
+call   13 returned 1
+call   14 returned 1
+call   15 returned 1
+call   16 never executed
+call   17 never executed
+        1:  142:}
+        -:  143:
+        -:  144:// 测试函数：验证线程安全对象池在并发压力下可正常回收。
+function _Z39TestThreadSafeObjectPoolConcurrentUsagev called 1 returned 100% blocks executed 59%
+        1:  145:void TestThreadSafeObjectPoolConcurrentUsage() {
+        -:  146:    // 对象变量：创建线程安全对象池。
+        2:  147:    ThreadSafeObjectPool<TestEntity> pool(8);
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+call    3 returned 1
+call    4 never executed
+        -:  148:
+        -:  149:    // 常量变量：线程数量。
+        1:  150:    const std::size_t thread_count = 4;
+        -:  151:
+        -:  152:    // 常量变量：每个线程循环次数。
+        1:  153:    const std::size_t iterations_per_thread = 200;
+        -:  154:
+        -:  155:    // 容器变量：保存工作线程。
+        1:  156:    std::vector<std::thread> workers;
+call    0 returned 1
+call    1 never executed
+        1:  157:    workers.reserve(thread_count);
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+        -:  158:
+        -:  159:    // 数量变量：启动多个线程并发创建对象。
+        5:  160:    for (std::size_t thread_index = 0; thread_index < thread_count; ++thread_index) {
+branch  0 taken 4 (fallthrough)
+branch  1 taken 1
+function _ZZ39TestThreadSafeObjectPoolConcurrentUsagevENKUlvE_clEv called 4 returned 100% blocks executed 78%
+      804:  161:        workers.emplace_back([&pool, thread_index, iterations_per_thread]() {
+        -:  162:            // 数量变量：执行当前线程的循环任务。
+      804:  163:            for (std::size_t iteration = 0; iteration < iterations_per_thread; ++iteration) {
+branch  0 taken 800 (fallthrough)
+branch  1 taken 4
+        -:  164:                // 智能指针变量：创建自动归还对象。
+        -:  165:                ThreadSafeUniquePoolPtr<TestEntity> entity =
+      800:  166:                    pool.CreateUnique(static_cast<int>(thread_index * iterations_per_thread + iteration));
+call    0 returned 800
+branch  1 taken 800 (fallthrough)
+branch  2 taken 0 (throw)
+call    3 returned 800
+        -:  167:            }
+        8:  168:        });
+call    0 returned 4
+branch  1 taken 4 (fallthrough)
+branch  2 taken 0 (throw)
+        -:  169:    }
+        -:  170:
+        -:  171:    // 引用变量：等待线程结束。
+        5:  172:    for (std::thread& worker : workers) {
+call    0 returned 1
+call    1 returned 1
+call    2 returned 5
+branch  3 taken 4 (fallthrough)
+branch  4 taken 1
+call    5 returned 4
+call    6 returned 4
+        4:  173:        worker.join();
+call    0 returned 4
+branch  1 taken 4 (fallthrough)
+branch  2 taken 0 (throw)
+        -:  174:    }
+        -:  175:
+        1:  176:    ExpectEqual(TestEntity::alive_count, 0, "all threaded objects should be destroyed");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 1
+branch  5 taken 1 (fallthrough)
+branch  6 taken 0 (throw)
+call    7 returned 1
+call    8 returned 1
+call    9 never executed
+call   10 never executed
+        1:  177:    ExpectEqual(pool.GetFreeCount(), pool.GetTotalCount(), "thread-safe pool should reclaim all blocks");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 1
+branch  5 taken 1 (fallthrough)
+branch  6 taken 0 (throw)
+call    7 returned 1
+branch  8 taken 1 (fallthrough)
+branch  9 taken 0 (throw)
+call   10 returned 1
+branch 11 taken 1 (fallthrough)
+branch 12 taken 0 (throw)
+call   13 returned 1
+call   14 returned 1
+call   15 returned 1
+call   16 never executed
+call   17 never executed
+        1:  178:}
+        -:  179:
+        -:  180:// 测试函数：验证调试池可以检测重复释放。
+function _Z30TestDebugPoolDetectsDoubleFreev called 1 returned 100% blocks executed 57%
+        1:  181:void TestDebugPoolDetectsDoubleFree() {
+        -:  182:    // 对象变量：创建调试版内存池。
+        2:  183:    DebugFixedMemoryPool pool(32, 2);
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+call    3 returned 1
+call    4 never executed
+        -:  184:
+        -:  185:    // 指针变量：申请一块用户内存。
+        1:  186:    void* memory = pool.Allocate();
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+        1:  187:    pool.Deallocate(memory);
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+        -:  188:
+        -:  189:    // 函数变量：封装第二次释放动作。
+function _ZZ30TestDebugPoolDetectsDoubleFreevENKUlvE_clEv called 1 returned 0% blocks executed 100%
+        1:  190:    TestFunction second_free = [&pool, memory]() {
+        1:  191:        pool.Deallocate(memory);
+call    0 returned 0
+       1*:  192:    };
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+call    3 never executed
+        -:  193:
+        1:  194:    ExpectThrows<std::runtime_error>(second_free, "debug pool should detect double free");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 1
+branch  5 taken 1 (fallthrough)
+branch  6 taken 0 (throw)
+call    7 returned 1
+call    8 returned 1
+call    9 returned 1
+call   10 never executed
+call   11 never executed
+        1:  195:}
+        -:  196:
+        -:  197:// 测试函数：验证调试池可以检测尾部越界写。
+function _Z34TestDebugPoolDetectsTailCorruptionv called 1 returned 100% blocks executed 55%
+        1:  198:void TestDebugPoolDetectsTailCorruption() {
+        -:  199:    // 对象变量：创建调试版内存池。
+        2:  200:    DebugFixedMemoryPool pool(8, 2);
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+call    3 returned 1
+call    4 never executed
+        -:  201:
+        -:  202:    // 指针变量：申请一块用户内存。
+        1:  203:    void* memory = pool.Allocate();
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+        -:  204:
+        -:  205:    // 字节指针变量：按字节访问用户区以制造越界写。
+        1:  206:    std::uint8_t* bytes = static_cast<std::uint8_t*>(memory);
+        1:  207:    bytes[8] = 0xFFu;
+        -:  208:
+        -:  209:    // 函数变量：封装释放动作并触发守卫区校验。
+function _ZZ34TestDebugPoolDetectsTailCorruptionvENKUlvE_clEv called 1 returned 0% blocks executed 100%
+        1:  210:    TestFunction free_corrupted = [&pool, memory]() {
+        1:  211:        pool.Deallocate(memory);
+call    0 returned 0
+       1*:  212:    };
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+call    3 never executed
+        -:  213:
+        1:  214:    ExpectThrows<std::runtime_error>(free_corrupted, "debug pool should detect tail corruption");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 1
+branch  5 taken 1 (fallthrough)
+branch  6 taken 0 (throw)
+call    7 returned 1
+call    8 returned 1
+call    9 returned 1
+call   10 never executed
+call   11 never executed
+        1:  215:}
+        -:  216:
+        -:  217:// 测试函数：验证变长池的尺寸类别排序与请求处理。
+function _Z32TestVariableMemoryPoolBasicUsagev called 1 returned 100% blocks executed 48%
+        1:  218:void TestVariableMemoryPoolBasicUsage() {
+        -:  219:    // 对象变量：创建一个带重复与乱序输入的变长池。
+        3:  220:    VariableMemoryPool pool({64, 16, 32, 32}, 2);
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 1
+branch  5 taken 1 (fallthrough)
+branch  6 taken 0 (throw)
+call    7 returned 1
+call    8 returned 1
+call    9 never executed
+        -:  221:
+        1:  222:    ExpectEqual(pool.GetSizeClassCount(), static_cast<std::size_t>(3), "duplicate size classes should be removed");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 1
+branch  5 taken 1 (fallthrough)
+branch  6 taken 0 (throw)
+call    7 returned 1
+branch  8 taken 1 (fallthrough)
+branch  9 taken 0 (throw)
+call   10 returned 1
+call   11 returned 1
+call   12 never executed
+call   13 never executed
+        1:  223:    ExpectEqual(pool.GetSizeClass(0), static_cast<std::size_t>(16), "size classes should be sorted ascending");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 1
+branch  5 taken 1 (fallthrough)
+branch  6 taken 0 (throw)
+call    7 returned 1
+branch  8 taken 1 (fallthrough)
+branch  9 taken 0 (throw)
+call   10 returned 1
+call   11 returned 1
+call   12 never executed
+call   13 never executed
+        1:  224:    ExpectEqual(pool.GetSizeClass(2), static_cast<std::size_t>(64), "largest size class should be 64");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 1
+branch  5 taken 1 (fallthrough)
+branch  6 taken 0 (throw)
+call    7 returned 1
+branch  8 taken 1 (fallthrough)
+branch  9 taken 0 (throw)
+call   10 returned 1
+call   11 returned 1
+call   12 never executed
+call   13 never executed
+        -:  225:
+        -:  226:    // 指针变量：申请适合首个桶位的内存。
+        1:  227:    void* small = pool.Allocate(12);
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+        -:  228:
+        -:  229:    // 指针变量：申请需要回退系统分配的内存。
+        1:  230:    void* large = pool.Allocate(128);
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+        -:  231:
+       1*:  232:    ExpectTrue(small != nullptr && large != nullptr, "variable pool allocations should succeed");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+branch  4 taken 1 (fallthrough)
+branch  5 taken 0
+branch  6 taken 1 (fallthrough)
+branch  7 taken 0
+call    8 returned 1
+branch  9 taken 1 (fallthrough)
+branch 10 taken 0 (throw)
+call   11 returned 1
+call   12 returned 1
+call   13 never executed
+call   14 never executed
+        -:  233:
+        1:  234:    pool.Deallocate(small);
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+        1:  235:    pool.Deallocate(large);
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+        1:  236:}
+        -:  237:
+        -:  238:// 测试函数：验证非法参数与越界访问会抛异常。
+function _Z25TestInvalidArgumentsThrowv called 1 returned 100% blocks executed 43%
+        1:  239:void TestInvalidArgumentsThrow() {
+        -:  240:    // 函数变量：封装非法固定池构造。
+function _ZZ25TestInvalidArgumentsThrowvENKUlvE_clEv called 1 returned 0% blocks executed 50%
+        1:  241:    TestFunction invalid_fixed_pool = []() {
+       1*:  242:        FixedMemoryPool pool(0, 1);
+call    0 returned 1
+branch  1 taken 0 (fallthrough)
+branch  2 taken 1 (throw)
+call    3 never executed
+       2*:  243:    };
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+call    3 returned 1
+call    4 never executed
+        -:  244:
+        -:  245:    // 函数变量：封装非法调试池构造。
+function _ZZ25TestInvalidArgumentsThrowvENKUlvE0_clEv called 1 returned 0% blocks executed 50%
+        1:  246:    TestFunction invalid_debug_pool = []() {
+       1*:  247:        DebugFixedMemoryPool pool(0, 1);
+call    0 returned 1
+branch  1 taken 0 (fallthrough)
+branch  2 taken 1 (throw)
+call    3 never executed
+       2*:  248:    };
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+call    3 returned 1
+call    4 never executed
+        -:  249:
+        -:  250:    // 函数变量：封装非法变长池构造。
+function _ZZ25TestInvalidArgumentsThrowvENKUlvE1_clEv called 1 returned 0% blocks executed 67%
+        1:  251:    TestFunction invalid_variable_pool = []() {
+       2*:  252:        VariableMemoryPool pool({}, 1);
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 0 (fallthrough)
+branch  3 taken 1 (throw)
+call    4 never executed
+       2*:  253:    };
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+call    3 returned 1
+call    4 never executed
+        -:  254:
+        -:  255:    // 函数变量：封装越界尺寸类访问。
+function _ZZ25TestInvalidArgumentsThrowvENKUlvE2_clEv called 1 returned 0% blocks executed 47%
+        1:  256:    TestFunction invalid_size_class_index = []() {
+       3*:  257:        VariableMemoryPool pool({16, 32}, 1);
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 1
+branch  5 taken 1 (fallthrough)
+branch  6 taken 0 (throw)
+call    7 returned 1
+call    8 never executed
+call    9 returned 1
+        1:  258:        static_cast<void>(pool.GetSizeClass(5));
+call    0 returned 1
+branch  1 taken 0 (fallthrough)
+branch  2 taken 1 (throw)
+       1*:  259:    };
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+call    3 never executed
+        -:  260:
+        1:  261:    ExpectThrows<std::invalid_argument>(invalid_fixed_pool, "zero-sized fixed pool should throw");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 1
+branch  5 taken 1 (fallthrough)
+branch  6 taken 0 (throw)
+call    7 returned 1
+call    8 returned 1
+call    9 never executed
+call   10 never executed
+        1:  262:    ExpectThrows<std::invalid_argument>(invalid_debug_pool, "zero-sized debug pool should throw");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 1
+branch  5 taken 1 (fallthrough)
+branch  6 taken 0 (throw)
+call    7 returned 1
+call    8 returned 1
+call    9 never executed
+call   10 never executed
+        1:  263:    ExpectThrows<std::invalid_argument>(invalid_variable_pool, "empty size class list should throw");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 1
+branch  5 taken 1 (fallthrough)
+branch  6 taken 0 (throw)
+call    7 returned 1
+call    8 returned 1
+call    9 never executed
+call   10 never executed
+        1:  264:    ExpectThrows<std::out_of_range>(invalid_size_class_index, "invalid size class index should throw");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 1
+branch  5 taken 1 (fallthrough)
+branch  6 taken 0 (throw)
+call    7 returned 1
+call    8 returned 1
+call    9 returned 1
+call   10 never executed
+call   11 never executed
+        1:  265:}
+        -:  266:
+        -:  267:// 主函数：执行所有单元测试并输出结果摘要。
+function main called 1 returned 100% blocks executed 59%
+        1:  268:int main() {
+        -:  269:    // 结构体变量：保存单个测试的名称与函数。
+        -:  270:    struct TestCase {
+        -:  271:        // 字符串变量：测试名称。
+        -:  272:        const char* name;
+        -:  273:
+        -:  274:        // 函数变量：测试执行体。
+        -:  275:        TestFunction function;
+        -:  276:    };
+        -:  277:
+        -:  278:    // 容器变量：注册全部测试用例。
+        -:  279:    const std::vector<TestCase> test_cases{
+        -:  280:        {"FixedMemoryPool Allocate/Reuse", TestFixedMemoryPoolAllocateAndReuse},
+        -:  281:        {"FixedMemoryPool Expansion", TestFixedMemoryPoolExpandsWhenExhausted},
+        -:  282:        {"ObjectPool Create/Destroy/Unique", TestObjectPoolCreateDestroyAndUnique},
+        -:  283:        {"ThreadSafeObjectPool Concurrent Usage", TestThreadSafeObjectPoolConcurrentUsage},
+        -:  284:        {"DebugFixedMemoryPool Double Free", TestDebugPoolDetectsDoubleFree},
+        -:  285:        {"DebugFixedMemoryPool Tail Corruption", TestDebugPoolDetectsTailCorruption},
+        -:  286:        {"VariableMemoryPool Basic Usage", TestVariableMemoryPoolBasicUsage},
+        -:  287:        {"Invalid Arguments Throw", TestInvalidArgumentsThrow},
+       11:  288:    };
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+call    3 returned 1
+branch  4 taken 1 (fallthrough)
+branch  5 taken 0 (throw)
+call    6 returned 1
+branch  7 taken 1 (fallthrough)
+branch  8 taken 0 (throw)
+call    9 returned 1
+branch 10 taken 1 (fallthrough)
+branch 11 taken 0 (throw)
+call   12 returned 1
+branch 13 taken 1 (fallthrough)
+branch 14 taken 0 (throw)
+call   15 returned 1
+branch 16 taken 1 (fallthrough)
+branch 17 taken 0 (throw)
+call   18 returned 1
+branch 19 taken 1 (fallthrough)
+branch 20 taken 0 (throw)
+call   21 returned 1
+branch 22 taken 1 (fallthrough)
+branch 23 taken 0 (throw)
+call   24 returned 1
+call   25 returned 1
+branch 26 taken 1 (fallthrough)
+branch 27 taken 0 (throw)
+call   28 returned 8
+call   29 returned 1
+call   30 never executed
+call   31 never executed
+        -:  289:
+        -:  290:    // 数量变量：记录已通过测试数量。
+        1:  291:    std::size_t passed_count = 0;
+        -:  292:
+        -:  293:    // 常量变量：记录总测试数量。
+        1:  294:    const std::size_t total_count = test_cases.size();
+call    0 returned 1
+        -:  295:
+        -:  296:    // 引用变量：依次执行每个测试用例。
+        9:  297:    for (const TestCase& test_case : test_cases) {
+call    0 returned 1
+call    1 returned 1
+call    2 returned 9
+branch  3 taken 8 (fallthrough)
+branch  4 taken 1
+call    5 returned 8
+call    6 returned 8
+        -:  298:        try {
+        8:  299:            test_case.function();
+call    0 returned 8
+branch  1 taken 8 (fallthrough)
+branch  2 taken 0 (throw)
+        8:  300:            ++passed_count;
+        8:  301:            std::cout << "[PASS] " << test_case.name << "\n";
+call    0 returned 8
+branch  1 taken 8 (fallthrough)
+branch  2 taken 0 (throw)
+call    3 returned 8
+branch  4 taken 8 (fallthrough)
+branch  5 taken 0 (throw)
+call    6 returned 8
+branch  7 taken 8 (fallthrough)
+branch  8 taken 0 (throw)
+    =====:  302:        } catch (const std::exception& exception) {
+call    0 never executed
+call    1 never executed
+    =====:  303:            std::cerr << "[FAIL] " << test_case.name << ": " << exception.what() << "\n";
+call    0 never executed
+branch  1 never executed
+branch  2 never executed
+call    3 never executed
+branch  4 never executed
+branch  5 never executed
+call    6 never executed
+branch  7 never executed
+branch  8 never executed
+call    9 never executed
+call   10 never executed
+branch 11 never executed
+branch 12 never executed
+call   13 never executed
+branch 14 never executed
+branch 15 never executed
+    =====:  304:            return 1;
+call    0 never executed
+        -:  305:        }
+        -:  306:    }
+        -:  307:
+        1:  308:    std::cout << "Passed " << passed_count << "/" << total_count << " tests\n";
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+call    3 returned 1
+branch  4 taken 1 (fallthrough)
+branch  5 taken 0 (throw)
+call    6 returned 1
+branch  7 taken 1 (fallthrough)
+branch  8 taken 0 (throw)
+call    9 returned 1
+branch 10 taken 1 (fallthrough)
+branch 11 taken 0 (throw)
+call   12 returned 1
+branch 13 taken 1 (fallthrough)
+branch 14 taken 0 (throw)
+        1:  309:    return 0;
+        -:  310:}

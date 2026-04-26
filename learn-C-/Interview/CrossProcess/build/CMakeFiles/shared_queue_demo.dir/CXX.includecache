@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/ipc_shared_queue.h
+pthread.h
+-
+semaphore.h
+-
+cstddef
+-
+string
+-
+
+/home/wj/Code/C++/Interview/CrossProcess/src/shared_queue_demo.cpp
+ipc_shared_queue.h
+/home/wj/Code/C++/Interview/CrossProcess/src/ipc_shared_queue.h
+sys/wait.h
+-
+unistd.h
+-
+cstdlib
+-
+iostream
+-
+string
+-
+

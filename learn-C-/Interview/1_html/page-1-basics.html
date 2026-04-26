@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>C++ 面试笔记 · 第 1 页 · 基础与 OOP</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="hero">
+    <div class="page-shell">
+      <div class="hero-card">
+        <span class="eyebrow">第 1 页 / 3</span>
+        <h1>基础语法、对象模型与 OOP</h1>
+        <p class="lead">
+          这一页是很多 C++ 面试的起手式。面试官之所以喜欢从这里开始，是因为这些问题看起来朴素，但几乎所有更复杂的话题都建立在这部分之上：
+          生命周期、所有权、对象布局、动态绑定、构造和析构。
+        </p>
+        <div class="pagination">
+          <a href="./index.html">返回总览</a>
+          <a href="./page-2-modern.html">下一页：现代 C++ 与 STL</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <div class="layout">
+      <aside class="toc">
+        <h3>本页目录</h3>
+        <ol>
+          <li><a href="#ptr-ref">指针与引用</a></li>
+          <li><a href="#const-static">const / static / inline</a></li>
+          <li><a href="#oop">封装、继承、多态</a></li>
+          <li><a href="#strategy">策略模式</a></li>
+          <li><a href="#virtual">虚函数与虚表</a></li>
+          <li><a href="#copy-control">拷贝控制与 Rule of 3/5/0</a></li>
+          <li><a href="#memory-layout">new/delete 与内存布局</a></li>
+        </ol>
+      </aside>
+
+      <div class="content-stack">
+        <section class="section-card" id="ptr-ref">
+          <h2>指针与引用</h2>
+          <p>
+            指针和引用的区别几乎是所有 C++ 面试都会出现的问题，但真正想考的是你是否理解“访问一个对象”和“拥有一个对象”并不是一回事。
+            指针更像一个独立的地址变量，而引用更像现有对象的一个别名。
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>维度</th>
+                  <th>指针</th>
+                  <th>引用</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>是否可为空</td>
+                  <td>可以，常见值是 <code>nullptr</code></td>
+                  <td>语义上通常不能为空，定义时必须绑定对象</td>
+                </tr>
+                <tr>
+                  <td>是否可改绑</td>
+                  <td>可以改指向另一个对象</td>
+                  <td>不能改成引用另一个对象</td>
+                </tr>
+                <tr>
+                  <td>语法使用</td>
+                  <td>需要显式解引用 <code>*p</code></td>
+                  <td>使用方式与普通对象几乎一样</td>
+                </tr>
+                <tr>
+                  <td>常见用途</td>
+                  <td>表达可空、可选、动态结构、所有权传递</td>
+                  <td>表达必然存在、避免拷贝、修改实参</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="diagram">
+            <svg viewBox="0 0 920 220" xmlns="http://www.w3.org/2000/svg" aria-label="指针与引用示意图">
+              <rect x="40" y="60" width="170" height="80" rx="18" fill="#fff1de" stroke="#b45309" />
+              <rect x="290" y="60" width="170" height="80" rx="18" fill="#dff5f1" stroke="#0f766e" />
+              <rect x="580" y="60" width="220" height="80" rx="18" fill="#f9f7f2" stroke="#7a6d5b" />
+              <text x="125" y="95" text-anchor="middle" font-size="22" fill="#8a4b0f">int* p</text>
+              <text x="125" y="122" text-anchor="middle" font-size="14" fill="#8a4b0f">保存地址，可改指向</text>
+              <text x="375" y="95" text-anchor="middle" font-size="22" fill="#164e48">int& r</text>
+              <text x="375" y="122" text-anchor="middle" font-size="14" fill="#164e48">对象别名，不可改绑</text>
+              <text x="690" y="95" text-anchor="middle" font-size="22" fill="#444">int value = 42</text>
+              <text x="690" y="122" text-anchor="middle" font-size="14" fill="#444">真正的数据对象</text>
+              <path d="M210 100 H290" stroke="#b45309" stroke-width="4" marker-end="url(#arrow1)" />
+              <path d="M460 100 H580" stroke="#0f766e" stroke-width="4" marker-end="url(#arrow1)" />
+              <defs>
+                <marker id="arrow1" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+                  <path d="M0 0 L12 6 L0 12 Z" fill="#36454f" />
+                </marker>
+              </defs>
+            </svg>
+            <div class="caption">指针是“指向对象的一个值”，引用是“对象的别名”。这也是两者语义差异的根源。</div>
+          </div>
+          <pre><code class="language-cpp">void modify_by_pointer(int* p) {
+    if (p) {
+        *p = 100;
+    }
+}
+
+void modify_by_reference(int& x) {
+    x = 100;
+}</code></pre>
+          <div class="answer-box">
+            面试回答模板：指针和引用都可以间接访问对象，但指针本身是一个可变地址值，能表达“可能为空”与“可改指向”；引用更适合表达“这个对象一定存在，而且这里只是它的别名”。
+          </div>
+        </section>
+
+        <section class="section-card" id="const-static">
+          <h2>const、static、inline</h2>
+          <p>
+            这些关键字面试里很爱单拎出来问，因为它们同时涉及类型系统、生命周期和链接属性。
+            如果回答只停留在“不能修改”或“静态变量在全局区”，通常会显得比较浅。
+          </p>
+          <div class="grid-3">
+            <article class="topic-card">
+              <h4><code>const int* p</code></h4>
+              <p>不能通过 <code>p</code> 修改其所指对象，但 <code>p</code> 自己可以指向别处。</p>
+            </article>
+            <article class="topic-card">
+              <h4><code>int* const p</code></h4>
+              <p><code>p</code> 自己不可改指向，但它指向的对象可修改。</p>
+            </article>
+            <article class="topic-card">
+              <h4><code>const int* const p</code></h4>
+              <p>既不能改指向，也不能通过它改对象。</p>
+            </article>
+          </div>
+          <div class="note">
+            成员函数后的 <code>const</code> 是个很常见的追问。它修饰的是隐式的 <code>this</code> 指针类型，相当于承诺“这个函数不会修改对象的逻辑状态”。
+          </div>
+          <pre><code class="language-cpp">class Counter {
+public:
+    int value() const { return value_; }   // this 的类型近似为 const Counter* const
+    void inc() { ++value_; }
+
+private:
+    int value_ = 0;
+};</code></pre>
+          <div class="grid-2">
+            <article class="compare-card">
+              <h4>static 的常见场景</h4>
+              <ul>
+                <li>修饰局部变量：生命周期延长到程序结束，但作用域仍在函数内部。</li>
+                <li>修饰全局变量或函数：限制链接范围到当前编译单元。</li>
+                <li>修饰类成员变量：属于类本身，而不是某个对象。</li>
+                <li>修饰类成员函数：没有 <code>this</code> 指针，只能访问静态成员。</li>
+              </ul>
+            </article>
+            <article class="compare-card">
+              <h4>inline 的现代意义</h4>
+              <p>它早期确实有“建议内联展开”的含义，但现代编译器是否内联主要自己决定。如今更重要的意义是：允许同一个函数在多个翻译单元中定义而不违反 ODR。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section-card" id="oop">
+          <h2>封装、继承、多态</h2>
+          <p>
+            这三者看起来像教科书概念，实际上是 C++ 对象模型的入口。面试官通常不只想听定义，而是想听你是否知道“多态成立的条件”和“多态为什么会有运行时开销”。
+          </p>
+          <div class="grid-3">
+            <article class="stat-card">
+              <h4>封装</h4>
+              <p>把实现细节藏起来，只暴露稳定接口。它的价值不是“把成员写成 private”，而是降低模块耦合。</p>
+            </article>
+            <article class="stat-card">
+              <h4>继承</h4>
+              <p>复用基类接口与部分实现，同时建立“is-a”的类型关系。使用不当会导致层次过深、耦合过强。</p>
+            </article>
+            <article class="stat-card">
+              <h4>多态</h4>
+              <p>基类指针或引用指向派生类对象，通过虚函数调用派生实现。多态的本质是动态绑定。</p>
+            </article>
+          </div>
+          <div class="warning">
+            很多候选人会把“重载、重写、隐藏”混在一起。这个点特别容易被顺手追问。
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>概念</th>
+                  <th>发生位置</th>
+                  <th>核心特征</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>重载</td>
+                  <td>同一作用域</td>
+                  <td>同名函数参数列表不同，编译期决定调用哪个</td>
+                </tr>
+                <tr>
+                  <td>重写</td>
+                  <td>继承层次中</td>
+                  <td>派生类覆盖基类虚函数，运行期可能动态绑定</td>
+                </tr>
+                <tr>
+                  <td>隐藏</td>
+                  <td>继承层次中</td>
+                  <td>派生类同名函数会屏蔽基类同名函数，即使参数不同也可能隐藏</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="section-card" id="strategy">
+          <h2>策略模式：把“怎么做”从“谁来做”里拆出来</h2>
+          <p>
+            策略模式是面试里非常常见的行为型设计模式。它解决的核心问题是：同一个业务目标可能有多种实现算法，如果把这些分支都硬编码在一个类里，
+            往往会导致大量 <code>if-else / switch</code>，后续每新增一种算法都要修改原有类，违反开闭原则。
+          </p>
+          <div class="answer-box">
+            详细定义：策略模式定义一组可互换的算法，把每个算法分别封装起来，并让它们可以在运行时自由切换。上下文对象只依赖抽象策略接口，不依赖具体算法细节，因此“行为可变”，而“调用方式稳定”。
+          </div>
+          <div class="grid-3">
+            <article class="stat-card">
+              <h4>核心思想</h4>
+              <p>把易变化的算法独立出去，用组合代替把所有逻辑塞进同一个类中。</p>
+            </article>
+            <article class="stat-card">
+              <h4>面试关键词</h4>
+              <p>行为型模式、封装算法族、运行时切换、开闭原则、组合优于继承。</p>
+            </article>
+            <article class="stat-card">
+              <h4>常见考法</h4>
+              <p>“什么时候用策略模式”“和简单工厂有什么区别”“为什么它比 if-else 更好扩展”。</p>
+            </article>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>角色</th>
+                  <th>职责</th>
+                  <th>对应到 C++ 中常见写法</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Strategy</td>
+                  <td>定义统一算法接口</td>
+                  <td>抽象基类 + 纯虚函数，或可调用对象 / <code>std::function</code></td>
+                </tr>
+                <tr>
+                  <td>ConcreteStrategy</td>
+                  <td>实现具体算法</td>
+                  <td>如满减、会员折扣、普通价、不同寻路策略</td>
+                </tr>
+                <tr>
+                  <td>Context</td>
+                  <td>持有策略对象并在合适时机调用</td>
+                  <td>如订单结算器、导航器、角色 AI 控制器</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="diagram">
+            <svg viewBox="0 0 920 320" xmlns="http://www.w3.org/2000/svg" aria-label="策略模式结构图">
+              <rect x="350" y="24" width="220" height="82" rx="18" fill="#f7f4ef" stroke="#7a6d5b" />
+              <rect x="60" y="138" width="220" height="120" rx="18" fill="#dff5f1" stroke="#0f766e" />
+              <rect x="350" y="138" width="220" height="120" rx="18" fill="#fff1de" stroke="#b45309" />
+              <rect x="640" y="138" width="220" height="120" rx="18" fill="#fff7ea" stroke="#b45309" />
+              <text x="460" y="56" text-anchor="middle" font-size="22" fill="#444">Context</text>
+              <text x="460" y="84" text-anchor="middle" font-size="14" fill="#444">持有 Strategy* / unique_ptr</text>
+              <text x="170" y="176" text-anchor="middle" font-size="22" fill="#164e48">Strategy</text>
+              <text x="170" y="205" text-anchor="middle" font-size="15" fill="#164e48">virtual execute() = 0</text>
+              <text x="170" y="232" text-anchor="middle" font-size="14" fill="#164e48">统一算法接口</text>
+              <text x="460" y="176" text-anchor="middle" font-size="20" fill="#8a4b0f">ConcreteStrategyA</text>
+              <text x="460" y="205" text-anchor="middle" font-size="15" fill="#8a4b0f">满减 / AggressiveAI</text>
+              <text x="460" y="232" text-anchor="middle" font-size="14" fill="#8a4b0f">具体算法 A</text>
+              <text x="750" y="176" text-anchor="middle" font-size="20" fill="#8a4b0f">ConcreteStrategyB</text>
+              <text x="750" y="205" text-anchor="middle" font-size="15" fill="#8a4b0f">会员价 / DefensiveAI</text>
+              <text x="750" y="232" text-anchor="middle" font-size="14" fill="#8a4b0f">具体算法 B</text>
+              <path d="M460 106 V138" stroke="#7a6d5b" stroke-width="4" marker-end="url(#arrow5)" />
+              <path d="M280 198 H350" stroke="#0f766e" stroke-width="4" marker-end="url(#arrow5)" />
+              <path d="M570 198 H640" stroke="#b45309" stroke-width="4" marker-end="url(#arrow5)" />
+              <defs>
+                <marker id="arrow5" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+                  <path d="M0 0 L12 6 L0 12 Z" fill="#36454f" />
+                </marker>
+              </defs>
+              <text x="460" y="292" text-anchor="middle" font-size="16" fill="#5f6b73">客户端把不同策略注入给 Context，Context 不关心算法细节，只负责调度调用</text>
+            </svg>
+            <div class="caption">策略模式把“变化的算法”隔离在具体策略里，让上下文只依赖稳定接口。新增算法时通常新增类，而不是修改旧分支。</div>
+          </div>
+          <div class="grid-2">
+            <article class="compare-card">
+              <h4>适用场景</h4>
+              <ul>
+                <li>同一任务存在多套可切换算法，如折扣计算、排序规则、路由选择、角色行为。</li>
+                <li>原代码里出现大量根据类型或状态分支的 <code>if-else</code>。</li>
+                <li>希望新增算法时尽量不改已有主流程代码。</li>
+              </ul>
+            </article>
+            <article class="compare-card">
+              <h4>优缺点</h4>
+              <ul>
+                <li>优点：扩展性好、分支逻辑更清晰、便于单元测试、支持运行时切换。</li>
+                <li>缺点：类数量会增多，若策略很简单，过度抽象反而会让代码变重。</li>
+                <li>一个高频追问是：客户端必须知道有哪些策略可选，因此要配合工厂或配置系统统一创建。</li>
+              </ul>
+            </article>
+          </div>
+          <p>
+            一个非常典型的 C++ 例子是“电商结算”。订单总价的计算目标不变，但不同用户或活动对应不同折扣算法。
+            如果把普通价、会员价、满减价都写进 <code>OrderContext</code>，每新增活动都得改原类；改成策略模式后，结算器只负责调用当前策略。
+          </p>
+          <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;memory&gt;
+
+class PricingStrategy {
+public:
+    virtual ~PricingStrategy() = default;
+    virtual double calc(double origin_price) const = 0;
+};
+
+class NormalPricing : public PricingStrategy {
+public:
+    double calc(double origin_price) const override {
+        return origin_price;
+    }
+};
+
+class MemberPricing : public PricingStrategy {
+public:
+    double calc(double origin_price) const override {
+        return origin_price * 0.85;
+    }
+};
+
+class FullReductionPricing : public PricingStrategy {
+public:
+    double calc(double origin_price) const override {
+        return origin_price >= 300.0 ? origin_price - 40.0 : origin_price;
+    }
+};
+
+class CheckoutContext {
+public:
+    explicit CheckoutContext(std::unique_ptr&lt;PricingStrategy&gt; strategy)
+        : strategy_(std::move(strategy)) {}
+
+    void set_strategy(std::unique_ptr&lt;PricingStrategy&gt; strategy) {
+        strategy_ = std::move(strategy);
+    }
+
+    double checkout(double origin_price) const {
+        return strategy_-&gt;calc(origin_price);
+    }
+
+private:
+    std::unique_ptr&lt;PricingStrategy&gt; strategy_;
+};
+
+int main() {
+    CheckoutContext ctx(std::make_unique&lt;NormalPricing&gt;());
+    std::cout &lt;&lt; ctx.checkout(320.0) &lt;&lt; "\n";  // 320
+
+    ctx.set_strategy(std::make_unique&lt;MemberPricing&gt;());
+    std::cout &lt;&lt; ctx.checkout(320.0) &lt;&lt; "\n";  // 272
+
+    ctx.set_strategy(std::make_unique&lt;FullReductionPricing&gt;());
+    std::cout &lt;&lt; ctx.checkout(320.0) &lt;&lt; "\n";  // 280
+}</code></pre>
+          <div class="note">
+            这个实现里 <code>CheckoutContext</code> 不知道“会员价怎么算”“满减怎么算”，它只知道自己持有一个 <code>PricingStrategy</code>。
+            这正是策略模式的价值所在：高层流程稳定，算法细节可替换。
+          </div>
+          <div class="grid-2">
+            <article class="topic-card">
+              <h4>实例 1：游戏 AI</h4>
+              <p>敌人对象可以注入激进、保守、逃跑等不同策略。角色本身不需要知道每种 AI 的细节，只在当前状态下调用行为接口。</p>
+            </article>
+            <article class="topic-card">
+              <h4>实例 2：排序与过滤</h4>
+              <p>日志系统、排行榜、推荐系统里，经常需要根据配置切换排序策略或过滤策略。策略模式能让切换逻辑比硬编码分支更整洁。</p>
+            </article>
+          </div>
+          <div class="warning">
+            面试里一个容易说浅的点是“策略模式就是多态”。更完整的表述应该是：它不仅使用多态，更重要的是把一组可替换算法从上下文中解耦出来，让行为变化被封装和组合。
+          </div>
+          <div class="answer-box">
+            面试回答模板：策略模式属于行为型模式，它把一组算法封装成独立策略类，并通过统一接口对外提供能力。上下文依赖抽象策略而不是具体实现，因此可以在运行时切换算法。典型场景包括折扣计算、支付方式、路径规划、角色 AI 等。它的优点是消除复杂分支、符合开闭原则、便于测试；缺点是类会变多，简单场景下可能显得过度设计。
+          </div>
+        </section>
+
+        <section class="section-card" id="virtual">
+          <h2>虚函数、虚表与析构</h2>
+          <p>
+            这是 C++ 面试里最经典、也最容易区分深浅的一类问题。真正重要的不只是“类里有个 vptr”，而是理解为什么基类析构要虚、为什么构造/析构中不建议调用虚函数，以及多态到底依赖什么条件。
+          </p>
+          <div class="diagram">
+            <svg viewBox="0 0 920 260" xmlns="http://www.w3.org/2000/svg" aria-label="虚表示意图">
+              <rect x="40" y="45" width="220" height="150" rx="20" fill="#dff5f1" stroke="#0f766e" />
+              <rect x="330" y="45" width="220" height="150" rx="20" fill="#fff1de" stroke="#b45309" />
+              <rect x="640" y="30" width="220" height="185" rx="20" fill="#f7f4ef" stroke="#7a6d5b" />
+              <text x="150" y="78" text-anchor="middle" font-size="22" fill="#164e48">Base 对象</text>
+              <text x="150" y="114" text-anchor="middle" font-size="16" fill="#164e48">vptr</text>
+              <text x="150" y="145" text-anchor="middle" font-size="16" fill="#164e48">data...</text>
+              <text x="440" y="78" text-anchor="middle" font-size="22" fill="#8a4b0f">Derived 对象</text>
+              <text x="440" y="114" text-anchor="middle" font-size="16" fill="#8a4b0f">vptr</text>
+              <text x="440" y="145" text-anchor="middle" font-size="16" fill="#8a4b0f">base + derived data</text>
+              <text x="750" y="63" text-anchor="middle" font-size="22" fill="#444">虚表</text>
+              <text x="750" y="102" text-anchor="middle" font-size="16" fill="#444">[0] virtual ~Base()</text>
+              <text x="750" y="132" text-anchor="middle" font-size="16" fill="#444">[1] foo()</text>
+              <text x="750" y="162" text-anchor="middle" font-size="16" fill="#444">[2] bar()</text>
+              <path d="M260 110 H330" stroke="#0f766e" stroke-width="4" marker-end="url(#arrow2)" />
+              <path d="M550 110 H640" stroke="#b45309" stroke-width="4" marker-end="url(#arrow2)" />
+              <defs>
+                <marker id="arrow2" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+                  <path d="M0 0 L12 6 L0 12 Z" fill="#36454f" />
+                </marker>
+              </defs>
+            </svg>
+            <div class="caption">通过基类指针或引用调用虚函数时，程序会先经由对象中的虚表指针找到对应虚表，再定位到最终函数地址。</div>
+          </div>
+          <pre><code class="language-cpp">class Base {
+public:
+    virtual ~Base() = default;
+    virtual void speak() const {
+        std::cout &lt;&lt; "Base\n";
+    }
+};
+
+class Derived : public Base {
+public:
+    void speak() const override {
+        std::cout &lt;&lt; "Derived\n";
+    }
+};</code></pre>
+          <div class="note">
+            基类析构函数通常应设为虚函数，因为如果你通过 <code>Base*</code> 删除一个 <code>Derived</code> 对象，而析构不是虚的，就只会执行基类析构，派生类资源可能泄漏。
+          </div>
+          <div class="warning">
+            构造和析构期间不要依赖虚函数实现多态。构造时派生部分还没构造完，析构时派生部分已经销毁，多态语义并不完整。
+          </div>
+        </section>
+
+        <section class="section-card" id="copy-control">
+          <h2>拷贝控制、RAII 与 Rule of 3/5/0</h2>
+          <p>
+            拷贝控制是 C++ 与很多语言差异很大的地方。只要一个类自己管理资源，就不能只写一半。很多面试官会通过这个点判断候选人是否真的理解对象生命周期。
+          </p>
+          <div class="grid-3">
+            <article class="topic-card">
+              <h4>Rule of 3</h4>
+              <p>如果类需要自定义析构、拷贝构造、拷贝赋值中的一个，通常另外两个也要认真定义。</p>
+            </article>
+            <article class="topic-card">
+              <h4>Rule of 5</h4>
+              <p>在 C++11 之后，还要一并考虑移动构造和移动赋值，因为资源的“转移”也是对象语义的一部分。</p>
+            </article>
+            <article class="topic-card">
+              <h4>Rule of 0</h4>
+              <p>最佳实践通常是根本不自己管理资源，而是交给 <code>std::string</code>、<code>std::vector</code>、<code>std::unique_ptr</code> 之类的 RAII 类型。</p>
+            </article>
+          </div>
+          <pre><code class="language-cpp">class Buffer {
+public:
+    explicit Buffer(std::size_t size)
+        : size_(size), data_(new int[size]{}) {}
+
+    ~Buffer() {
+        delete[] data_;
+    }
+
+    Buffer(const Buffer& other)
+        : size_(other.size_), data_(new int[other.size_]) {
+        std::copy(other.data_, other.data_ + size_, data_);
+    }
+
+    Buffer& operator=(const Buffer& other) {
+        if (this == &other) {
+            return *this;
+        }
+        int* new_data = new int[other.size_];
+        std::copy(other.data_, other.data_ + other.size_, new_data);
+        delete[] data_;
+        data_ = new_data;
+        size_ = other.size_;
+        return *this;
+    }
+
+private:
+    std::size_t size_;
+    int* data_;
+};</code></pre>
+          <div class="answer-box">
+            面试里更推荐补一句：如果这是实际工程代码，我更倾向于直接用 <code>std::vector&lt;int&gt;</code> 或 <code>std::unique_ptr&lt;int[]&gt;</code>，这样就更接近 Rule of 0，维护成本也更低。
+          </div>
+        </section>
+
+        <section class="section-card" id="memory-layout">
+          <h2>new/delete、malloc/free 与内存布局</h2>
+          <p>
+            这部分很常作为快问快答出现。定义本身不难，但如果你能自然提到“构造/析构”和“对象语义”，答案会明显更完整。
+          </p>
+          <div class="grid-2">
+            <article class="compare-card">
+              <h4><code>new / delete</code></h4>
+              <p>这是 C++ 的运算符。<code>new</code> 先分配原始内存，再调用构造函数；<code>delete</code> 先调用析构函数，再释放内存。</p>
+            </article>
+            <article class="compare-card">
+              <h4><code>malloc / free</code></h4>
+              <p>这是 C 标准库函数，只处理原始内存，不会自动构造或析构对象，因此不适合直接承担现代 C++ 的对象管理职责。</p>
+            </article>
+          </div>
+          <div class="diagram">
+            <svg viewBox="0 0 920 230" xmlns="http://www.w3.org/2000/svg" aria-label="程序内存布局示意图">
+              <rect x="80" y="30" width="760" height="38" rx="12" fill="#dff5f1" stroke="#0f766e" />
+              <rect x="80" y="72" width="760" height="38" rx="12" fill="#ecfaf8" stroke="#0f766e" />
+              <rect x="80" y="114" width="760" height="38" rx="12" fill="#fff1de" stroke="#b45309" />
+              <rect x="80" y="156" width="760" height="38" rx="12" fill="#f7f4ef" stroke="#7a6d5b" />
+              <text x="460" y="54" text-anchor="middle" font-size="18" fill="#164e48">代码段 / 只读区</text>
+              <text x="460" y="96" text-anchor="middle" font-size="18" fill="#164e48">全局 / 静态存储区</text>
+              <text x="460" y="138" text-anchor="middle" font-size="18" fill="#8a4b0f">堆：动态分配，灵活但管理成本高</text>
+              <text x="460" y="180" text-anchor="middle" font-size="18" fill="#444">栈：自动管理，分配释放快，空间通常较小</text>
+            </svg>
+            <div class="caption">面试中说“内存分区”时，不同平台的具体实现细节会有差异，但大致模型可以这样表达。</div>
+          </div>
+          <div class="pagination">
+            <a href="./index.html">返回总览</a>
+            <a href="./page-2-modern.html">下一页：现代 C++ 与 STL</a>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

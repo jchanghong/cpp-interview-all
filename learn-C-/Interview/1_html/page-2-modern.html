@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>C++ 面试笔记 · 第 2 页 · 现代 C++ 与 STL</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="hero">
+    <div class="page-shell">
+      <div class="hero-card">
+        <span class="eyebrow">第 2 页 / 3</span>
+        <h1>现代 C++、STL 与模板</h1>
+        <p class="lead">
+          这部分通常是“会写 C++”和“理解现代 C++”之间的分界线。面试官会特别关注你是否理解所有权、值类别、移动语义，
+          以及你能否在 STL 与模板场景下说清楚性能、可读性和抽象约束。
+        </p>
+        <div class="pagination">
+          <a href="./page-1-basics.html">上一页：基础与 OOP</a>
+          <a href="./page-3-concurrency.html">下一页：并发与新标准</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <div class="layout">
+      <aside class="toc">
+        <h3>本页目录</h3>
+        <ol>
+          <li><a href="#move">右值引用与 move</a></li>
+          <li><a href="#smart-ptr">智能指针</a></li>
+          <li><a href="#stl">STL 容器</a></li>
+          <li><a href="#iterators">迭代器失效</a></li>
+          <li><a href="#templates">模板、SFINAE、Concepts</a></li>
+          <li><a href="#lambda">auto / decltype / constexpr / lambda</a></li>
+        </ol>
+      </aside>
+
+      <div class="content-stack">
+        <section class="section-card" id="move">
+          <h2>右值引用、move 语义与完美转发</h2>
+          <p>
+            move 语义几乎是现代 C++ 面试的标志性话题。这里真正考查的不是会不会背“左值右值”，而是你能否解释“为什么移动能更高效”，以及“什么情况下不能盲目移动”。
+          </p>
+          <div class="grid-3">
+            <article class="stat-card">
+              <h4>左值</h4>
+              <p>通常有名字、可取地址、生命周期较稳定，例如局部变量、全局变量、容器中的元素。</p>
+            </article>
+            <article class="stat-card">
+              <h4>右值</h4>
+              <p>临时对象或将亡值，往往适合作为资源转移的来源。</p>
+            </article>
+            <article class="stat-card">
+              <h4>右值引用</h4>
+              <p><code>T&amp;&amp;</code> 主要用于绑定右值，从而支持移动语义和完美转发。</p>
+            </article>
+          </div>
+          <div class="diagram">
+            <svg viewBox="0 0 920 260" xmlns="http://www.w3.org/2000/svg" aria-label="拷贝与移动示意图">
+              <rect x="70" y="50" width="210" height="110" rx="18" fill="#fff1de" stroke="#b45309" />
+              <rect x="360" y="50" width="210" height="110" rx="18" fill="#dff5f1" stroke="#0f766e" />
+              <rect x="650" y="50" width="210" height="110" rx="18" fill="#f7f4ef" stroke="#7a6d5b" />
+              <text x="175" y="90" text-anchor="middle" font-size="20" fill="#8a4b0f">源对象</text>
+              <text x="175" y="120" text-anchor="middle" font-size="14" fill="#8a4b0f">拥有一块堆内存</text>
+              <text x="465" y="90" text-anchor="middle" font-size="20" fill="#164e48">拷贝</text>
+              <text x="465" y="120" text-anchor="middle" font-size="14" fill="#164e48">新分配一块内存并复制内容</text>
+              <text x="755" y="90" text-anchor="middle" font-size="20" fill="#444">移动</text>
+              <text x="755" y="120" text-anchor="middle" font-size="14" fill="#444">直接接管原来的资源句柄</text>
+              <path d="M280 105 H360" stroke="#b45309" stroke-width="4" marker-end="url(#arrow3)" />
+              <path d="M570 105 H650" stroke="#0f766e" stroke-width="4" marker-end="url(#arrow3)" />
+              <defs>
+                <marker id="arrow3" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+                  <path d="M0 0 L12 6 L0 12 Z" fill="#36454f" />
+                </marker>
+              </defs>
+              <text x="465" y="205" text-anchor="middle" font-size="17" fill="#5f6b73">拷贝的核心成本是“复制资源本体”，移动的核心收益是“转移资源所有权”</text>
+            </svg>
+          </div>
+          <pre><code class="language-cpp">class StringBuffer {
+public:
+    explicit StringBuffer(std::size_t n)
+        : size_(n), data_(new char[n]{}) {}
+
+    StringBuffer(StringBuffer&& other) noexcept
+        : size_(other.size_), data_(other.data_) {
+        other.size_ = 0;
+        other.data_ = nullptr;
+    }
+
+private:
+    std::size_t size_ = 0;
+    char* data_ = nullptr;
+};</code></pre>
+          <div class="note">
+            <code>std::move</code> 本身不会移动任何东西，它只是把一个表达式转换成右值表达式。真正是否发生移动，要看目标类型是否提供了合适的移动构造或移动赋值。
+          </div>
+          <div class="warning">
+            被 move 之后的对象仍然必须保持“有效但未指定”的状态。也就是说它必须还能析构、还能重新赋值，但你不能假定它一定为空。
+          </div>
+          <pre><code class="language-cpp">template &lt;typename T, typename... Args&gt;
+std::unique_ptr&lt;T&gt; make_owned(Args&&... args) {
+    return std::unique_ptr&lt;T&gt;(new T(std::forward&lt;Args&gt;(args)...));
+}</code></pre>
+          <div class="answer-box">
+            面试回答模板：move 语义的本质是把资源所有权从源对象转移到目标对象，避免昂贵的深拷贝。右值引用是它的语言基础，而完美转发则是在模板中保留参数原有值类别的机制。
+          </div>
+        </section>
+
+        <section class="section-card" id="smart-ptr">
+          <h2>智能指针</h2>
+          <p>
+            智能指针的重点不是把裸指针换个壳，而是把“所有权语义”显式化。现在很多面试官会特别注意你是否能正确说出“谁拥有对象”“谁只是观察对象”。
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>类型</th>
+                  <th>所有权</th>
+                  <th>典型用途</th>
+                  <th>注意点</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>unique_ptr</code></td>
+                  <td>独占</td>
+                  <td>默认首选，清晰表达唯一拥有关系</td>
+                  <td>不可拷贝，只能移动</td>
+                </tr>
+                <tr>
+                  <td><code>shared_ptr</code></td>
+                  <td>共享</td>
+                  <td>多个所有者共同决定对象生命周期</td>
+                  <td>有计数开销，容易循环引用</td>
+                </tr>
+                <tr>
+                  <td><code>weak_ptr</code></td>
+                  <td>不拥有</td>
+                  <td>观察 <code>shared_ptr</code> 管理的对象，打破循环</td>
+                  <td>使用前要 <code>lock()</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <pre><code class="language-cpp">struct Node {
+    int value = 0;
+    std::shared_ptr&lt;Node&gt; next;
+    std::weak_ptr&lt;Node&gt; prev;  // 防止双向链表形成循环引用
+};</code></pre>
+          <div class="note">
+            大多数情况下应该优先使用 <code>unique_ptr</code>。如果你一开始就使用 <code>shared_ptr</code>，往往意味着所有权设计还没有想清楚。
+          </div>
+        </section>
+
+        <section class="section-card" id="stl">
+          <h2>STL 容器：为什么面试总爱问 vector 和 unordered_map</h2>
+          <p>
+            因为容器问题能同时考你对复杂度、底层结构、缓存局部性和工程取舍的理解。真正好的答案不只是背 O(1) 或 O(log n)，而是要说明“为什么在真实代码里会这样选”。
+          </p>
+          <div class="grid-2">
+            <article class="compare-card">
+              <h4><code>vector</code></h4>
+              <ul>
+                <li>连续内存，随机访问快，缓存局部性好。</li>
+                <li>尾部插入删除通常快，中间插入删除需要搬移元素。</li>
+                <li>扩容时可能整体搬迁，导致迭代器、指针、引用失效。</li>
+              </ul>
+            </article>
+            <article class="compare-card">
+              <h4><code>list</code></h4>
+              <ul>
+                <li>双向链表，任意位置插删较快。</li>
+                <li>不支持随机访问，节点分散导致缓存局部性差。</li>
+                <li>虽然理论插删复杂度好看，但实际工程里不一定比 <code>vector</code> 快。</li>
+              </ul>
+            </article>
+            <article class="compare-card">
+              <h4><code>map</code></h4>
+              <ul>
+                <li>通常基于红黑树，键有序。</li>
+                <li>查找、插入、删除一般是 <code>O(log n)</code>。</li>
+                <li>适合有序遍历、范围查询。</li>
+              </ul>
+            </article>
+            <article class="compare-card">
+              <h4><code>unordered_map</code></h4>
+              <ul>
+                <li>通常基于哈希表，平均查找 <code>O(1)</code>。</li>
+                <li>无序，最坏情况可能退化到 <code>O(n)</code>。</li>
+                <li>rehash 会带来元素搬移与迭代器失效问题。</li>
+              </ul>
+            </article>
+          </div>
+          <div class="answer-box">
+            一个很好的补充表达是：很多场景下 <code>vector</code> 比 <code>list</code> 更快，不是因为复杂度更低，而是因为连续内存更符合 CPU cache 的访问模式。
+          </div>
+        </section>
+
+        <section class="section-card" id="iterators">
+          <h2>迭代器失效</h2>
+          <p>
+            这是一个非常典型的“看似小题，实际很工程”的问题。因为它考查你是否真的写过容器代码，尤其是边遍历边删除、插入扩容、rehash 这些真实场景。
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>容器</th>
+                  <th>常见失效场景</th>
+                  <th>面试高频提醒</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>vector</code></td>
+                  <td>扩容、插入、删除后大范围失效</td>
+                  <td>预留容量 <code>reserve</code> 可以减少扩容带来的失效和拷贝</td>
+                </tr>
+                <tr>
+                  <td><code>list</code></td>
+                  <td>通常只有被删除节点失效</td>
+                  <td>其他节点迭代器通常仍有效</td>
+                </tr>
+                <tr>
+                  <td><code>unordered_map</code></td>
+                  <td>rehash 后迭代器可能失效</td>
+                  <td>负载因子变化可能触发 rehash</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <pre><code class="language-cpp">for (auto it = nums.begin(); it != nums.end(); ) {
+    if (*it % 2 == 0) {
+        it = nums.erase(it);  // 不能简单写 ++it 后再 erase
+    } else {
+        ++it;
+    }
+}</code></pre>
+        </section>
+
+        <section class="section-card" id="templates">
+          <h2>模板、SFINAE 与 Concepts</h2>
+          <p>
+            这部分是很多中高级岗位非常关注的区域。模板不只是“泛型写法”，它本质上是编译期代码生成和接口约束机制。过去大家常用 <code>enable_if</code> 和 SFINAE，C++20 以后则更推荐用 Concepts。
+          </p>
+          <div class="grid-2">
+            <article class="topic-card">
+              <h4>SFINAE</h4>
+              <p>替换失败不是错误。模板参数替换时，如果某个候选不成立，编译器会继续找其他候选，而不是立刻报错。</p>
+            </article>
+            <article class="topic-card">
+              <h4>Concepts</h4>
+              <p>把模板约束显式写出来，让接口意图更清晰，报错信息也更友好。这是现代 C++ 面试里非常值得主动提到的升级点。</p>
+            </article>
+          </div>
+          <pre><code class="language-cpp">template &lt;typename T&gt;
+concept Addable = requires(T a, T b) {
+    a + b;
+};
+
+template &lt;Addable T&gt;
+T add_twice(const T& a, const T& b) {
+    return a + b + b;
+}</code></pre>
+          <div class="note">
+            面试里可以这样表述：SFINAE 是传统模板约束手段，Concepts 是 C++20 带来的更现代、更可读、更接近“接口契约”的方式。
+          </div>
+        </section>
+
+        <section class="section-card" id="lambda">
+          <h2>auto、decltype、constexpr、lambda</h2>
+          <div class="grid-2">
+            <article class="compare-card">
+              <h4><code>auto</code></h4>
+              <p>用于自动类型推导，能减少冗长类型声明，但也要避免把真实语义藏得太深。</p>
+            </article>
+            <article class="compare-card">
+              <h4><code>decltype</code></h4>
+              <p>推导表达式类型，常用于泛型编程和复杂返回值场景。</p>
+            </article>
+            <article class="compare-card">
+              <h4><code>constexpr</code></h4>
+              <p>强调编译期可求值能力。现代 C++ 中它的能力越来越强，已经不只是“常量”这么简单。</p>
+            </article>
+            <article class="compare-card">
+              <h4>lambda</h4>
+              <p>本质是匿名函数对象。面试追问重点往往在捕获方式、生命周期和异步场景下的风险。</p>
+            </article>
+          </div>
+          <pre><code class="language-cpp">int base = 10;
+
+auto plus_by_value = [base](int x) {
+    return x + base;
+};
+
+auto plus_by_ref = [&base](int x) {
+    base += 1;
+    return x + base;
+};</code></pre>
+          <div class="warning">
+            在线程池、异步回调、协程等场景中，引用捕获要特别谨慎。如果外部对象先销毁，lambda 内部就可能出现悬空引用。
+          </div>
+          <div class="pagination">
+            <a href="./page-1-basics.html">上一页：基础与 OOP</a>
+            <a href="./page-3-concurrency.html">下一页：并发与新标准</a>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

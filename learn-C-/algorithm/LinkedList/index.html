@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>链表常用知识点与 C++ 实现</title>
+  <style>
+    :root {
+      --bg: #f6f0e7;
+      --paper: #fffdf8;
+      --ink: #201d19;
+      --muted: #665f57;
+      --line: #d9ccba;
+      --primary: #c05c2e;
+      --primary-soft: #ffe8dc;
+      --accent: #0d7c86;
+      --accent-soft: #dbf4f4;
+      --violet: #7b59d6;
+      --violet-soft: #efe8ff;
+      --warn: #d1841d;
+      --code-bg: #f3eee6;
+      --shadow: 0 18px 40px rgba(56, 42, 24, 0.1);
+      --radius: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Noto Serif SC", "Source Han Serif SC", "PingFang SC", serif;
+      color: var(--ink);
+      line-height: 1.75;
+      background:
+        radial-gradient(circle at 12% 10%, rgba(192, 92, 46, 0.14), transparent 24%),
+        radial-gradient(circle at 86% 12%, rgba(13, 124, 134, 0.12), transparent 22%),
+        linear-gradient(180deg, #faf4ea 0%, #f5eee2 100%);
+    }
+
+    .hero {
+      padding: 56px 24px 28px;
+    }
+
+    .hero-inner,
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    .hero-card {
+      background: linear-gradient(135deg, rgba(255, 253, 248, 0.96), rgba(255, 235, 220, 0.9));
+      border: 1px solid rgba(192, 92, 46, 0.16);
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+      padding: 36px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      right: -60px;
+      bottom: -70px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(123, 89, 214, 0.18), transparent 70%);
+      pointer-events: none;
+    }
+
+    h1, h2, h3, h4 {
+      line-height: 1.25;
+      margin: 0 0 16px;
+    }
+
+    h1 {
+      font-size: clamp(2.1rem, 4vw, 3.4rem);
+      letter-spacing: 0.02em;
+    }
+
+    h2 {
+      font-size: clamp(1.5rem, 2vw, 2rem);
+    }
+
+    h3 {
+      font-size: 1.2rem;
+    }
+
+    h4 {
+      font-size: 1rem;
+    }
+
+    p {
+      margin: 0 0 16px;
+    }
+
+    .lead {
+      max-width: 920px;
+      color: var(--muted);
+      font-size: 1.06rem;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 18px 0 22px;
+    }
+
+    .tag {
+      display: inline-flex;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(32, 29, 25, 0.08);
+    }
+
+    .quick-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .quick-nav a {
+      text-decoration: none;
+      color: var(--ink);
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(32, 29, 25, 0.08);
+      background: rgba(255, 255, 255, 0.74);
+      transition: transform 0.18s ease, border-color 0.18s ease;
+    }
+
+    .quick-nav a:hover {
+      transform: translateY(-2px);
+      border-color: rgba(192, 92, 46, 0.4);
+    }
+
+    main {
+      padding: 0 24px 60px;
+      display: grid;
+      gap: 22px;
+    }
+
+    section {
+      background: var(--paper);
+      border-radius: var(--radius);
+      border: 1px solid rgba(32, 29, 25, 0.08);
+      box-shadow: var(--shadow);
+      padding: 30px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 22px;
+      align-items: start;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .card,
+    .concept-card {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(250, 245, 237, 0.92));
+      border: 1px solid rgba(32, 29, 25, 0.08);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .concept-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin: 18px 0;
+    }
+
+    .diagram,
+    .mini-diagram {
+      width: 100%;
+      background: linear-gradient(180deg, #fcfaf6, #f6efe2);
+      border: 1px solid rgba(32, 29, 25, 0.08);
+      border-radius: 18px;
+      padding: 12px;
+    }
+
+    .mini-diagram {
+      padding: 10px;
+      margin-bottom: 10px;
+      background: rgba(255, 255, 255, 0.58);
+    }
+
+    .note {
+      border-left: 4px solid var(--accent);
+      background: var(--accent-soft);
+      padding: 14px 16px;
+      border-radius: 12px;
+      margin: 14px 0;
+    }
+
+    .warning {
+      border-left-color: var(--warn);
+      background: #fff4e5;
+    }
+
+    .caption {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    ul, ol {
+      margin: 0 0 16px;
+      padding-left: 24px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    code {
+      font-family: "JetBrains Mono", "Fira Code", monospace;
+      background: rgba(123, 89, 214, 0.08);
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 0.92em;
+    }
+
+    pre {
+      margin: 16px 0;
+      padding: 18px;
+      background: var(--code-bg);
+      border-radius: 16px;
+      overflow-x: auto;
+      border: 1px solid rgba(32, 29, 25, 0.08);
+    }
+
+    pre code {
+      background: transparent;
+      padding: 0;
+      border-radius: 0;
+      font-size: 0.92rem;
+      line-height: 1.65;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+    }
+
+    th, td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+
+    th {
+      background: #fff0e7;
+    }
+
+    .foot {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.95rem;
+      padding: 6px 0 22px;
+    }
+
+    @media (max-width: 720px) {
+      .hero-card,
+      section {
+        padding: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="hero-card">
+        <h1>链表常用知识点与 C++ 实现</h1>
+        <p class="lead">
+          这份文档围绕算法里最常见的链表题型展开，重点讲清楚链表的结构定义、指针操作本质、快慢指针思想、
+          反转与合并、环与相交、双向链表和 LRU 的基础。链表题难点通常不在算法复杂，而在于指针变化细节，
+          所以这里会把“指针为什么这样改”讲透，并配上示意图帮助理解。
+        </p>
+        <div class="tag-row">
+          <span class="tag">单链表 / 双向链表</span>
+          <span class="tag">快慢指针</span>
+          <span class="tag">反转 / 合并 / 删除</span>
+          <span class="tag">环 / 相交 / 回文</span>
+          <span class="tag">LRU 基础</span>
+          <span class="tag">C++ 模板代码</span>
+        </div>
+        <nav class="quick-nav">
+          <a href="#basic">1. 基础概念</a>
+          <a href="#pointer">2. 指针操作本质</a>
+          <a href="#fastslow">3. 快慢指针</a>
+          <a href="#classic">4. 经典题型</a>
+          <a href="#double">5. 双向链表与 LRU</a>
+          <a href="#templates">6. 模板与总结</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="basic">
+      <h2>1. 链表的基础概念</h2>
+      <div class="grid-2">
+        <div>
+          <p>
+            链表是一种通过指针把节点串起来的线性结构。与数组不同，链表中的节点在内存中不要求连续，
+            每个节点只需要知道“下一个节点在哪里”即可。
+          </p>
+          <p>
+            所以链表的核心不是“下标”，而是“连接关系”。算法题里你真正操作的不是值，而是
+            <code>next</code> 和 <code>prev</code> 这些指针。
+          </p>
+          <div class="note">
+            链表题的第一原则是：
+            <strong>先想清楚谁指向谁，再写代码。</strong>
+            一旦指针修改顺序错了，很容易把后续节点丢失。
+          </div>
+          <ul>
+            <li><strong>头节点</strong>：链表的入口。</li>
+            <li><strong>当前节点</strong>：指针当前指向的节点。</li>
+            <li><strong>后继节点</strong>：<code>node-&gt;next</code>。</li>
+            <li><strong>前驱节点</strong>：当前节点前面的节点，单链表通常需要额外记录。</li>
+            <li><strong>哑节点 dummy</strong>：人为添加的头前节点，用来统一边界处理。</li>
+          </ul>
+        </div>
+        <div class="diagram">
+          <svg viewBox="0 0 560 220" width="100%" aria-label="单链表示意图">
+            <defs>
+              <style>
+                .box { fill: #fff; stroke: #c05c2e; stroke-width: 3; rx: 12; }
+                .small { fill: #ffe8dc; stroke: #c05c2e; stroke-width: 2.5; }
+                .arr { stroke: #0d7c86; stroke-width: 3.5; fill: none; marker-end: url(#arrow1); }
+                .tx { font: 700 20px sans-serif; fill: #201d19; text-anchor: middle; dominant-baseline: middle; }
+                .lb { font: 15px sans-serif; fill: #4f4942; }
+              </style>
+              <marker id="arrow1" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                <path d="M0,0 L8,3 L0,6 Z" fill="#0d7c86"></path>
+              </marker>
+            </defs>
+            <rect class="box" x="20" y="70" width="100" height="54"></rect>
+            <rect class="small" x="120" y="70" width="36" height="54"></rect>
+            <rect class="box" x="184" y="70" width="100" height="54"></rect>
+            <rect class="small" x="284" y="70" width="36" height="54"></rect>
+            <rect class="box" x="348" y="70" width="100" height="54"></rect>
+            <rect class="small" x="448" y="70" width="36" height="54"></rect>
+            <text class="tx" x="70" y="97">1</text>
+            <text class="tx" x="234" y="97">2</text>
+            <text class="tx" x="398" y="97">3</text>
+            <text class="tx" x="138" y="97">next</text>
+            <text class="tx" x="302" y="97">next</text>
+            <text class="tx" x="466" y="97">∅</text>
+            <path class="arr" d="M 156 97 L 180 97"></path>
+            <path class="arr" d="M 320 97 L 344 97"></path>
+            <text class="lb" x="28" y="48">head</text>
+            <path class="arr" d="M 48 52 L 62 68"></path>
+          </svg>
+        </div>
+      </div>
+
+      <h3>1.1 单链表与双向链表</h3>
+      <div class="concept-grid">
+        <div class="concept-card">
+          <h4>单链表</h4>
+          <div class="mini-diagram">
+            <svg viewBox="0 0 260 90" width="100%" aria-label="单链表结构图">
+              <defs>
+                <style>
+                  .sbox { fill: #fff; stroke: #c05c2e; stroke-width: 3; rx: 10; }
+                  .sarr { stroke: #0d7c86; stroke-width: 3; fill: none; marker-end: url(#a2); }
+                  .st { font: 700 15px sans-serif; fill: #222; text-anchor: middle; dominant-baseline: middle; }
+                </style>
+                <marker id="a2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                  <path d="M0,0 L8,3 L0,6 Z" fill="#0d7c86"></path>
+                </marker>
+              </defs>
+              <rect class="sbox" x="10" y="24" width="54" height="34"></rect>
+              <rect class="sbox" x="100" y="24" width="54" height="34"></rect>
+              <rect class="sbox" x="190" y="24" width="54" height="34"></rect>
+              <text class="st" x="37" y="41">1</text>
+              <text class="st" x="127" y="41">2</text>
+              <text class="st" x="217" y="41">3</text>
+              <path class="sarr" d="M64 41 L96 41"></path>
+              <path class="sarr" d="M154 41 L186 41"></path>
+            </svg>
+          </div>
+          <p class="caption">每个节点只知道下一个节点，节省空间，但删除时通常要先找到前驱。</p>
+        </div>
+        <div class="concept-card">
+          <h4>双向链表</h4>
+          <div class="mini-diagram">
+            <svg viewBox="0 0 260 90" width="100%" aria-label="双向链表结构图">
+              <defs>
+                <style>
+                  .dbox { fill: #fff; stroke: #7b59d6; stroke-width: 3; rx: 10; }
+                  .darr { stroke: #7b59d6; stroke-width: 3; fill: none; marker-end: url(#a3); }
+                  .dt { font: 700 15px sans-serif; fill: #222; text-anchor: middle; dominant-baseline: middle; }
+                </style>
+                <marker id="a3" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                  <path d="M0,0 L8,3 L0,6 Z" fill="#7b59d6"></path>
+                </marker>
+              </defs>
+              <rect class="dbox" x="10" y="24" width="54" height="34"></rect>
+              <rect class="dbox" x="100" y="24" width="54" height="34"></rect>
+              <rect class="dbox" x="190" y="24" width="54" height="34"></rect>
+              <text class="dt" x="37" y="41">1</text>
+              <text class="dt" x="127" y="41">2</text>
+              <text class="dt" x="217" y="41">3</text>
+              <path class="darr" d="M64 34 L96 34"></path>
+              <path class="darr" d="M154 34 L186 34"></path>
+              <path class="darr" d="M190 48 L158 48"></path>
+              <path class="darr" d="M100 48 L68 48"></path>
+            </svg>
+          </div>
+          <p class="caption">每个节点同时知道前驱和后继，插删更灵活，是 LRU 的常见基础结构。</p>
+        </div>
+        <div class="concept-card">
+          <h4>哑节点 dummy</h4>
+          <div class="mini-diagram">
+            <svg viewBox="0 0 260 90" width="100%" aria-label="dummy 节点图">
+              <defs>
+                <style>
+                  .bbox { fill: #dbf4f4; stroke: #0d7c86; stroke-width: 3; rx: 10; }
+                  .nbox { fill: #fff; stroke: #c05c2e; stroke-width: 3; rx: 10; }
+                  .barr { stroke: #0d7c86; stroke-width: 3; fill: none; marker-end: url(#a4); }
+                  .bt { font: 700 15px sans-serif; fill: #222; text-anchor: middle; dominant-baseline: middle; }
+                </style>
+                <marker id="a4" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                  <path d="M0,0 L8,3 L0,6 Z" fill="#0d7c86"></path>
+                </marker>
+              </defs>
+              <rect class="bbox" x="10" y="24" width="64" height="34"></rect>
+              <rect class="nbox" x="104" y="24" width="54" height="34"></rect>
+              <rect class="nbox" x="190" y="24" width="54" height="34"></rect>
+              <text class="bt" x="42" y="41">dummy</text>
+              <text class="bt" x="131" y="41">1</text>
+              <text class="bt" x="217" y="41">2</text>
+              <path class="barr" d="M74 41 L100 41"></path>
+              <path class="barr" d="M158 41 L186 41"></path>
+            </svg>
+          </div>
+          <p class="caption">当头节点也可能被删或被插到前面时，dummy 能让边界情况和普通情况统一。</p>
+        </div>
+      </div>
+
+      <h3>1.2 标准定义</h3>
+      <pre><code class="language-cpp">struct ListNode {
+    int val;
+    ListNode* next;
+
+    ListNode(int x) : val(x), next(nullptr) {}
+};
+
+struct DListNode {
+    int key, val;
+    DListNode* prev;
+    DListNode* next;
+
+    DListNode(int k, int v) : key(k), val(v), prev(nullptr), next(nullptr) {}
+};</code></pre>
+
+      <h3>1.3 链表与数组的对比</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>维度</th>
+            <th>数组</th>
+            <th>链表</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>内存</td>
+            <td>连续</td>
+            <td>不连续，靠指针连接</td>
+          </tr>
+          <tr>
+            <td>随机访问</td>
+            <td><code>O(1)</code></td>
+            <td><code>O(n)</code></td>
+          </tr>
+          <tr>
+            <td>中间插入/删除</td>
+            <td>常常需要搬移元素</td>
+            <td>找到位置后可 <code>O(1)</code> 修改指针</td>
+          </tr>
+          <tr>
+            <td>算法难点</td>
+            <td>边界与下标</td>
+            <td>指针顺序与节点丢失</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="pointer">
+      <h2>2. 链表题的指针操作本质</h2>
+      <p>
+        大多数链表题本质上都在做下面几件事：找到某个位置、断开旧连接、建立新连接、保存可能丢失的后继节点。
+        只要把这几个动作拆开，代码就会变得稳定。
+      </p>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>2.1 删除节点</h3>
+          <p>
+            删除某节点的本质不是“擦掉它”，而是让它的前驱跳过它，直接指向它的后继。
+            所以删除时最关键的是前驱节点。
+          </p>
+          <pre><code class="language-cpp">ListNode* removeElements(ListNode* head, int val) {
+    ListNode dummy(0);
+    dummy.next = head;
+    ListNode* cur = &dummy;
+
+    while (cur->next) {
+        if (cur->next->val == val) {
+            cur->next = cur->next->next;
+        } else {
+            cur = cur->next;
+        }
+    }
+    return dummy.next;
+}</code></pre>
+        </div>
+        <div class="diagram">
+          <svg viewBox="0 0 560 220" width="100%" aria-label="删除节点示意图">
+            <defs>
+              <style>
+                .box1 { fill: #fff; stroke: #c05c2e; stroke-width: 3; rx: 12; }
+                .box2 { fill: #ffe8dc; stroke: #c05c2e; stroke-width: 3; rx: 12; }
+                .arr1 { stroke: #0d7c86; stroke-width: 3.5; fill: none; marker-end: url(#arrowd1); }
+                .arr2 { stroke: #c05c2e; stroke-width: 4; fill: none; marker-end: url(#arrowd2); stroke-dasharray: 7 5; }
+                .txt1 { font: 700 18px sans-serif; fill: #222; text-anchor: middle; dominant-baseline: middle; }
+                .lb1 { font: 15px sans-serif; fill: #4f4942; }
+              </style>
+              <marker id="arrowd1" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                <path d="M0,0 L8,3 L0,6 Z" fill="#0d7c86"></path>
+              </marker>
+              <marker id="arrowd2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                <path d="M0,0 L8,3 L0,6 Z" fill="#c05c2e"></path>
+              </marker>
+            </defs>
+            <rect class="box1" x="24" y="82" width="90" height="46"></rect>
+            <rect class="box2" x="168" y="82" width="90" height="46"></rect>
+            <rect class="box1" x="312" y="82" width="90" height="46"></rect>
+            <text class="txt1" x="69" y="105">prev</text>
+            <text class="txt1" x="213" y="105">删掉</text>
+            <text class="txt1" x="357" y="105">next</text>
+            <path class="arr1" d="M114 105 L162 105"></path>
+            <path class="arr1" d="M258 105 L306 105"></path>
+            <path class="arr2" d="M114 74 C 190 22, 280 22, 354 74"></path>
+            <text class="lb1" x="200" y="38">真正要做的是 prev->next = target->next</text>
+          </svg>
+        </div>
+      </div>
+
+      <h3>2.2 插入节点</h3>
+      <p>
+        在链表中间插入一个节点时，最安全的顺序是：
+        <code>newNode-&gt;next = prev-&gt;next</code>，然后再 <code>prev-&gt;next = newNode</code>。
+        先接上后半段，再接前半段，避免后继丢失。
+      </p>
+      <pre><code class="language-cpp">void insertAfter(ListNode* prev, ListNode* node) {
+    if (!prev || !node) return;
+    node->next = prev->next;
+    prev->next = node;
+}</code></pre>
+
+      <div class="note">
+        链表操作里最常见的错误，是还没保存 <code>next</code> 就把指针改掉，结果后面的节点全丢了。
+        所以遇到“重连”类操作时，经常先写一句：<code>ListNode* nxt = cur->next;</code>
+      </div>
+
+      <h3>2.3 为什么 dummy 节点这么常用</h3>
+      <ul>
+        <li>头节点被删除时，不需要单独写分支。</li>
+        <li>在头部插入节点时，逻辑和中间插入完全一致。</li>
+        <li>返回答案时统一写成 <code>dummy.next</code>。</li>
+      </ul>
+    </section>
+
+    <section id="fastslow">
+      <h2>3. 快慢指针思想</h2>
+      <p>
+        快慢指针是链表题里最重要的技巧之一。它的本质是让两个指针以不同速度前进，
+        通过它们的相对位置关系来得到中点、环、倒数第 k 个节点等信息。
+      </p>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>3.1 找中点</h3>
+          <p>
+            让 <code>slow</code> 每次走一步，<code>fast</code> 每次走两步。
+            当 <code>fast</code> 到末尾时，<code>slow</code> 恰好在中间。
+          </p>
+          <pre><code class="language-cpp">ListNode* middleNode(ListNode* head) {
+    ListNode* slow = head;
+    ListNode* fast = head;
+
+    while (fast && fast->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    return slow;
+}</code></pre>
+        </div>
+        <div class="diagram">
+          <svg viewBox="0 0 560 220" width="100%" aria-label="快慢指针找中点示意图">
+            <defs>
+              <style>
+                .mnode { fill: #fff; stroke: #7b59d6; stroke-width: 3; rx: 10; }
+                .marr { stroke: #c7b8a6; stroke-width: 3; fill: none; marker-end: url(#af1); }
+                .mslow { stroke: #0d7c86; stroke-width: 4; fill: none; marker-end: url(#af2); }
+                .mfast { stroke: #c05c2e; stroke-width: 4; fill: none; marker-end: url(#af3); }
+                .mt { font: 700 18px sans-serif; fill: #222; text-anchor: middle; dominant-baseline: middle; }
+                .ml { font: 15px sans-serif; fill: #4f4942; }
+              </style>
+              <marker id="af1" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                <path d="M0,0 L8,3 L0,6 Z" fill="#c7b8a6"></path>
+              </marker>
+              <marker id="af2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                <path d="M0,0 L8,3 L0,6 Z" fill="#0d7c86"></path>
+              </marker>
+              <marker id="af3" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                <path d="M0,0 L8,3 L0,6 Z" fill="#c05c2e"></path>
+              </marker>
+            </defs>
+            <rect class="mnode" x="20" y="88" width="60" height="38"></rect>
+            <rect class="mnode" x="110" y="88" width="60" height="38"></rect>
+            <rect class="mnode" x="200" y="88" width="60" height="38"></rect>
+            <rect class="mnode" x="290" y="88" width="60" height="38"></rect>
+            <rect class="mnode" x="380" y="88" width="60" height="38"></rect>
+            <rect class="mnode" x="470" y="88" width="60" height="38"></rect>
+            <text class="mt" x="50" y="107">1</text>
+            <text class="mt" x="140" y="107">2</text>
+            <text class="mt" x="230" y="107">3</text>
+            <text class="mt" x="320" y="107">4</text>
+            <text class="mt" x="410" y="107">5</text>
+            <text class="mt" x="500" y="107">6</text>
+            <path class="marr" d="M80 107 L104 107"></path>
+            <path class="marr" d="M170 107 L194 107"></path>
+            <path class="marr" d="M260 107 L284 107"></path>
+            <path class="marr" d="M350 107 L374 107"></path>
+            <path class="marr" d="M440 107 L464 107"></path>
+            <path class="mslow" d="M 230 62 L 230 84"></path>
+            <path class="mfast" d="M 410 42 L 410 84"></path>
+            <text class="ml" x="206" y="52">slow 每次 1 步</text>
+            <text class="ml" x="384" y="30">fast 每次 2 步</text>
+          </svg>
+        </div>
+      </div>
+
+      <div class="concept-grid">
+        <div class="concept-card">
+          <h4>判断有环</h4>
+          <div class="mini-diagram">
+            <svg viewBox="0 0 260 150" width="100%" aria-label="链表成环示意图">
+              <defs>
+                <style>
+                  .hbox { fill: #fff; stroke: #c05c2e; stroke-width: 3; rx: 10; }
+                  .harr { stroke: #0d7c86; stroke-width: 3; fill: none; marker-end: url(#ha1); }
+                  .ht { font: 700 15px sans-serif; fill: #222; text-anchor: middle; dominant-baseline: middle; }
+                </style>
+                <marker id="ha1" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                  <path d="M0,0 L8,3 L0,6 Z" fill="#0d7c86"></path>
+                </marker>
+              </defs>
+              <rect class="hbox" x="12" y="54" width="40" height="28"></rect>
+              <rect class="hbox" x="76" y="54" width="40" height="28"></rect>
+              <rect class="hbox" x="140" y="54" width="40" height="28"></rect>
+              <rect class="hbox" x="204" y="54" width="40" height="28"></rect>
+              <text class="ht" x="32" y="68">1</text>
+              <text class="ht" x="96" y="68">2</text>
+              <text class="ht" x="160" y="68">3</text>
+              <text class="ht" x="224" y="68">4</text>
+              <path class="harr" d="M52 68 L72 68"></path>
+              <path class="harr" d="M116 68 L136 68"></path>
+              <path class="harr" d="M180 68 L200 68"></path>
+              <path class="harr" d="M224 50 C 224 20, 96 20, 96 50"></path>
+            </svg>
+          </div>
+          <p class="caption">如果有环，快指针最终一定会在环里追上慢指针。</p>
+        </div>
+        <div class="concept-card">
+          <h4>找倒数第 k 个</h4>
+          <div class="mini-diagram">
+            <svg viewBox="0 0 260 150" width="100%" aria-label="倒数第k个节点示意图">
+              <defs>
+                <style>
+                  .kbox { fill: #fff; stroke: #7b59d6; stroke-width: 3; rx: 10; }
+                  .karr { stroke: #c7b8a6; stroke-width: 3; fill: none; marker-end: url(#ka1); }
+                  .kt { font: 700 15px sans-serif; fill: #222; text-anchor: middle; dominant-baseline: middle; }
+                  .kl { font: 13px sans-serif; fill: #4f4942; }
+                </style>
+                <marker id="ka1" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                  <path d="M0,0 L8,3 L0,6 Z" fill="#c7b8a6"></path>
+                </marker>
+              </defs>
+              <rect class="kbox" x="10" y="56" width="34" height="26"></rect>
+              <rect class="kbox" x="56" y="56" width="34" height="26"></rect>
+              <rect class="kbox" x="102" y="56" width="34" height="26"></rect>
+              <rect class="kbox" x="148" y="56" width="34" height="26"></rect>
+              <rect class="kbox" x="194" y="56" width="34" height="26"></rect>
+              <path class="karr" d="M44 69 L52 69"></path>
+              <path class="karr" d="M90 69 L98 69"></path>
+              <path class="karr" d="M136 69 L144 69"></path>
+              <path class="karr" d="M182 69 L190 69"></path>
+              <text class="kt" x="27" y="69">1</text>
+              <text class="kt" x="73" y="69">2</text>
+              <text class="kt" x="119" y="69">3</text>
+              <text class="kt" x="165" y="69">4</text>
+              <text class="kt" x="211" y="69">5</text>
+              <text class="kl" x="10" y="28">先让 fast 比 slow 多走 k 步</text>
+              <text class="kl" x="10" y="112">之后同步前进，fast 到尾时 slow 即为倒数第 k 个</text>
+            </svg>
+          </div>
+          <p class="caption">两个指针保持固定间距，这是双指针在链表上的经典应用。</p>
+        </div>
+      </div>
+
+      <pre><code class="language-cpp">bool hasCycle(ListNode* head) {
+    ListNode* slow = head;
+    ListNode* fast = head;
+
+    while (fast && fast->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+        if (slow == fast) return true;
+    }
+    return false;
+}
+
+ListNode* getKthFromEnd(ListNode* head, int k) {
+    ListNode* fast = head;
+    ListNode* slow = head;
+    while (k-- && fast) fast = fast->next;
+    while (fast) {
+        fast = fast->next;
+        slow = slow->next;
+    }
+    return slow;
+}</code></pre>
+    </section>
+
+    <section id="classic">
+      <h2>4. 链表经典题型与实现</h2>
+
+      <h3>4.1 反转链表</h3>
+      <p>
+        反转链表是链表题的基本功。核心就是把每个节点的 <code>next</code> 指向前一个节点。
+        这个过程必须先保存原来的后继，否则后面的链会断掉。
+      </p>
+      <div class="concept-grid">
+        <div class="concept-card">
+          <h4>反转过程</h4>
+          <div class="mini-diagram">
+            <svg viewBox="0 0 260 150" width="100%" aria-label="反转链表示意图">
+              <defs>
+                <style>
+                  .rbox { fill: #fff; stroke: #c05c2e; stroke-width: 3; rx: 10; }
+                  .rarr { stroke: #0d7c86; stroke-width: 3; fill: none; marker-end: url(#ra1); }
+                  .rback { stroke: #7b59d6; stroke-width: 3; fill: none; marker-end: url(#ra2); }
+                  .rt { font: 700 15px sans-serif; fill: #222; text-anchor: middle; dominant-baseline: middle; }
+                </style>
+                <marker id="ra1" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                  <path d="M0,0 L8,3 L0,6 Z" fill="#0d7c86"></path>
+                </marker>
+                <marker id="ra2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                  <path d="M0,0 L8,3 L0,6 Z" fill="#7b59d6"></path>
+                </marker>
+              </defs>
+              <rect class="rbox" x="12" y="56" width="40" height="28"></rect>
+              <rect class="rbox" x="84" y="56" width="40" height="28"></rect>
+              <rect class="rbox" x="156" y="56" width="40" height="28"></rect>
+              <text class="rt" x="32" y="70">1</text>
+              <text class="rt" x="104" y="70">2</text>
+              <text class="rt" x="176" y="70">3</text>
+              <path class="rarr" d="M52 70 L80 70"></path>
+              <path class="rarr" d="M124 70 L152 70"></path>
+              <path class="rback" d="M104 50 C 104 24, 28 24, 28 52"></path>
+            </svg>
+          </div>
+          <p class="caption">当前节点回头指向前驱，链表方向就逐步反过来了。</p>
+        </div>
+      </div>
+      <pre><code class="language-cpp">ListNode* reverseList(ListNode* head) {
+    ListNode* prev = nullptr;
+    ListNode* cur = head;
+
+    while (cur) {
+        ListNode* nxt = cur->next;
+        cur->next = prev;
+        prev = cur;
+        cur = nxt;
+    }
+    return prev;
+}</code></pre>
+
+      <h3>4.2 合并两个有序链表</h3>
+      <p>
+        这题和归并排序的 merge 很像。每次比较两个链表的当前节点，把较小的接到答案链表后面。
+      </p>
+      <pre><code class="language-cpp">ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+    ListNode dummy(0);
+    ListNode* tail = &dummy;
+
+    while (l1 && l2) {
+        if (l1->val < l2->val) {
+            tail->next = l1;
+            l1 = l1->next;
+        } else {
+            tail->next = l2;
+            l2 = l2->next;
+        }
+        tail = tail->next;
+    }
+
+    tail->next = l1 ? l1 : l2;
+    return dummy.next;
+}</code></pre>
+
+      <h3>4.3 删除倒数第 N 个节点</h3>
+      <p>
+        先让快指针比慢指针领先 <code>n</code> 步，再同步前进。为了删除方便，通常让慢指针停在目标节点的前驱，
+        所以一般从 dummy 开始走。
+      </p>
+      <pre><code class="language-cpp">ListNode* removeNthFromEnd(ListNode* head, int n) {
+    ListNode dummy(0);
+    dummy.next = head;
+    ListNode* fast = &dummy;
+    ListNode* slow = &dummy;
+
+    for (int i = 0; i < n; ++i) fast = fast->next;
+
+    while (fast->next) {
+        fast = fast->next;
+        slow = slow->next;
+    }
+
+    slow->next = slow->next->next;
+    return dummy.next;
+}</code></pre>
+
+      <h3>4.4 判断链表是否有环，并找到入环点</h3>
+      <p>
+        快慢指针第一次相遇后，把其中一个指针放回头节点，然后两者每次都走一步。
+        它们再次相遇的地方，就是入环点。
+      </p>
+      <div class="concept-grid">
+        <div class="concept-card">
+          <h4>入环点原理</h4>
+          <div class="mini-diagram">
+            <svg viewBox="0 0 260 170" width="100%" aria-label="入环点示意图">
+              <defs>
+                <style>
+                  .ebox { fill: #fff; stroke: #7b59d6; stroke-width: 3; rx: 10; }
+                  .earr { stroke: #0d7c86; stroke-width: 3; fill: none; marker-end: url(#ea1); }
+                  .et { font: 700 15px sans-serif; fill: #222; text-anchor: middle; dominant-baseline: middle; }
+                </style>
+                <marker id="ea1" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                  <path d="M0,0 L8,3 L0,6 Z" fill="#0d7c86"></path>
+                </marker>
+              </defs>
+              <rect class="ebox" x="12" y="68" width="34" height="24"></rect>
+              <rect class="ebox" x="60" y="68" width="34" height="24"></rect>
+              <rect class="ebox" x="108" y="68" width="34" height="24"></rect>
+              <rect class="ebox" x="156" y="68" width="34" height="24"></rect>
+              <text class="et" x="29" y="80">a</text>
+              <text class="et" x="77" y="80">b</text>
+              <text class="et" x="125" y="80">入</text>
+              <text class="et" x="173" y="80">x</text>
+              <path class="earr" d="M46 80 L56 80"></path>
+              <path class="earr" d="M94 80 L104 80"></path>
+              <path class="earr" d="M142 80 L152 80"></path>
+              <path class="earr" d="M173 64 C 226 30, 236 128, 124 96"></path>
+            </svg>
+          </div>
+          <p class="caption">第一次相遇点不一定是入环点，但二次同步前进一定会在入环点相遇。</p>
+        </div>
+      </div>
+      <pre><code class="language-cpp">ListNode* detectCycle(ListNode* head) {
+    ListNode* slow = head;
+    ListNode* fast = head;
+
+    while (fast && fast->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+        if (slow == fast) {
+            ListNode* p = head;
+            while (p != slow) {
+                p = p->next;
+                slow = slow->next;
+            }
+            return p;
+        }
+    }
+    return nullptr;
+}</code></pre>
+
+      <h3>4.5 两个链表的第一个相交节点</h3>
+      <p>
+        让两个指针分别从两条链表出发，走到末尾后切换到另一条链表头部。
+        这样两者总路程相等，最终会在相交点相遇；如果不相交，就一起走到空节点。
+      </p>
+      <pre><code class="language-cpp">ListNode* getIntersectionNode(ListNode* headA, ListNode* headB) {
+    ListNode* p = headA;
+    ListNode* q = headB;
+
+    while (p != q) {
+        p = p ? p->next : headB;
+        q = q ? q->next : headA;
+    }
+    return p;
+}</code></pre>
+
+      <h3>4.6 判断回文链表</h3>
+      <p>
+        常见做法是：快慢指针找中点，反转后半段，再从头和后半段头同时比较。
+        这题把多个链表模板拼到了一起，是很典型的综合题。
+      </p>
+      <pre><code class="language-cpp">bool isPalindrome(ListNode* head) {
+    if (!head || !head->next) return true;
+
+    ListNode* slow = head;
+    ListNode* fast = head;
+    while (fast && fast->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+
+    ListNode* prev = nullptr;
+    while (slow) {
+        ListNode* nxt = slow->next;
+        slow->next = prev;
+        prev = slow;
+        slow = nxt;
+    }
+
+    ListNode* p1 = head;
+    ListNode* p2 = prev;
+    while (p2) {
+        if (p1->val != p2->val) return false;
+        p1 = p1->next;
+        p2 = p2->next;
+    }
+    return true;
+}</code></pre>
+    </section>
+
+    <section id="double">
+      <h2>5. 双向链表与 LRU 基础</h2>
+      <p>
+        双向链表在算法题中最常见的场景是 LRU 缓存。因为 LRU 需要支持：
+        某个节点快速删除、快速插到头部、快速拿到尾部最久未使用节点。
+        这正是双向链表擅长的事情。
+      </p>
+
+      <div class="grid-2">
+        <div>
+          <h3>5.1 双向链表的删除与头插</h3>
+          <p>
+            双向链表的删除本质是让一个节点的前驱和后继重新连起来：
+            <code>node->prev->next = node->next</code>，
+            <code>node->next->prev = node->prev</code>。
+          </p>
+          <pre><code class="language-cpp">void removeNode(DListNode* node) {
+    node->prev->next = node->next;
+    node->next->prev = node->prev;
+}
+
+void addToFront(DListNode* head, DListNode* node) {
+    node->next = head->next;
+    node->prev = head;
+    head->next->prev = node;
+    head->next = node;
+}</code></pre>
+        </div>
+        <div class="diagram">
+          <svg viewBox="0 0 560 220" width="100%" aria-label="双向链表头插示意图">
+            <defs>
+              <style>
+                .db1 { fill: #fff; stroke: #7b59d6; stroke-width: 3; rx: 12; }
+                .da1 { stroke: #7b59d6; stroke-width: 3.5; fill: none; marker-end: url(#dl1); }
+                .da2 { stroke: #c05c2e; stroke-width: 3.5; fill: none; marker-end: url(#dl2); stroke-dasharray: 7 5; }
+                .dt1 { font: 700 18px sans-serif; fill: #222; text-anchor: middle; dominant-baseline: middle; }
+                .dlb { font: 15px sans-serif; fill: #4f4942; }
+              </style>
+              <marker id="dl1" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                <path d="M0,0 L8,3 L0,6 Z" fill="#7b59d6"></path>
+              </marker>
+              <marker id="dl2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                <path d="M0,0 L8,3 L0,6 Z" fill="#c05c2e"></path>
+              </marker>
+            </defs>
+            <rect class="db1" x="24" y="90" width="88" height="42"></rect>
+            <rect class="db1" x="174" y="90" width="88" height="42"></rect>
+            <rect class="db1" x="324" y="90" width="88" height="42"></rect>
+            <text class="dt1" x="68" y="111">head</text>
+            <text class="dt1" x="218" y="111">node</text>
+            <text class="dt1" x="368" y="111">old first</text>
+            <path class="da2" d="M112 68 C 154 34, 182 34, 218 84"></path>
+            <path class="da2" d="M262 84 C 302 34, 332 34, 368 84"></path>
+            <path class="da1" d="M112 111 L168 111"></path>
+            <path class="da1" d="M262 111 L318 111"></path>
+            <text class="dlb" x="22" y="42">插到头部时，先接 node 和 old first，再接 head</text>
+          </svg>
+        </div>
+      </div>
+
+      <h3>5.2 LRU 为什么是 哈希表 + 双向链表</h3>
+      <div class="concept-grid">
+        <div class="concept-card">
+          <h4>哈希表的作用</h4>
+          <p class="caption">根据 key 在 <code>O(1)</code> 时间定位到对应节点。</p>
+        </div>
+        <div class="concept-card">
+          <h4>双向链表的作用</h4>
+          <p class="caption">在 <code>O(1)</code> 时间删除任意节点，并把最近访问节点移到头部。</p>
+        </div>
+        <div class="concept-card">
+          <h4>尾部节点的意义</h4>
+          <p class="caption">尾部就是最久未使用节点，容量满时直接淘汰尾部前一个节点。</p>
+        </div>
+      </div>
+
+      <pre><code class="language-cpp">class LRUCache {
+private:
+    int capacity;
+    unordered_map&lt;int, DListNode*&gt; mp;
+    DListNode* head;
+    DListNode* tail;
+
+    void removeNode(DListNode* node) {
+        node->prev->next = node->next;
+        node->next->prev = node->prev;
+    }
+
+    void addToFront(DListNode* node) {
+        node->next = head->next;
+        node->prev = head;
+        head->next->prev = node;
+        head->next = node;
+    }
+
+public:
+    LRUCache(int cap) : capacity(cap) {
+        head = new DListNode(0, 0);
+        tail = new DListNode(0, 0);
+        head->next = tail;
+        tail->prev = head;
+    }
+
+    int get(int key) {
+        if (!mp.count(key)) return -1;
+        DListNode* node = mp[key];
+        removeNode(node);
+        addToFront(node);
+        return node->val;
+    }
+
+    void put(int key, int value) {
+        if (mp.count(key)) {
+            DListNode* node = mp[key];
+            node->val = value;
+            removeNode(node);
+            addToFront(node);
+            return;
+        }
+
+        if ((int)mp.size() == capacity) {
+            DListNode* node = tail->prev;
+            removeNode(node);
+            mp.erase(node->key);
+        }
+
+        DListNode* node = new DListNode(key, value);
+        addToFront(node);
+        mp[key] = node;
+    }
+};</code></pre>
+    </section>
+
+    <section id="templates">
+      <h2>6. 常用模板、复杂度与总结</h2>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3>反转模板</h3>
+          <pre><code class="language-cpp">ListNode* prev = nullptr;
+ListNode* cur = head;
+while (cur) {
+    ListNode* nxt = cur->next;
+    cur->next = prev;
+    prev = cur;
+    cur = nxt;
+}</code></pre>
+        </div>
+        <div class="card">
+          <h3>快慢指针模板</h3>
+          <pre><code class="language-cpp">ListNode* slow = head;
+ListNode* fast = head;
+while (fast && fast->next) {
+    slow = slow->next;
+    fast = fast->next->next;
+}</code></pre>
+        </div>
+        <div class="card">
+          <h3>dummy 模板</h3>
+          <pre><code class="language-cpp">ListNode dummy(0);
+dummy.next = head;
+ListNode* cur = &dummy;</code></pre>
+        </div>
+      </div>
+
+      <h3>6.1 常见误区</h3>
+      <ul>
+        <li>修改 <code>cur->next</code> 前没有先保存后继节点。</li>
+        <li>删除头节点时没用 dummy，导致单独写很多边界分支。</li>
+        <li>快慢指针循环条件写错，空指针解引用。</li>
+        <li>链表是否有环、找中点、找倒数第 k 个节点这些模板混用时没分清目标。</li>
+        <li>双向链表删除节点时只改了一边，导致链表结构损坏。</li>
+      </ul>
+
+      <h3>6.2 复杂度分析</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>操作</th>
+            <th>时间复杂度</th>
+            <th>空间复杂度</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>遍历链表</td>
+            <td><code>O(n)</code></td>
+            <td><code>O(1)</code></td>
+          </tr>
+          <tr>
+            <td>反转链表</td>
+            <td><code>O(n)</code></td>
+            <td><code>O(1)</code></td>
+          </tr>
+          <tr>
+            <td>快慢指针找中点 / 判断有环</td>
+            <td><code>O(n)</code></td>
+            <td><code>O(1)</code></td>
+          </tr>
+          <tr>
+            <td>LRU 的 get / put</td>
+            <td>平均 <code>O(1)</code></td>
+            <td><code>O(capacity)</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        链表题真正要练的不是记住题目，而是把这些动作练熟：
+        找前驱、保存后继、重连 next、快慢指针保持间距、dummy 统一边界。
+        这些动作一旦熟练，很多题都只是模板变形。
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>背诵版总结</h3>
+          <ul>
+            <li>链表是靠指针连接，不靠下标访问。</li>
+            <li>删除的本质是前驱跳过当前节点。</li>
+            <li>插入的本质是先接后半段，再接前半段。</li>
+            <li>反转时必须先保存 <code>nxt</code>。</li>
+            <li>快慢指针解决中点、环、倒数第 k 个等问题。</li>
+            <li>dummy 节点能统一头节点边界处理。</li>
+            <li>LRU = 哈希表 + 双向链表。</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>刷题顺序建议</h3>
+          <ol>
+            <li>先练删除、反转、合并两个有序链表。</li>
+            <li>再练删除倒数第 N 个、找中点、回文链表。</li>
+            <li>然后练环检测、入环点、相交链表。</li>
+            <li>最后练双向链表与 LRU。</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <div class="foot">
+      文档生成位置：<code>/home/wj/Code/C++/algorithm/LinkedList/index.html</code>
+    </div>
+  </main>
+</body>
+</html>

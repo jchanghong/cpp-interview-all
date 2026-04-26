@@ -1,0 +1,19 @@
+Start testing: Apr 21 22:41 CST
+----------------------------------------------------------
+1/1 Testing: smart_pointer_unit_tests
+1/1 Test: smart_pointer_unit_tests
+Command: "/home/wj/Code/C++/Interview/SmartPointer/build/smart_pointer_tests"
+Directory: /home/wj/Code/C++/Interview/SmartPointer/build
+"smart_pointer_unit_tests" start time: Apr 21 22:41 CST
+Output:
+----------------------------------------------------------
+All smart pointer tests passed.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"smart_pointer_unit_tests" end time: Apr 21 22:41 CST
+"smart_pointer_unit_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Apr 21 22:41 CST

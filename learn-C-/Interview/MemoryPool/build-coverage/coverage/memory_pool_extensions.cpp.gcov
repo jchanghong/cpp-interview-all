@@ -1,0 +1,506 @@
+        -:    0:Source:/home/wj/Code/C++/Interview/MemoryPool/src/memory_pool_extensions.cpp
+        -:    0:Graph:/home/wj/Code/C++/Interview/MemoryPool/build-coverage/CMakeFiles/memory_pool_tests.dir/src/memory_pool_extensions.cpp.gcno
+        -:    0:Data:/home/wj/Code/C++/Interview/MemoryPool/build-coverage/CMakeFiles/memory_pool_tests.dir/src/memory_pool_extensions.cpp.gcda
+        -:    0:Runs:1
+        -:    1:#include "memory_pool_extensions.h"
+        -:    2:
+        -:    3:#include <algorithm>
+        -:    4:#include <cstring>
+        -:    5:#include <limits>
+        -:    6:
+        -:    7:// 构造函数：创建带互斥锁保护的定长内存池。
+function _ZN25ThreadSafeFixedMemoryPoolC2Emm called 0 returned 0% blocks executed 0%
+    #####:    8:ThreadSafeFixedMemoryPool::ThreadSafeFixedMemoryPool(std::size_t block_size, std::size_t blocks_per_chunk)
+        -:    9:    : mutex_(),
+    #####:   10:      pool_(block_size, blocks_per_chunk) {}
+call    0 never executed
+call    1 never executed
+        -:   11:
+        -:   12:// 分配函数：在线程安全保护下获取一个内存块。
+function _ZN25ThreadSafeFixedMemoryPool8AllocateEv called 0 returned 0% blocks executed 0%
+    #####:   13:void* ThreadSafeFixedMemoryPool::Allocate() {
+        -:   14:    // 锁变量：保护底层池状态。
+    #####:   15:    std::lock_guard<std::mutex> lock(mutex_);
+call    0 never executed
+branch  1 never executed
+branch  2 never executed
+call    3 never executed
+call    4 never executed
+    #####:   16:    return pool_.Allocate();
+call    0 never executed
+branch  1 never executed
+branch  2 never executed
+        -:   17:}
+        -:   18:
+        -:   19:// 回收函数：在线程安全保护下归还一个内存块。
+function _ZN25ThreadSafeFixedMemoryPool10DeallocateEPv called 0 returned 0% blocks executed 0%
+    #####:   20:void ThreadSafeFixedMemoryPool::Deallocate(void* ptr) {
+        -:   21:    // 锁变量：保护底层池状态。
+    #####:   22:    std::lock_guard<std::mutex> lock(mutex_);
+call    0 never executed
+branch  1 never executed
+branch  2 never executed
+call    3 never executed
+call    4 never executed
+    #####:   23:    pool_.Deallocate(ptr);
+call    0 never executed
+branch  1 never executed
+branch  2 never executed
+    #####:   24:}
+        -:   25:
+        -:   26:// 查询函数：返回当前空闲块数量。
+function _ZNK25ThreadSafeFixedMemoryPool17GetFreeBlockCountEv called 0 returned 0% blocks executed 0%
+    #####:   27:std::size_t ThreadSafeFixedMemoryPool::GetFreeBlockCount() const {
+        -:   28:    // 锁变量：保护底层池状态。
+    #####:   29:    std::lock_guard<std::mutex> lock(mutex_);
+call    0 never executed
+branch  1 never executed
+branch  2 never executed
+call    3 never executed
+call    4 never executed
+    #####:   30:    return pool_.GetFreeBlockCount();
+call    0 never executed
+branch  1 never executed
+branch  2 never executed
+        -:   31:}
+        -:   32:
+        -:   33:// 查询函数：返回当前总块数量。
+function _ZNK25ThreadSafeFixedMemoryPool18GetTotalBlockCountEv called 0 returned 0% blocks executed 0%
+    #####:   34:std::size_t ThreadSafeFixedMemoryPool::GetTotalBlockCount() const {
+        -:   35:    // 锁变量：保护底层池状态。
+    #####:   36:    std::lock_guard<std::mutex> lock(mutex_);
+call    0 never executed
+branch  1 never executed
+branch  2 never executed
+call    3 never executed
+call    4 never executed
+    #####:   37:    return pool_.GetTotalBlockCount();
+call    0 never executed
+branch  1 never executed
+branch  2 never executed
+        -:   38:}
+        -:   39:
+        -:   40:// 构造函数：创建带越界检测与活跃块跟踪的调试池。
+function _ZN20DebugFixedMemoryPoolC2Emm called 3 returned 67% blocks executed 86%
+        3:   41:DebugFixedMemoryPool::DebugFixedMemoryPool(std::size_t user_block_size, std::size_t blocks_per_chunk)
+        -:   42:    : user_block_size_(user_block_size),
+        -:   43:      raw_pool_(GetRawBlockSize(user_block_size), blocks_per_chunk),
+        5:   44:      active_blocks_() {
+call    0 returned 3
+call    1 returned 3
+call    2 returned 3
+call    3 returned 1
+call    4 returned 1
+        3:   45:    if (user_block_size_ == 0) {
+branch  0 taken 1 (fallthrough)
+branch  1 taken 2
+        1:   46:        throw std::invalid_argument("user_block_size must be greater than 0.");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 1
+call    5 never executed
+        -:   47:    }
+        2:   48:}
+        -:   49:
+        -:   50:// 分配函数：返回给业务层使用的用户可见地址。
+function _ZN20DebugFixedMemoryPool8AllocateEv called 2 returned 100% blocks executed 100%
+        2:   51:void* DebugFixedMemoryPool::Allocate() {
+        -:   52:    // 指针变量：获取底层原始块地址。
+        2:   53:    void* raw_block = raw_pool_.Allocate();
+call    0 returned 2
+branch  1 taken 2 (fallthrough)
+branch  2 taken 0 (throw)
+        -:   54:
+        -:   55:    // 字节指针变量：用于对原始块进行头尾布局。
+        2:   56:    char* raw_bytes = static_cast<char*>(raw_block);
+        -:   57:
+        -:   58:    // 指针变量：定位块头信息。
+        2:   59:    BlockHeader* header = reinterpret_cast<BlockHeader*>(raw_bytes);
+        2:   60:    header->head_magic = kHeadMagic;
+        -:   61:
+        -:   62:    // 指针变量：定位用户区起始地址。
+        2:   63:    void* user_ptr = raw_bytes + GetAlignedHeaderSize();
+call    0 returned 2
+        -:   64:
+        -:   65:    // 指针变量：定位尾部守卫区。
+        2:   66:    std::uint32_t* tail_guard = reinterpret_cast<std::uint32_t*>(
+        2:   67:        static_cast<char*>(user_ptr) + user_block_size_);
+        2:   68:    *tail_guard = kTailMagic;
+        -:   69:
+        2:   70:    active_blocks_[user_ptr] = raw_block;
+call    0 returned 2
+branch  1 taken 2 (fallthrough)
+branch  2 taken 0 (throw)
+        2:   71:    return user_ptr;
+        -:   72:}
+        -:   73:
+        -:   74:// 回收函数：校验守卫区并归还内存块。
+function _ZN20DebugFixedMemoryPool10DeallocateEPv called 3 returned 33% blocks executed 83%
+        3:   75:void DebugFixedMemoryPool::Deallocate(void* ptr) {
+        3:   76:    if (ptr == nullptr) {
+branch  0 taken 0 (fallthrough)
+branch  1 taken 3
+    #####:   77:        return;
+        -:   78:    }
+        -:   79:
+        -:   80:    // 迭代器变量：查找当前用户指针是否处于活跃状态。
+        3:   81:    const auto iterator = active_blocks_.find(ptr);
+call    0 returned 3
+branch  1 taken 3 (fallthrough)
+branch  2 taken 0 (throw)
+        3:   82:    if (iterator == active_blocks_.end()) {
+call    0 returned 3
+call    1 returned 3
+branch  2 taken 1 (fallthrough)
+branch  3 taken 2
+        1:   83:        throw std::runtime_error("invalid pointer or double free detected.");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 1
+call    5 never executed
+        -:   84:    }
+        -:   85:
+        -:   86:    // 指针变量：取出底层原始块地址。
+        2:   87:    void* raw_block = iterator->second;
+call    0 returned 2
+        -:   88:
+        2:   89:    ValidateBlock(raw_block, ptr);
+call    0 returned 2
+branch  1 taken 1 (fallthrough)
+branch  2 taken 1 (throw)
+        1:   90:    active_blocks_.erase(iterator);
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+        -:   91:
+        -:   92:    // 字节指针变量：把用户区内容清零，帮助调试悬挂读问题。
+        1:   93:    char* user_bytes = static_cast<char*>(ptr);
+        1:   94:    std::memset(user_bytes, 0, user_block_size_);
+        -:   95:
+        1:   96:    raw_pool_.Deallocate(raw_block);
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+        -:   97:}
+        -:   98:
+        -:   99:// 查询函数：返回活跃分配数量。
+function _ZNK20DebugFixedMemoryPool24GetActiveAllocationCountEv called 0 returned 0% blocks executed 0%
+    #####:  100:std::size_t DebugFixedMemoryPool::GetActiveAllocationCount() const {
+    #####:  101:    return active_blocks_.size();
+call    0 never executed
+        -:  102:}
+        -:  103:
+        -:  104:// 计算函数：返回头部对齐后的大小。
+function _ZN20DebugFixedMemoryPool20GetAlignedHeaderSizeEv called 5 returned 100% blocks executed 100%
+        5:  105:std::size_t DebugFixedMemoryPool::GetAlignedHeaderSize() {
+        -:  106:    // 常量变量：统一使用的对齐粒度。
+        5:  107:    const std::size_t alignment = alignof(std::max_align_t);
+        -:  108:
+        -:  109:    // 常量变量：原始头部大小。
+        5:  110:    const std::size_t header_size = sizeof(BlockHeader);
+        5:  111:    return ((header_size + alignment - 1) / alignment) * alignment;
+        -:  112:}
+        -:  113:
+        -:  114:// 计算函数：返回底层真实块大小。
+function _ZN20DebugFixedMemoryPool15GetRawBlockSizeEm called 3 returned 100% blocks executed 100%
+        3:  115:std::size_t DebugFixedMemoryPool::GetRawBlockSize(std::size_t user_block_size) {
+        3:  116:    return GetAlignedHeaderSize() + user_block_size + sizeof(std::uint32_t);
+call    0 returned 3
+        -:  117:}
+        -:  118:
+        -:  119:// 校验函数：确认守卫区是否被破坏。
+function _ZNK20DebugFixedMemoryPool13ValidateBlockEPvS0_ called 2 returned 50% blocks executed 54%
+        2:  120:void DebugFixedMemoryPool::ValidateBlock(void* raw_block, void* user_ptr) const {
+        -:  121:    // 指针变量：定位块头信息。
+        2:  122:    const BlockHeader* header = reinterpret_cast<const BlockHeader*>(raw_block);
+        2:  123:    if (header->head_magic != kHeadMagic) {
+branch  0 taken 0 (fallthrough)
+branch  1 taken 2
+    #####:  124:        throw std::runtime_error("head guard has been corrupted.");
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+call    5 never executed
+        -:  125:    }
+        -:  126:
+        -:  127:    // 指针变量：定位尾部守卫区。
+        2:  128:    const std::uint32_t* tail_guard = reinterpret_cast<const std::uint32_t*>(
+        2:  129:        static_cast<const char*>(user_ptr) + user_block_size_);
+        2:  130:    if (*tail_guard != kTailMagic) {
+branch  0 taken 1 (fallthrough)
+branch  1 taken 1
+        1:  131:        throw std::runtime_error("tail guard has been corrupted.");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 0
+call    5 never executed
+        -:  132:    }
+        1:  133:}
+        -:  134:
+        -:  135:// 构造函数：创建多尺寸分离适配的变长内存池。
+function _ZN18VariableMemoryPoolC2ESt6vectorImSaImEEm called 3 returned 67% blocks executed 76%
+        3:  136:VariableMemoryPool::VariableMemoryPool(std::vector<std::size_t> size_classes, std::size_t blocks_per_chunk)
+        4:  137:    : size_classes_() {
+call    0 returned 3
+call    1 returned 1
+        3:  138:    if (size_classes.empty()) {
+call    0 returned 3
+branch  1 taken 1 (fallthrough)
+branch  2 taken 2
+        1:  139:        throw std::invalid_argument("size_classes must not be empty.");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 1
+call    5 never executed
+        -:  140:    }
+        -:  141:
+        -:  142:    // 迭代器变量：用于遍历尺寸类别数组。
+        8:  143:    for (std::size_t payload_size : size_classes) {
+call    0 returned 2
+call    1 returned 2
+call    2 returned 8
+branch  3 taken 6 (fallthrough)
+branch  4 taken 2
+call    5 returned 6
+call    6 returned 6
+        6:  144:        if (payload_size == 0) {
+branch  0 taken 0 (fallthrough)
+branch  1 taken 6
+    #####:  145:            throw std::invalid_argument("size class must be greater than 0.");
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+call    5 never executed
+        -:  146:        }
+        -:  147:    }
+        -:  148:
+        2:  149:    std::sort(size_classes.begin(), size_classes.end());
+call    0 returned 2
+call    1 returned 2
+call    2 returned 2
+branch  3 taken 2 (fallthrough)
+branch  4 taken 0 (throw)
+        -:  150:    // 迭代器变量：用于按顺序创建桶位。
+        8:  151:    for (std::size_t payload_size : size_classes) {
+call    0 returned 2
+call    1 returned 2
+call    2 returned 8
+branch  3 taken 6 (fallthrough)
+branch  4 taken 2
+call    5 returned 6
+call    6 returned 6
+        6:  152:        if (!size_classes_.empty() && size_classes_.back()->payload_size == payload_size) {
+call    0 returned 6
+branch  1 taken 4 (fallthrough)
+branch  2 taken 2
+call    3 returned 4
+call    4 returned 4
+branch  5 taken 1 (fallthrough)
+branch  6 taken 3
+branch  7 taken 1 (fallthrough)
+branch  8 taken 5
+        1:  153:            continue;
+        -:  154:        }
+        -:  155:
+        5:  156:        size_classes_.emplace_back(std::make_unique<SizeClassEntry>(payload_size, blocks_per_chunk));
+call    0 returned 5
+branch  1 taken 5 (fallthrough)
+branch  2 taken 0 (throw)
+call    3 returned 5
+branch  4 taken 5 (fallthrough)
+branch  5 taken 0 (throw)
+call    6 returned 5
+call    7 never executed
+        -:  157:    }
+        2:  158:}
+        -:  159:
+        -:  160:// 分配函数：按请求大小选择合适桶位并返回内存。
+function _ZN18VariableMemoryPool8AllocateEm called 2 returned 100% blocks executed 79%
+        2:  161:void* VariableMemoryPool::Allocate(std::size_t size) {
+        2:  162:    if (size == 0) {
+branch  0 taken 0 (fallthrough)
+branch  1 taken 2
+    #####:  163:        throw std::invalid_argument("size must be greater than 0.");
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+call    5 never executed
+        -:  164:    }
+        -:  165:
+        -:  166:    // 常量变量：头部占用的对齐后字节数。
+        2:  167:    const std::size_t header_size = GetAlignedHeaderSize();
+call    0 returned 2
+        -:  168:
+        -:  169:    // 数量变量：定位适配当前请求的桶位索引。
+        2:  170:    const std::size_t class_index = FindSizeClassIndex(size);
+call    0 returned 2
+        -:  171:
+        -:  172:    // 布尔变量：标记是否需要回退到系统分配。
+        2:  173:    const bool uses_fallback = class_index == size_classes_.size();
+call    0 returned 2
+        -:  174:
+        -:  175:    // 指针变量：保存底层原始块地址。
+        2:  176:    void* raw_block = nullptr;
+        -:  177:
+        2:  178:    if (uses_fallback) {
+branch  0 taken 1 (fallthrough)
+branch  1 taken 1
+        -:  179:        // 常量变量：系统回退场景下的真实块大小。
+        1:  180:        const std::size_t raw_block_size = GetRawBlockSize(size);
+call    0 returned 1
+        1:  181:        raw_block = ::operator new(raw_block_size);
+call    0 returned 1
+        -:  182:    } else {
+        1:  183:        raw_block = size_classes_[class_index]->pool.Allocate();
+call    0 returned 1
+call    1 returned 1
+call    2 returned 1
+        -:  184:    }
+        -:  185:
+        -:  186:    // 字节指针变量：用于写入块头。
+        2:  187:    char* raw_bytes = static_cast<char*>(raw_block);
+        -:  188:
+        -:  189:    // 指针变量：定位块头信息。
+        2:  190:    BlockHeader* header = reinterpret_cast<BlockHeader*>(raw_bytes);
+        2:  191:    header->uses_fallback = uses_fallback;
+        2:  192:    header->class_index = class_index;
+        2:  193:    header->requested_size = size;
+        -:  194:
+        2:  195:    return raw_bytes + header_size;
+        -:  196:}
+        -:  197:
+        -:  198:// 回收函数：根据块头信息把内存归还正确的桶位。
+function _ZN18VariableMemoryPool10DeallocateEPv called 2 returned 100% blocks executed 71%
+        2:  199:void VariableMemoryPool::Deallocate(void* ptr) {
+        2:  200:    if (ptr == nullptr) {
+branch  0 taken 0 (fallthrough)
+branch  1 taken 2
+    #####:  201:        return;
+        -:  202:    }
+        -:  203:
+        -:  204:    // 常量变量：头部占用的对齐后字节数。
+        2:  205:    const std::size_t header_size = GetAlignedHeaderSize();
+call    0 returned 2
+        -:  206:
+        -:  207:    // 字节指针变量：回退到原始块首地址。
+        2:  208:    char* raw_bytes = static_cast<char*>(ptr) - header_size;
+        -:  209:
+        -:  210:    // 指针变量：读取块头信息。
+        2:  211:    BlockHeader* header = reinterpret_cast<BlockHeader*>(raw_bytes);
+        -:  212:
+        2:  213:    if (header->uses_fallback) {
+branch  0 taken 1 (fallthrough)
+branch  1 taken 1
+        1:  214:        ::operator delete(raw_bytes);
+call    0 returned 1
+        1:  215:        return;
+        -:  216:    }
+        -:  217:
+        1:  218:    if (header->class_index >= size_classes_.size()) {
+call    0 returned 1
+branch  1 taken 0 (fallthrough)
+branch  2 taken 1
+    #####:  219:        throw std::runtime_error("invalid size class index detected.");
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+call    5 never executed
+        -:  220:    }
+        -:  221:
+        1:  222:    size_classes_[header->class_index]->pool.Deallocate(raw_bytes);
+call    0 returned 1
+call    1 returned 1
+call    2 returned 1
+        -:  223:}
+        -:  224:
+        -:  225:// 查询函数：返回当前尺寸类别数量。
+function _ZNK18VariableMemoryPool17GetSizeClassCountEv called 1 returned 100% blocks executed 100%
+        1:  226:std::size_t VariableMemoryPool::GetSizeClassCount() const {
+        1:  227:    return size_classes_.size();
+call    0 returned 1
+        -:  228:}
+        -:  229:
+        -:  230:// 查询函数：返回指定桶位的用户负载大小。
+function _ZNK18VariableMemoryPool12GetSizeClassEm called 3 returned 67% blocks executed 91%
+        3:  231:std::size_t VariableMemoryPool::GetSizeClass(std::size_t index) const {
+        3:  232:    if (index >= size_classes_.size()) {
+call    0 returned 3
+branch  1 taken 1 (fallthrough)
+branch  2 taken 2
+        1:  233:        throw std::out_of_range("size class index is out of range.");
+call    0 returned 1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+call    4 returned 0
+call    5 never executed
+        -:  234:    }
+        -:  235:
+        2:  236:    return size_classes_[index]->payload_size;
+call    0 returned 2
+call    1 returned 2
+        -:  237:}
+        -:  238:
+        -:  239:// 构造函数：创建指定负载大小的桶位。
+function _ZN18VariableMemoryPool14SizeClassEntryC2Emm called 5 returned 100% blocks executed 100%
+        5:  240:VariableMemoryPool::SizeClassEntry::SizeClassEntry(std::size_t payload_size_value,
+        5:  241:                                                   std::size_t blocks_per_chunk)
+        -:  242:    : payload_size(payload_size_value),
+        5:  243:      pool(GetRawBlockSize(payload_size_value), blocks_per_chunk) {}
+call    0 returned 5
+call    1 returned 5
+        -:  244:
+        -:  245:// 计算函数：返回对齐后的头部大小。
+function _ZN18VariableMemoryPool20GetAlignedHeaderSizeEv called 10 returned 100% blocks executed 100%
+       10:  246:std::size_t VariableMemoryPool::GetAlignedHeaderSize() {
+        -:  247:    // 常量变量：统一使用的对齐粒度。
+       10:  248:    const std::size_t alignment = alignof(std::max_align_t);
+        -:  249:
+        -:  250:    // 常量变量：原始头部大小。
+       10:  251:    const std::size_t header_size = sizeof(BlockHeader);
+       10:  252:    return ((header_size + alignment - 1) / alignment) * alignment;
+        -:  253:}
+        -:  254:
+        -:  255:// 计算函数：根据负载大小计算真实块大小。
+function _ZN18VariableMemoryPool15GetRawBlockSizeEm called 6 returned 100% blocks executed 100%
+        6:  256:std::size_t VariableMemoryPool::GetRawBlockSize(std::size_t payload_size) {
+        6:  257:    return GetAlignedHeaderSize() + payload_size;
+call    0 returned 6
+        -:  258:}
+        -:  259:
+        -:  260:// 查找函数：返回适合请求大小的桶位索引。
+function _ZNK18VariableMemoryPool18FindSizeClassIndexEm called 2 returned 100% blocks executed 100%
+        2:  261:std::size_t VariableMemoryPool::FindSizeClassIndex(std::size_t size) const {
+        -:  262:    // 数量变量：遍历尺寸类别索引。
+        5:  263:    for (std::size_t index = 0; index < size_classes_.size(); ++index) {
+call    0 returned 5
+branch  1 taken 4 (fallthrough)
+branch  2 taken 1
+        4:  264:        if (size <= size_classes_[index]->payload_size) {
+call    0 returned 4
+call    1 returned 4
+branch  2 taken 1 (fallthrough)
+branch  3 taken 3
+        1:  265:            return index;
+        -:  266:        }
+        -:  267:    }
+        -:  268:
+        1:  269:    return size_classes_.size();
+call    0 returned 1
+        -:  270:}
