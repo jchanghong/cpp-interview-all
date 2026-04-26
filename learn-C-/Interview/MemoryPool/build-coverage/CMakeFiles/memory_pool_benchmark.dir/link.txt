@@ -1,1 +1,0 @@
-/usr/bin/c++    --coverage CMakeFiles/memory_pool_benchmark.dir/src/fixed_memory_pool.cpp.o CMakeFiles/memory_pool_benchmark.dir/src/memory_pool_extensions.cpp.o CMakeFiles/memory_pool_benchmark.dir/src/benchmark.cpp.o  -o memory_pool_benchmark  -lpthread 

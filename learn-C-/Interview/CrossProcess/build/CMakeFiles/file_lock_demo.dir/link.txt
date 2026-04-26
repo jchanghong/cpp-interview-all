@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/file_lock_demo.dir/src/file_lock_demo.cpp.o  -o file_lock_demo  libcross_process_lib.a -lpthread /usr/lib/x86_64-linux-gnu/librt.so 

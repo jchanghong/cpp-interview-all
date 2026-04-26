@@ -1,2 +1,0 @@
-/usr/bin/ar qc librpc_lib.a  CMakeFiles/rpc_lib.dir/src/rpc_framework.cpp.o
-/usr/bin/ranlib librpc_lib.a

@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/network_tests.dir/tests/test_network.cpp.o  -o network_tests  libnetwork_lib.a -lpthread 

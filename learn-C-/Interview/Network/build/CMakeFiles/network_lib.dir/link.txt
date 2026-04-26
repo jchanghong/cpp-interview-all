@@ -1,2 +1,0 @@
-/usr/bin/ar qc libnetwork_lib.a  CMakeFiles/network_lib.dir/src/network_echo.cpp.o
-/usr/bin/ranlib libnetwork_lib.a

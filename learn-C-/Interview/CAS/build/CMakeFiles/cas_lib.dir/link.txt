@@ -1,2 +1,0 @@
-/usr/bin/ar qc libcas_lib.a  CMakeFiles/cas_lib.dir/src/cas_primitives.cpp.o
-/usr/bin/ranlib libcas_lib.a

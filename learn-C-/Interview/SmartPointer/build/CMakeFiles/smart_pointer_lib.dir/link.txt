@@ -1,2 +1,0 @@
-/usr/bin/ar qc libsmart_pointer_lib.a  CMakeFiles/smart_pointer_lib.dir/src/smart_pointer_demo_lib.cpp.o
-/usr/bin/ranlib libsmart_pointer_lib.a

@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/smart_pointer_tests.dir/tests/test_smart_pointer.cpp.o  -o smart_pointer_tests  libsmart_pointer_lib.a 
