@@ -1,3 +1,5 @@
+> 说明：当前目录仅保留 README.md，正文为历史文档合并/知识点汇总；若出现旧文件名式标题，表示章节来源，不代表当前目录存在对应文件。
+
 # CODE_OF_CONDUCT.md
 
 ## 参与者公约
@@ -138,7 +140,7 @@ CrossProcess
 ### 构建与运行
 
 ```bash
-cd /home/wj/Code/C++/Interview/CrossProcess
+cd <CrossProcess 项目目录>
 cmake -S . -B build
 cmake --build build
 ctest --test-dir build --output-on-failure
@@ -249,7 +251,7 @@ MemoryPool/
 ### 如何构建
 
 ```bash
-cd /home/wj/Code/C++/Interview/MemoryPool
+cd <MemoryPool 项目目录>
 cmake -S . -B build
 cmake --build build
 ./build/memory_pool_demo
@@ -489,7 +491,7 @@ cat build-coverage/coverage/coverage_summary.txt
 ### 构建
 
 ```bash
-cd /home/wj/Code/C++/Interview/RPC
+cd <RPC 项目目录>
 cmake -S . -B build
 cmake --build build
 ctest --test-dir build --output-on-failure
@@ -517,7 +519,7 @@ ctest --test-dir build --output-on-failure
 ### 构建
 
 ```bash
-cd /home/wj/Code/C++/Interview/ThreadPool
+cd <ThreadPool 项目目录>
 cmake -S . -B build
 cmake --build build
 ctest --test-dir build --output-on-failure
@@ -545,7 +547,7 @@ ctest --test-dir build --output-on-failure
 ### 构建
 
 ```bash
-cd /home/wj/Code/C++/Interview/Timer
+cd <Timer 项目目录>
 cmake -S . -B build
 cmake --build build
 ctest --test-dir build --output-on-failure
@@ -568,24 +570,24 @@ ctest --test-dir build --output-on-failure
 
 ## 面试鸭
 
-![]
-![]
+<!-- 图片占位：原文此处为图片，当前目录未包含对应资源 -->
+<!-- 图片占位：原文此处为图片，当前目录未包含对应资源 -->
 
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 ![All Contributors](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
-> 一个干净免费的面试刷题网站！
+> 一个面向面试准备的刷题网站。
 >
 > 开源版为 React + 云开发 / Node.js 全栈项目，包含网站前台 + 管理员后台的完整前后端代码。
 
 
-在线使用，吊打面试官：https://mianshiya.com
+在线访问：https://mianshiya.com
 
-- 25 年面试鸭全新版本视频介绍：欢迎点赞、收藏、投币三连
-- 24 年面试鸭教学版开源项目：手把手带你做出自己的面试刷题网站
-- 22 年面试鸭开源版本视频介绍：欢迎点赞、收藏、投币三连
+- 25 年新版介绍视频
+- 24 年教学版开源项目
+- 22 年开源版本介绍视频
 
 ![面试鸭主页]
 
@@ -600,7 +602,7 @@ ctest --test-dir build --output-on-failure
 
 ### 面试鸭介绍
 
-2024 年，鱼皮带团队上线了新版面试鸭，题目更全面、刷题更方便、背题更省时、题解更优质、知识更丰富、更新更频繁，是鸭鸭的 6 大优势。目标只有一个：**帮助大家用更短的时间准备面试，吊打面试官！**
+2024 年，鱼皮带团队上线了新版面试鸭，题目更全面、刷题更方便、背题更省时、题解更优质、知识更丰富、更新更频繁。目标只有一个：**帮助大家更高效地准备面试。**
 
 1. 三端同步，刷题更方便：面试鸭支持网页端、小程序和 IDE 插件，全端数据同步，真正做到随时随地刷题，轻松备战求职面试。
 2. 题目全面，命中率高：面试鸭涵盖了 **几乎所有主流编程方向** 的面试题，Java 后端/ C++ / Python / Go / 前端 / 运维 / 计算机基础 / 408 考研，200+ 题库、9000+ 高频面试题，还有秋招热题、企业真实面经、刷题路线等，帮助你 360° 全方位无死角吊打面试官！
@@ -680,19 +682,19 @@ ctest --test-dir build --output-on-failure
 
 多维度题目检索和排序：
 
-![]
+<!-- 图片占位：原文此处为图片，当前目录未包含对应资源 -->
 
 题目浏览：
 
-![]
+<!-- 图片占位：原文此处为图片，当前目录未包含对应资源 -->
 
 试卷浏览：
 
-![]
+<!-- 图片占位：原文此处为图片，当前目录未包含对应资源 -->
 
 快速组卷：
 
-![]
+<!-- 图片占位：原文此处为图片，当前目录未包含对应资源 -->
 
 ### 技术栈
 
@@ -757,13 +759,13 @@ yarn build
 
 > 代码均在 server 目录中
 
-请阅读 [参考文档](server__README.md)
+请阅读下方“Node 后端”章节（当前目录未包含单独的 `server__README.md`）
 
 #### 云函数后端
 
 > 代码均在 cloudfunctions 目录中
 
-请阅读 [参考文档](cloudfunctions__README.md)
+请阅读下方“云函数后端”章节（当前目录未包含单独的 `cloudfunctions__README.md`）
 
 ### 🍊 进一步学习
 
@@ -802,7 +804,7 @@ Thanks goes to these wonderful people (emoji key):
 This project follows the all-contributors specification.
 Contributions of any kind welcome!
 
-# cloudfunctions__README.md
+# 云函数后端（来源：cloudfunctions__README.md）
 
 ## 面试鸭后端云函数
 
@@ -1164,7 +1166,7 @@ public:
 ```
 
 
-# server__README.md
+# Node 后端（来源：server__README.md）
 
 ## 面试鸭后端 Node 版
 
@@ -1222,7 +1224,7 @@ CMD [ "node", "server.js" ]
 
 将目录下所有文件压缩为 zip：
 
-![]
+<!-- 图片占位：原文此处为图片，当前目录未包含对应资源 -->
 
 进入微信云托管，创建环境和服务，然后发布一个版本。
 
@@ -1230,7 +1232,7 @@ CMD [ "node", "server.js" ]
 - 附件类型为 ZIP 压缩包（即上一步中产生的压缩包）
 - 监听端口为 3000
 
-![]
+<!-- 图片占位：原文此处为图片，当前目录未包含对应资源 -->
 
 随后点击确定，即可创建一个版本，后续发布流程可以参考微信云托管文档。
 
