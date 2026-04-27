@@ -2,6 +2,8 @@
 
 > 说明：当前目录仅保留 README.md，正文为历史文档合并/知识点汇总；文中的旧文件名式标题仅表示章节来源，不代表当前目录存在对应文件。
 
+> **注意**：原仓库已合并为各目录的 README.md，文中旧链接（`../` 开头的相对路径）已失效，以下仅保留知识点标题。
+
 ## Network
 
 这是历史工程的说明页：原文对应一个最小本地 `TCP echo server/client` 示例，适合面试里讲 socket 生命周期、绑定监听、连接、收发和资源管理；当前目录不包含可直接构建的源码。
@@ -54,155 +56,155 @@ ctest --test-dir build --output-on-failure
 ## 编程语言C++
 
 * C++primer5笔记代码资料
-* [volatile static const extern等关键字](../%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/problems__volatile%2Cstatic%2Cconst%2Cextern%E7%AD%89%E5%85%B3%E9%94%AE%E5%AD%97.md)
-* [宏定义和展开、内联函数区别](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%AE%8F%E5%AE%9A%E4%B9%89%E5%92%8C%E5%B1%95%E5%BC%80%E3%80%81%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0%E5%8C%BA%E5%88%AB.md)
+* volatile static const extern等关键字
+* 宏定义和展开、内联函数区别
 * 常用库函数实现
-    * [malloc,strcpy,strcmp的实现，常用库函数实现，哪些库函数属于高危函数](../%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/problems__malloc%2Cstrcpy%2Cstrcmp%E7%9A%84%E5%AE%9E%E7%8E%B0%EF%BC%8C%E5%B8%B8%E7%94%A8%E5%BA%93%E5%87%BD%E6%95%B0%E5%AE%9E%E7%8E%B0%EF%BC%8C%E5%93%AA%E4%BA%9B%E5%BA%93%E5%87%BD%E6%95%B0%E5%B1%9E%E4%BA%8E%E9%AB%98%E5%8D%B1%E5%87%BD%E6%95%B0.md)
-* [STL原理及实现](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__STL%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0.md)
-* [虚函数的作用和实现原理，什么是虚函数,有什么作用?](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E8%99%9A%E5%87%BD%E6%95%B0%E7%9A%84%E4%BD%9C%E7%94%A8%E5%92%8C%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%EF%BC%8C%E4%BB%80%E4%B9%88%E6%98%AF%E8%99%9A%E5%87%BD%E6%95%B0%2C%E6%9C%89%E4%BB%80%E4%B9%88%E4%BD%9C%E7%94%A8.md)
-    * [纯虚函数，为什么需要纯虚函数？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E7%BA%AF%E8%99%9A%E5%87%BD%E6%95%B0%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E7%BA%AF%E8%99%9A%E5%87%BD%E6%95%B0.md)
-    * [为什么需要虚析构函数,什么时候不需要?](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E8%99%9A%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0%2C%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E4%B8%8D%E9%9C%80%E8%A6%81.md)
-    * [内联函数、构造函数、静态成员函数可以是虚函数吗?](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0%E3%80%81%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E3%80%81%E9%9D%99%E6%80%81%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0%E5%8F%AF%E4%BB%A5%E6%98%AF%E8%99%9A%E5%87%BD%E6%95%B0%E5%90%97.md)
-    * [构造函数中可以调用虚函数吗?](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E4%B8%AD%E5%8F%AF%E4%BB%A5%E8%B0%83%E7%94%A8%E8%99%9A%E5%87%BD%E6%95%B0%E5%90%97.md)
-    * [为什么需要虚继承?虚继承实现原理解析](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E8%99%9A%E7%BB%A7%E6%89%BF.md)
-    * [虚函数是针对类还是针对对象的？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E8%99%9A%E5%87%BD%E6%95%B0%E6%98%AF%E9%92%88%E5%AF%B9%E7%B1%BB%E8%BF%98%E6%98%AF%E9%92%88%E5%AF%B9%E5%AF%B9%E8%B1%A1%E7%9A%84%EF%BC%9F.md)
-    * [同一个类的两个对象的虚函数表是如何维护的？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%90%8C%E4%B8%80%E4%B8%AA%E7%B1%BB%E7%9A%84%E4%B8%A4%E4%B8%AA%E5%AF%B9%E8%B1%A1%E7%9A%84%E8%99%9A%E5%87%BD%E6%95%B0%E8%A1%A8%E6%98%AF%E5%A6%82%E4%BD%95%E7%BB%B4%E6%8A%A4%E7%9A%84%EF%BC%9F.md)
-* [C++ 内存分配机制](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__C%2B%2B%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D.md)
+    * malloc,strcpy,strcmp的实现，常用库函数实现，哪些库函数属于高危函数
+* STL原理及实现
+* 虚函数的作用和实现原理，什么是虚函数,有什么作用?
+    * 纯虚函数，为什么需要纯虚函数？
+    * 为什么需要虚析构函数,什么时候不需要?
+    * 内联函数、构造函数、静态成员函数可以是虚函数吗?
+    * 构造函数中可以调用虚函数吗?
+    * 为什么需要虚继承?虚继承实现原理解析
+    * 虚函数是针对类还是针对对象的？
+    * 同一个类的两个对象的虚函数表是如何维护的？
+* C++ 内存分配机制
 * 指针
-    * [迭代器与普通指针有什么区别](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E8%BF%AD%E4%BB%A3%E5%99%A8%E4%B8%8E%E6%99%AE%E9%80%9A%E6%8C%87%E9%92%88%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB.md)
-    * [C++的智能指针及其原理](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__C%2B%2B%E7%9A%84%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86.md)
-    * [悬挂指针和野指针有什么区别？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E6%82%AC%E6%8C%82%E6%8C%87%E9%92%88%E5%92%8C%E9%87%8E%E6%8C%87%E9%92%88%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F.md)
-    * [指针常量和常量指针的区别](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E6%8C%87%E9%92%88%E5%B8%B8%E9%87%8F%E5%92%8C%E5%B8%B8%E9%87%8F%E6%8C%87%E9%92%88%E7%9A%84%E5%8C%BA%E5%88%AB.md)
-    * [指针和引用有什么区别呢？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E6%8C%87%E9%92%88%E5%92%8C%E5%BC%95%E7%94%A8%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%E5%91%A2%EF%BC%9F.md)
-    * [如何避免悬挂指针？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E6%82%AC%E6%8C%82%E6%8C%87%E9%92%88%EF%BC%9F.md)
-* [override和overload的区别](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__override%E5%92%8Coverload%E7%9A%84%E5%8C%BA%E5%88%AB%E6%9C%89%E9%82%A3%E4%BA%9B.md)
-* [写string类的构造，析构，拷贝函数](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%86%99string%E7%B1%BB%E7%9A%84%E6%9E%84%E9%80%A0%EF%BC%8C%E6%9E%90%E6%9E%84%EF%BC%8C%E6%8B%B7%E8%B4%9D%E5%87%BD%E6%95%B0.md)
-* [C++中类成员的访问权限有哪些？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__C%2B%2B%E4%B8%AD%E7%B1%BB%E6%88%90%E5%91%98%E7%9A%84%E8%AE%BF%E9%97%AE%E6%9D%83%E9%99%90%E6%9C%89%E9%82%A3%E4%BA%9B%EF%BC%9F.md)
-* [C++多态的实现有哪几种？它们有什么不同？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__C%2B%2B%E5%A4%9A%E6%80%81%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%9C%89%E9%82%A3%E5%87%A0%E7%A7%8D%EF%BC%9F%E4%BB%96%E4%BB%AC%E6%9C%89%E4%BB%80%E4%B9%88%E4%B8%8D%E5%90%8C%EF%BC%9F.md)
-* [C++中右值引用有什么作用？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__C%2B%2B%E4%B8%AD%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E6%9C%89%E4%BB%80%E4%B9%88%E4%BD%9C%E7%94%A8%EF%BC%9F.md)
-* [面向对象的三大特征是什么](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84%E4%B8%89%E5%A4%A7%E7%89%B9%E5%BE%81%E6%98%AF%E4%BB%80%E4%B9%88.md)
-* [静态分配内存和动态分配内存有什么区别？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E9%9D%99%E6%80%81%E5%88%86%E9%85%8D%E5%86%85%E5%AD%98%E5%92%8C%E5%8A%A8%E6%80%81%E5%88%86%E9%85%8D%E5%86%85%E5%AD%98%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F.md)
-* [C++结构体内存对齐](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__C%2B%2B%E7%BB%93%E6%9E%84%E4%BD%93%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90.md)
-* [讲一讲C++中的原子操作有哪些？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E8%AE%B2%E4%B8%80%E8%AE%B2C%2B%2B%E4%B8%AD%E7%9A%84%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E6%9C%89%E9%82%A3%E4%BA%9B%EF%BC%9F.md)
-* [简单说说STL中的优先级队列是如何实现的？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__STL%E4%B8%AD%E7%9A%84%E4%BC%98%E5%85%88%E7%BA%A7%E9%98%9F%E5%88%97%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84%EF%BC%9F.md)
-* [C++中动态链接库和静态连接库的区别是什么？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__C%2B%2B%E4%B8%AD%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5%E5%BA%93%E5%92%8C%E9%9D%99%E6%80%81%E8%BF%9E%E6%8E%A5%E5%BA%93%E7%9A%84%E5%8C%BA%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F.md)
-* [在C++中，对一个对象先malloc后delete这样使用可以吗？有什么风险？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%9C%A8C%2B%2B%E4%B8%AD%EF%BC%8C%E5%AF%B9%E4%B8%80%E4%B8%AA%E5%AF%B9%E8%B1%A1%E5%85%88malloc%E5%90%8Edelete%E8%BF%99%E6%A0%B7%E4%BD%BF%E7%94%A8%E5%8F%AF%E4%BB%A5%E5%90%97%EF%BC%9F%E6%9C%89%E4%BB%80%E4%B9%88%E9%A3%8E%E9%99%A9.md)
-* [在C++中，三个全局变量相互依赖，程序应该如何初始化呢？300个呢？](../%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5/problems__%E5%9C%A8C%2B%2B%E4%B8%AD%EF%BC%8C%E4%B8%89%E4%B8%AA%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E7%9B%B8%E4%BA%92%E4%BE%9D%E8%B5%96%EF%BC%8C%E7%A8%8B%E5%BA%8F%E5%BA%94%E8%AF%A5%E5%A6%82%E4%BD%95%E5%88%9D%E5%A7%8B%E5%8C%96%E5%91%A2%EF%BC%9F300%E4%B8%AA%E5%91%A2%EF%BC%9F.md)
-* [STL中的优先级队列是如何实现的？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__STL%E4%B8%AD%E7%9A%84%E4%BC%98%E5%85%88%E7%BA%A7%E9%98%9F%E5%88%97%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84%EF%BC%9F.md)
-* [如果拿到虚函数表的储存地址，是否可以改写虚函数表的内容？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%A6%82%E6%9E%9C%E6%8B%BF%E5%88%B0%E8%99%9A%E5%87%BD%E6%95%B0%E8%A1%A8%E7%9A%84%E5%82%A8%E5%AD%98%E5%9C%B0%E5%9D%80%EF%BC%8C%E6%98%AF%E5%90%A6%E5%8F%AF%E4%BB%A5%E6%94%B9%E5%86%99%E8%99%9A%E5%87%BD%E6%95%B0%E8%A1%A8%E7%9A%84%E5%86%85%E5%AE%B9%EF%BC%9F.md)
-* [在C++中为什么需要深拷贝，浅拷贝会存在哪些问题？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%9C%A8C%2B%2B%E4%B8%AD%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E6%B7%B1%E6%8B%B7%E8%B4%9D%EF%BC%8C%E6%B5%85%E6%8B%B7%E8%B4%9D%E4%BC%9A%E5%AD%98%E5%9C%A8%E5%93%AA%E4%BA%9B%E9%97%AE%E9%A2%98%EF%BC%9F.md)
-* [如何构造一个类使得只能在堆上或者栈上分配内存？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%A6%82%E4%BD%95%E6%9E%84%E9%80%A0%E4%B8%80%E4%B8%AA%E7%B1%BB%E4%BD%BF%E5%BE%97%E5%8F%AA%E8%83%BD%E5%9C%A8%E5%A0%86%E4%B8%8A%E6%88%96%E8%80%85%E6%A0%88%E4%B8%8A%E5%88%86%E9%85%8D%E5%86%85%E5%AD%98%EF%BC%9F.md)
-* [什么是C++的内存模型？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E4%BB%80%E4%B9%88%E6%98%AFC%2B%2B%E7%9A%84%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%EF%BC%9F.md)
-* [指针和引用在内存中的表现形式有何不同？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E6%8C%87%E9%92%88%E5%92%8C%E5%BC%95%E7%94%A8%E5%9C%A8%E5%86%85%E5%AD%98%E4%B8%AD%E7%9A%84%E8%A1%A8%E7%8E%B0%E5%BD%A2%E5%BC%8F%E6%9C%89%E4%BD%95%E4%B8%8D%E5%90%8C%EF%BC%9F.md)
-* [内存映射文件是什么？如何用它来处理大文件？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E5%86%85%E5%AD%98%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E5%A6%82%E4%BD%95%E7%94%A8%E5%AE%83%E6%9D%A5%E5%A4%84%E7%90%86%E5%A4%A7%E6%96%87%E4%BB%B6%EF%BC%9F.md)
-* [C++中结构体内存布局的规则是什么？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__C%2B%2B%E4%B8%AD%E7%BB%93%E6%9E%84%E4%BD%93%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80%E7%9A%84%E8%A7%84%E5%88%99%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F.md)
-* [在C++中，用堆和用栈谁更快一点？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%9C%A8C%2B%2B%E4%B8%AD%EF%BC%8C%E7%94%A8%E5%A0%86%E5%92%8C%E7%94%A8%E6%A0%88%E8%B0%81%E6%9B%B4%E5%BF%AB%E4%B8%80%E7%82%B9%EF%BC%9F.md)
-* [C++中struct和class有什么区别？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__C%2B%2B%E4%B8%ADstruct%E5%92%8Cclass%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F.md)
-* [如果A这个对象对应的类是一个空类，那么sizeof(A)的值是多少？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%A6%82%E6%9E%9CA%E8%BF%99%E4%B8%AA%E5%AF%B9%E8%B1%A1%E5%AF%B9%E5%BA%94%E7%9A%84%E7%B1%BB%E6%98%AF%E4%B8%80%E4%B8%AA%E7%A9%BA%E7%B1%BB%EF%BC%8C%E9%82%A3%E4%B9%88sizeof%28A%29%E7%9A%84%E5%80%BC%E6%98%AF%E5%A4%9A%E5%B0%91%EF%BC%9F.md)
-* [如果A这个指针指向一个数组，那么sizeof(A)的值是多少？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%A6%82%E6%9E%9CA%E8%BF%99%E4%B8%AA%E6%8C%87%E9%92%88%E6%8C%87%E5%90%91%E4%B8%80%E4%B8%AA%E6%95%B0%E7%BB%84%EF%BC%8C%E9%82%A3%E4%B9%88sizeof%28A%29%E7%9A%84%E5%80%BC%E6%98%AF%E5%A4%9A%E5%B0%91%EF%BC%9F.md)
-* [如果A是某一个类的指针，那么在它等于nullptr的情况下能直接调用里面的A对应类里面的public函数吗](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%A6%82%E6%9E%9CA%E6%98%AF%E6%9F%90%E4%B8%80%E4%B8%AA%E7%B1%BB%E7%9A%84%E6%8C%87%E9%92%88%EF%BC%8C%E9%82%A3%E4%B9%88%E5%9C%A8%E5%AE%83%E7%AD%89%E4%BA%8Enullptr%E7%9A%84%E6%83%85%E5%86%B5%E4%B8%8B%E8%83%BD%E7%9B%B4%E6%8E%A5%E8%B0%83%E7%94%A8%E9%87%8C%E9%9D%A2%E7%9A%84A%E5%AF%B9%E5%BA%94%E7%B1%BB%E9%87%8C%E9%9D%A2%E7%9A%84public%E5%87%BD%E6%95%B0%E5%90%97.md)
-* [STL中一般都有哪些常见的算法库呢？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__STL%E4%B8%AD%E4%B8%80%E8%88%AC%E9%83%BD%E6%9C%89%E9%82%A3%E4%BA%9B%E5%B8%B8%E8%A7%81%E7%9A%84%E7%AE%97%E6%B3%95%E5%BA%93%E5%91%A2%EF%BC%9F.md)
-* [C++中，结构体可以直接赋值吗？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__C%2B%2B%E4%B8%AD%EF%BC%8C%E7%BB%93%E6%9E%84%E4%BD%93%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E8%B5%8B%E5%80%BC%E5%90%97%EF%BC%9F.md)
-* [#define和const的区别有哪些？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%23define%E5%92%8Cconst%E7%9A%84%E5%8C%BA%E5%88%AB%E6%9C%89%E9%82%A3%E4%BA%9B%EF%BC%9F.md)
-* [在C++的map中，[]与insert有哪些区别？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%9C%A8C%2B%2B%E7%9A%84map%E4%B8%AD%EF%BC%8C%5B%5D%E4%B8%8Einsert%E6%9C%89%E9%82%A3%E4%BA%9B%E5%8C%BA%E5%88%AB%EF%BC%9F.md)
-* [在32位和64位系统中，指针分别为多大？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%9C%A832%E4%BD%8D%E5%92%8C64%E4%BD%8D%E7%B3%BB%E7%BB%9F%E4%B8%AD%EF%BC%8C%E6%8C%87%E9%92%88%E5%88%86%E5%88%AB%E4%B8%BA%E5%A4%9A%E5%A4%A7%EF%BC%9F.md)
-* [weak_ptr是如何解决shared_ptr循环引用的？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__weak_ptr%E6%98%AF%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3shared_ptr%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8%E7%9A%84%EF%BC%9F.md)
-* [虚函数是否可以声明为static？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E8%99%9A%E5%87%BD%E6%95%B0%E6%98%AF%E5%90%A6%E5%8F%AF%E4%BB%A5%E5%A3%B0%E6%98%8E%E4%B8%BAstatic%EF%BC%9F.md)
-* [如何使用gdb来定位C++程序中的死锁？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8gdb%E6%9D%A5%E5%AE%9A%E4%BD%8DC%2B%2B%E7%A8%8B%E5%BA%8F%E4%B8%AD%E7%9A%84%E6%AD%BB%E9%94%81%EF%BC%9F.md)
-* [C++中常用的类优化技术有哪些？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__C%2B%2B%E4%B8%AD%E5%B8%B8%E7%94%A8%E7%9A%84%E7%B1%BB%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF%E6%9C%89%E9%82%A3%E4%BA%9B%EF%BC%9F.md)
-* [C++的atomic<bool>代码底层是如何实现的？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__C%2B%2B%E7%9A%84atomic-bool%E4%BB%A3%E7%A0%81%E5%BA%95%E5%B1%82%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84%EF%BC%9F.md)
-* [原子变量的内存序是什么？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%8E%9F%E5%AD%90%E5%8F%98%E9%87%8F%E7%9A%84%E5%86%85%E5%AD%98%E5%BA%8F%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F.md)
-* [什么是左值？什么是右值？有什么不同？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E4%BB%80%E4%B9%88%E6%98%AF%E5%B7%A6%E5%80%BC%EF%BC%9F%E4%BB%80%E4%B9%88%E6%98%AF%E5%8F%B3%E5%80%BC%EF%BC%9F%E6%9C%89%E4%BB%80%E4%B9%88%E4%B8%8D%E5%90%8C%EF%BC%9F.md)
-* [什么是完美转发？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E4%BB%80%E4%B9%88%E6%98%AF%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91%EF%BC%9F.md)
-* [C++中四种cast的转换？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__C%2B%2B%E4%B8%AD%E5%9B%9B%E7%A7%8Dcast%E7%9A%84%E8%BD%AC%E6%8D%A2%EF%BC%9F.md)
-* [内存池是什么？在C++中如何设计一个简单的内存池？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%86%85%E5%AD%98%E6%B1%A0%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E5%9C%A8C%2B%2B%E4%B8%AD%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E5%86%85%E5%AD%98%E6%B1%A0%EF%BC%9F.md)
-* [STL中，map的底层是如何实现的？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__STL%E4%B8%AD%EF%BC%8Cmap%E7%9A%84%E5%BA%95%E5%B1%82%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84%EF%BC%9F.md)
-* [STL中，set的底层是如何实现的？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__STL%E4%B8%AD%EF%BC%8Cset%E7%9A%84%E5%BA%95%E5%B1%82%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84%EF%BC%9F.md)
-* [set，multiset，map，multimap之间都有什么区别？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__set%EF%BC%8Cmultiset%EF%BC%8Cmap%EF%BC%8Cmultimap%E4%B9%8B%E9%97%B4%E9%83%BD%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F.md)
-* [在C++的算法库中，find()和binary_search()有什么区别？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%9C%A8C%2B%2B%E7%9A%84%E7%AE%97%E6%B3%95%E5%BA%93%E4%B8%AD%EF%BC%8Cfind%28%29%E5%92%8Cbinary_search%28%29%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F.md)
-* [lower_bound()和upper_bound()有什么区别？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__lower_bound%28%29%E5%92%8Cupper_bound%28%29%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F.md)
-* [为什么需要allocator？他在STL中有什么作用？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81allocator%EF%BC%9F%E4%BB%96%E5%9C%A8STL%E4%B8%AD%E6%9C%89%E4%BB%80%E4%B9%88%E4%BD%9C%E7%94%A8%EF%BC%9F.md)
-* [什么是RAII原则，他在STL是怎么应用的？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E4%BB%80%E4%B9%88%E6%98%AFRAII%E5%8E%9F%E5%88%99%EF%BC%8C%E4%BB%96%E5%9C%A8STL%E6%98%AF%E6%80%8E%E4%B9%88%E5%BA%94%E7%94%A8%E7%9A%84%EF%BC%9F.md)
-* [STL容器是线程安全的吗？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__STL%E5%AE%B9%E5%99%A8%E6%98%AF%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E5%90%97%EF%BC%9F.md)
-* [什么是泛型编程，他在STL中是怎么使用的？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E4%BB%80%E4%B9%88%E6%98%AF%E6%B3%9B%E5%9E%8B%E7%BC%96%E7%A8%8B%EF%BC%8C%E4%BB%96%E5%9C%A8STL%E4%B8%AD%E6%98%AF%E6%80%8E%E4%B9%88%E4%BD%BF%E7%94%A8%E7%9A%84%EF%BC%9F.md)
-* [如何选择合适的STL容器](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9%E5%90%88%E9%80%82%E7%9A%84STL%E5%AE%B9%E5%99%A8.md)
-* [函数参数的入栈顺序是什么，从左到右还是从右到左?](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E7%9A%84%E5%85%A5%E6%A0%88%E9%A1%BA%E5%BA%8F%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%8C%E4%BB%8E%E5%B7%A6%E5%88%B0%E5%8F%B3%E8%BF%98%E6%98%AF%E4%BB%8E%E5%8F%B3%E5%88%B0%E5%B7%A6.md)
-* [讲讲函数调用的过程](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E8%AE%B2%E8%AE%B2%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B.md)
-* [git的merge和rebase有什么区别?](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__git%E7%9A%84merge%E5%92%8Crebase%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB.md)
+    * 迭代器与普通指针有什么区别
+    * C++的智能指针及其原理
+    * 悬挂指针和野指针有什么区别？
+    * 指针常量和常量指针的区别
+    * 指针和引用有什么区别呢？
+    * 如何避免悬挂指针？
+* override和overload的区别
+* 写string类的构造，析构，拷贝函数
+* C++中类成员的访问权限有哪些？
+* C++多态的实现有哪几种？它们有什么不同？
+* C++中右值引用有什么作用？
+* 面向对象的三大特征是什么
+* 静态分配内存和动态分配内存有什么区别？
+* C++结构体内存对齐
+* 讲一讲C++中的原子操作有哪些？
+* 简单说说STL中的优先级队列是如何实现的？
+* C++中动态链接库和静态连接库的区别是什么？
+* 在C++中，对一个对象先malloc后delete这样使用可以吗？有什么风险？
+* 在C++中，三个全局变量相互依赖，程序应该如何初始化呢？300个呢？
+* STL中的优先级队列是如何实现的？
+* 如果拿到虚函数表的储存地址，是否可以改写虚函数表的内容？
+* 在C++中为什么需要深拷贝，浅拷贝会存在哪些问题？
+* 如何构造一个类使得只能在堆上或者栈上分配内存？
+* 什么是C++的内存模型？
+* 指针和引用在内存中的表现形式有何不同？
+* 内存映射文件是什么？如何用它来处理大文件？
+* C++中结构体内存布局的规则是什么？
+* 在C++中，用堆和用栈谁更快一点？
+* C++中struct和class有什么区别？
+* 如果A这个对象对应的类是一个空类，那么sizeof(A)的值是多少？
+* 如果A这个指针指向一个数组，那么sizeof(A)的值是多少？
+* 如果A是某一个类的指针，那么在它等于nullptr的情况下能直接调用里面的A对应类里面的public函数吗
+* STL中一般都有哪些常见的算法库呢？
+* C++中，结构体可以直接赋值吗？
+* #define和const的区别有哪些？
+* 在C++的map中，[]与insert有哪些区别？
+* 在32位和64位系统中，指针分别为多大？
+* weak_ptr是如何解决shared_ptr循环引用的？
+* 虚函数是否可以声明为static？
+* 如何使用gdb来定位C++程序中的死锁？
+* C++中常用的类优化技术有哪些？
+* C++的atomic<bool>代码底层是如何实现的？
+* 原子变量的内存序是什么？
+* 什么是左值？什么是右值？有什么不同？
+* 什么是完美转发？
+* C++中四种cast的转换？
+* 内存池是什么？在C++中如何设计一个简单的内存池？
+* STL中，map的底层是如何实现的？
+* STL中，set的底层是如何实现的？
+* set，multiset，map，multimap之间都有什么区别？
+* 在C++的算法库中，find()和binary_search()有什么区别？
+* lower_bound()和upper_bound()有什么区别？
+* 为什么需要allocator？他在STL中有什么作用？
+* 什么是RAII原则，他在STL是怎么应用的？
+* STL容器是线程安全的吗？
+* 什么是泛型编程，他在STL中是怎么使用的？
+* 如何选择合适的STL容器
+* 函数参数的入栈顺序是什么，从左到右还是从右到左?
+* 讲讲函数调用的过程
+* git的merge和rebase有什么区别?
 
 ## 数据结构与算法
 
 * 数据结构与算法学习攻略
-* [数组和链表的区别、适用场景](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E6%95%B0%E7%BB%84%E5%92%8C%E9%93%BE%E8%A1%A8%E7%9A%84%E5%8C%BA%E5%88%AB%E3%80%81%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF.md)
-* [栈和队列的区别、适用场景](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E6%A0%88%E5%92%8C%E9%98%9F%E5%88%97%E7%9A%84%E5%8C%BA%E5%88%AB%E3%80%81%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF.md)
-* [什么时候会产生栈溢出，为什么一直递归就会栈溢出](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E4%BC%9A%E4%BA%A7%E7%94%9F%E6%A0%88%E6%BA%A2%E5%87%BA%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%80%E7%9B%B4%E9%80%92%E5%BD%92%E5%B0%B1%E4%BC%9A%E6%A0%88%E6%BA%A2%E5%87%BA.md)
-* [循环队列怎么实现](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E5%BE%AA%E7%8E%AF%E9%98%9F%E5%88%97%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0.md)
-* [什么是二叉树、二叉搜索树、平衡二叉树、完全二叉树、满二叉树](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E4%BB%80%E4%B9%88%E6%98%AF%E4%BA%8C%E5%8F%89%E6%A0%91%E3%80%81%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E3%80%81%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91%E3%80%81%E5%AE%8C%E5%85%A8%E4%BA%8C%E5%8F%89%E6%A0%91%E3%80%81%E6%BB%A1%E4%BA%8C%E5%8F%89%E6%A0%91.md)
-* [二叉树和链表的区别](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E4%BA%8C%E5%8F%89%E6%A0%91%E5%92%8C%E9%93%BE%E8%A1%A8%E7%9A%84%E5%8C%BA%E5%88%AB.md)
-* [什么是哈夫曼树？构造过程？应用场景](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E4%BB%80%E4%B9%88%E6%98%AF%E5%93%88%E5%A4%AB%E6%9B%BC%E6%A0%91%EF%BC%9F%E6%9E%84%E9%80%A0%E8%BF%87%E7%A8%8B%EF%BC%9F%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF.md)
-* [什么是堆？如何维护堆](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E4%BB%80%E4%B9%88%E6%98%AF%E5%A0%86%EF%BC%9F%E5%A6%82%E4%BD%95%E7%BB%B4%E6%8A%A4%E5%A0%86.md)
-* [什么是红黑树？红黑树与平衡二叉树、B/B+ 树的区别](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E4%BB%80%E4%B9%88%E6%98%AF%E7%BA%A2%E9%BB%91%E6%A0%91%EF%BC%9F%E7%BA%A2%E9%BB%91%E6%A0%91%E4%B8%8E%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91%E3%80%81B%E5%92%8CB%2B%E6%A0%91%E7%9A%84%E5%8C%BA%E5%88%AB.md)
-* [什么是跳表？跳表和平衡二叉树的区别](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E4%BB%80%E4%B9%88%E6%98%AF%E8%B7%B3%E8%A1%A8%EF%BC%9F%E8%B7%B3%E8%A1%A8%E5%92%8C%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%8C%BA%E5%88%AB.md)
-* [如何判断图中是否有环（拓扑排序）](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E5%9B%BE%E4%B8%AD%E6%98%AF%E5%90%A6%E6%9C%89%E7%8E%AF%EF%BC%88%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F%EF%BC%89.md)
-* [时间复杂度和空间复杂度的定义？时间换空间 & 空间换时间的例子有哪些](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%92%8C%E7%A9%BA%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E7%9A%84%E5%AE%9A%E4%B9%89%EF%BC%9F%E6%97%B6%E9%97%B4%E6%8D%A2%E7%A9%BA%E9%97%B4%26%E7%A9%BA%E9%97%B4%E6%8D%A2%E6%97%B6%E9%97%B4%E7%9A%84%E4%BE%8B%E5%AD%90%E6%9C%89%E5%93%AA%E4%BA%9B.md)
-* [常见排序算法及其时间复杂度、各种排序算法对比](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E5%B8%B8%E8%A7%81%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E5%8F%8A%E5%85%B6%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E3%80%81%E5%90%84%E7%A7%8D%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E5%AF%B9%E6%AF%94.md)
-* [内存有限，怎么对100亿数据进行排序（大数据小内存排序问题，答案不唯一）](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E5%86%85%E5%AD%98%E6%9C%89%E9%99%90%EF%BC%8C%E6%80%8E%E4%B9%88%E5%AF%B9100%E4%BA%BF%E6%95%B0%E6%8D%AE%E8%BF%9B%E8%A1%8C%E6%8E%92%E5%BA%8F%EF%BC%88%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%B0%8F%E5%86%85%E5%AD%98%E6%8E%92%E5%BA%8F%E9%97%AE%E9%A2%98%EF%BC%89.md)
-* [如何判断某网页的URL是否存在于包含100亿条数据的黑名单上（大数据小内存去重问题，答案不唯一）](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E6%9F%90%E7%BD%91%E9%A1%B5%E7%9A%84URL%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8%E4%BA%8E%E5%8C%85%E5%90%AB100%E4%BA%BF%E6%9D%A1%E6%95%B0%E6%8D%AE%E7%9A%84%E9%BB%91%E5%90%8D%E5%8D%95%E4%B8%8A%EF%BC%88%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%B0%8F%E5%86%85%E5%AD%98%E5%8E%BB%E9%87%8D%E9%97%AE%E9%A2%98%EF%BC%89.md)
-* [检查手机号是否存在于百万数据电话号中（答案不唯一）](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E6%A3%80%E6%9F%A5%E6%89%8B%E6%9C%BA%E5%8F%B7%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8%E4%BA%8E%E7%99%BE%E4%B8%87%E6%95%B0%E6%8D%AE%E7%94%B5%E8%AF%9D%E5%8F%B7%E4%B8%AD.md)
-* [内存有限，如何在20亿个整数中找到出现次数最多的数（答案不唯一）](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E5%86%85%E5%AD%98%E6%9C%89%E9%99%90%EF%BC%8C%E5%A6%82%E4%BD%95%E5%9C%A820%E4%BA%BF%E4%B8%AA%E6%95%B4%E6%95%B0%E4%B8%AD%E6%89%BE%E5%88%B0%E5%87%BA%E7%8E%B0%E6%AC%A1%E6%95%B0%E6%9C%80%E5%A4%9A%E7%9A%84%E6%95%B0.md)
-* [内存有限，如何在 40 亿个非负整数中找到所有未出现的数（答案不唯一）](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E5%86%85%E5%AD%98%E6%9C%89%E9%99%90%EF%BC%8C%E5%A6%82%E4%BD%95%E5%9C%A840%E4%BA%BF%E4%B8%AA%E9%9D%9E%E8%B4%9F%E6%95%B4%E6%95%B0%E4%B8%AD%E6%89%BE%E5%88%B0%E6%89%80%E6%9C%89%E6%9C%AA%E5%87%BA%E7%8E%B0%E7%9A%84%E6%95%B0.md)
-* [内存有限，如何在 100 亿数据中找到中位数（答案不唯一）](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E5%86%85%E5%AD%98%E6%9C%89%E9%99%90%EF%BC%8C%E5%A6%82%E4%BD%95%E5%9C%A8100%E4%BA%BF%E6%95%B0%E6%8D%AE%E4%B8%AD%E6%89%BE%E5%88%B0%E4%B8%AD%E4%BD%8D%E6%95%B0.md)
-* [内存有限，如何在 2 亿个整数中找出不连续的最小数（答案不唯一）](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E5%86%85%E5%AD%98%E6%9C%89%E9%99%90%EF%BC%8C%E5%A6%82%E4%BD%95%E5%9C%A82%E4%BA%BF%E4%B8%AA%E6%95%B4%E6%95%B0%E4%B8%AD%E6%89%BE%E5%87%BA%E4%B8%8D%E8%BF%9E%E7%BB%AD%E7%9A%84%E6%9C%80%E5%B0%8F%E6%95%B0.md)
+* 数组和链表的区别、适用场景
+* 栈和队列的区别、适用场景
+* 什么时候会产生栈溢出，为什么一直递归就会栈溢出
+* 循环队列怎么实现
+* 什么是二叉树、二叉搜索树、平衡二叉树、完全二叉树、满二叉树
+* 二叉树和链表的区别
+* 什么是哈夫曼树？构造过程？应用场景
+* 什么是堆？如何维护堆
+* 什么是红黑树？红黑树与平衡二叉树、B/B+ 树的区别
+* 什么是跳表？跳表和平衡二叉树的区别
+* 如何判断图中是否有环（拓扑排序）
+* 时间复杂度和空间复杂度的定义？时间换空间 & 空间换时间的例子有哪些
+* 常见排序算法及其时间复杂度、各种排序算法对比
+* 内存有限，怎么对100亿数据进行排序（大数据小内存排序问题，答案不唯一）
+* 如何判断某网页的URL是否存在于包含100亿条数据的黑名单上（大数据小内存去重问题，答案不唯一）
+* 检查手机号是否存在于百万数据电话号中（答案不唯一）
+* 内存有限，如何在20亿个整数中找到出现次数最多的数（答案不唯一）
+* 内存有限，如何在 40 亿个非负整数中找到所有未出现的数（答案不唯一）
+* 内存有限，如何在 100 亿数据中找到中位数（答案不唯一）
+* 内存有限，如何在 2 亿个整数中找出不连续的最小数（答案不唯一）
 
 ## 设计模式
 
 * C++设计模式
-* [C++单例模式](../%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5/problems__C%2B%2B%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F.md)
-* [用C++设计一个不能被继承的类](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E7%94%A8C%2B%2B%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E4%B8%8D%E8%83%BD%E8%A2%AB%E7%BB%A7%E6%89%BF%E7%9A%84%E7%B1%BB.md)
-* [如何定义一个只能在堆上定义对象的类?栈上呢](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%A6%82%E4%BD%95%E5%AE%9A%E4%B9%89%E4%B8%80%E4%B8%AA%E5%8F%AA%E8%83%BD%E5%9C%A8%E5%A0%86%E4%B8%8A%E5%AE%9A%E4%B9%89%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%B1%BB%E6%A0%88%E4%B8%8A%E5%91%A2.md)
-* [类构造和析构的顺序](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E7%B1%BB%E6%9E%84%E9%80%A0%E5%92%8C%E6%9E%90%E6%9E%84%E7%9A%84%E9%A1%BA%E5%BA%8F.md)
+* C++单例模式
+* 用C++设计一个不能被继承的类
+* 如何定义一个只能在堆上定义对象的类?栈上呢
+* 类构造和析构的顺序
 
 ## 操作系统
 
-* [linux的内存管理机制，内存寻址方式，什么叫虚拟内存，内存调页算法，任务调度算法](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__linux%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E6%9C%BA%E5%88%B6%E5%86%85%E5%AD%98%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F%E4%BB%80%E4%B9%88%E5%8F%AB%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E5%86%85%E5%AD%98%E8%B0%83%E9%A1%B5%E7%AE%97%E6%B3%95%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95.md)
-* [锁：互斥锁，乐观锁，悲观锁](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E9%94%81%EF%BC%9A%E4%BA%92%E6%96%A5%E9%94%81%EF%BC%8C%E4%B9%90%E8%A7%82%E9%94%81%EF%BC%8C%E6%82%B2%E8%A7%82%E9%94%81.md)
-    * [死锁必要条件及避免算法](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E6%AD%BB%E9%94%81%E5%BF%85%E8%A6%81%E6%9D%A1%E4%BB%B6%E5%8F%8A%E9%81%BF%E5%85%8D%E7%AE%97%E6%B3%95.md)
-* [动态链接和静态链接的区别](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5%E5%92%8C%E9%9D%99%E6%80%81%E9%93%BE%E6%8E%A5%E7%9A%84%E5%8C%BA%E5%88%AB.md)
-* [常见的信号、系统如何将一个信号通知到进程](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E5%B8%B8%E8%A7%81%E7%9A%84%E4%BF%A1%E5%8F%B7%E3%80%81%E7%B3%BB%E7%BB%9F%E5%A6%82%E4%BD%95%E5%B0%86%E4%B8%80%E4%B8%AA%E4%BF%A1%E5%8F%B7%E9%80%9A%E7%9F%A5%E5%88%B0%E8%BF%9B%E7%A8%8B.md)
-* [linux系统的各类同步机制、linux系统的各类异步机制](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__linux%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%90%84%E7%B1%BB%E5%90%8C%E6%AD%A5%E6%9C%BA%E5%88%B6%E3%80%81linux%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%90%84%E7%B1%BB%E5%BC%82%E6%AD%A5%E6%9C%BA%E5%88%B6.md)
-* [如何实现守护进程](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B.md)
-* [标准库函数和系统调用的区别](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E6%A0%87%E5%87%86%E5%BA%93%E5%87%BD%E6%95%B0%E5%92%8C%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%8C%BA%E5%88%AB.md)
-* [协程是什么，为什么需要协程](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E5%8D%8F%E7%A8%8B%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%8D%8F%E7%A8%8B.md)
-* [进程的状态转换有哪些？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E8%BF%9B%E7%A8%8B%E7%9A%84%E7%8A%B6%E6%80%81%E8%BD%AC%E6%8D%A2%E6%9C%89%E9%82%A3%E4%BA%9B%EF%BC%9F.md)
-* [什么是进程？什么是线程？它们的区别是什么？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E4%BB%80%E4%B9%88%E6%98%AF%E8%BF%9B%E7%A8%8B%EF%BC%9F%E4%BB%80%E4%B9%88%E6%98%AF%E7%BA%BF%E7%A8%8B%EF%BC%9F%E4%BB%96%E4%BB%AC%E7%9A%84%E5%8C%BA%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F.md)
-* [进程间的通信方式有哪些？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E8%BF%9B%E7%A8%8B%E9%97%B4%E7%9A%84%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F%E6%9C%89%E9%82%A3%E4%BA%9B%EF%BC%9F.md)
-* [线程间的通信方式有哪些？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E7%BA%BF%E7%A8%8B%E9%97%B4%E7%9A%84%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F%E6%9C%89%E9%82%A3%E4%BA%9B%EF%BC%9F.md)
-* [线程，进程和协程是否有自己独立的堆区和栈区？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E7%BA%BF%E7%A8%8B%EF%BC%8C%E8%BF%9B%E7%A8%8B%E5%92%8C%E5%8D%8F%E7%A8%8B%E6%98%AF%E5%90%A6%E6%9C%89%E8%87%AA%E5%B7%B1%E7%8B%AC%E7%AB%8B%E7%9A%84%E5%A0%86%E5%8C%BA%E5%92%8C%E6%A0%88%E5%8C%BA%EF%BC%9F.md)
-* [什么是PCB？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E4%BB%80%E4%B9%88%E6%98%AFPCB%EF%BC%9F.md)
-* [分页和分段的区别是什么？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E5%88%86%E9%A1%B5%E5%92%8C%E5%88%86%E6%AE%B5%E7%9A%84%E5%8C%BA%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F.md)
-* [为什么有了进程还需要线程和协程？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%89%E4%BA%86%E8%BF%9B%E7%A8%8B%E8%BF%98%E9%9C%80%E8%A6%81%E7%BA%BF%E7%A8%8B%E5%92%8C%E5%8D%8F%E7%A8%8B%EF%BC%9F.md)
-* [外中断和内中断有什么区别？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E5%A4%96%E4%B8%AD%E6%96%AD%E5%92%8C%E5%86%85%E4%B8%AD%E6%96%AD%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F.md)
-* [什么是僵尸进程？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E4%BB%80%E4%B9%88%E6%98%AF%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B%EF%BC%9F.md)
-* [程序编译的过程](../%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/problems__%E7%A8%8B%E5%BA%8F%E7%BC%96%E8%AF%91%E7%9A%84%E8%BF%87%E7%A8%8B.md)
-* [并行和并发的区别](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E5%B9%B6%E8%A1%8C%E5%92%8C%E5%B9%B6%E5%8F%91%E7%9A%84%E5%8C%BA%E5%88%AB.md)
-* [什么是缺页中断](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E4%BB%80%E4%B9%88%E6%98%AF%E7%BC%BA%E9%A1%B5%E4%B8%AD%E6%96%AD.md)
-* [为什么用户态和内核态的相互切换过程开销比较大](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E4%B8%BA%E4%BB%80%E4%B9%88%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81%E7%9A%84%E7%9B%B8%E4%BA%92%E5%88%87%E6%8D%A2%E8%BF%87%E7%A8%8B%E5%BC%80%E9%94%80%E6%AF%94%E8%BE%83%E5%A4%A7.md)
-* [介绍下分层存储体系和 CPU 三级缓存](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E4%BB%8B%E7%BB%8D%E4%B8%8B%E5%88%86%E5%B1%82%E5%AD%98%E5%82%A8%E4%BD%93%E7%B3%BB%E5%92%8CCPU%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98.md)
-* [为什么 CPU访问寄存器的速度比访问内存或CPUCache 的速度快](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E4%B8%BA%E4%BB%80%E4%B9%88CPU%E8%AE%BF%E9%97%AE%E5%AF%84%E5%AD%98%E5%99%A8%E7%9A%84%E9%80%9F%E5%BA%A6%E6%AF%94%E8%AE%BF%E9%97%AE%E5%86%85%E5%AD%98%E6%88%96CPUCache%E7%9A%84%E9%80%9F%E5%BA%A6%E5%BF%AB.md)
-* [固态硬盘和机械硬盘区别](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98%E5%92%8C%E6%9C%BA%E6%A2%B0%E7%A1%AC%E7%9B%98%E5%8C%BA%E5%88%AB.md)
-* [操作系统本身为用户提供什么功能](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%9C%AC%E8%BA%AB%E4%B8%BA%E7%94%A8%E6%88%B7%E6%8F%90%E4%BE%9B%E4%BB%80%E4%B9%88%E5%8A%9F%E8%83%BD.md)
-* [什么是缓冲区溢出？](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E4%BB%80%E4%B9%88%E6%98%AF%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%EF%BC%9F.md)
-* [介绍下进程的地址空间（虚拟地址和物理地址）](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E4%BB%8B%E7%BB%8D%E4%B8%8B%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%EF%BC%88%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E5%92%8C%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%EF%BC%89.md)
-* [一段代码从程序到执行经历怎么样的过程（程序在计算机中是如何运行起来的）](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E4%B8%80%E6%AE%B5%E4%BB%A3%E7%A0%81%E4%BB%8E%E7%A8%8B%E5%BA%8F%E5%88%B0%E6%89%A7%E8%A1%8C%E7%BB%8F%E5%8E%86%E6%80%8E%E4%B9%88%E6%A0%B7%E7%9A%84%E8%BF%87%E7%A8%8B%EF%BC%88%E7%A8%8B%E5%BA%8F%E5%9C%A8%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%B8%AD%E6%98%AF%E5%A6%82%E4%BD%95%E8%BF%90%E8%A1%8C%E8%B5%B7%E6%9D%A5%E7%9A%84%EF%BC%89.md)
-* [什么是页表、什么是快表](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E4%BB%80%E4%B9%88%E6%98%AF%E9%A1%B5%E8%A1%A8%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF%E5%BF%AB%E8%A1%A8.md)
+* linux的内存管理机制，内存寻址方式，什么叫虚拟内存，内存调页算法，任务调度算法
+* 锁：互斥锁，乐观锁，悲观锁
+    * 死锁必要条件及避免算法
+* 动态链接和静态链接的区别
+* 常见的信号、系统如何将一个信号通知到进程
+* linux系统的各类同步机制、linux系统的各类异步机制
+* 如何实现守护进程
+* 标准库函数和系统调用的区别
+* 协程是什么，为什么需要协程
+* 进程的状态转换有哪些？
+* 什么是进程？什么是线程？它们的区别是什么？
+* 进程间的通信方式有哪些？
+* 线程间的通信方式有哪些？
+* 线程，进程和协程是否有自己独立的堆区和栈区？
+* 什么是PCB？
+* 分页和分段的区别是什么？
+* 为什么有了进程还需要线程和协程？
+* 外中断和内中断有什么区别？
+* 什么是僵尸进程？
+* 程序编译的过程
+* 并行和并发的区别
+* 什么是缺页中断
+* 为什么用户态和内核态的相互切换过程开销比较大
+* 介绍下分层存储体系和 CPU 三级缓存
+* 为什么 CPU访问寄存器的速度比访问内存或CPUCache 的速度快
+* 固态硬盘和机械硬盘区别
+* 操作系统本身为用户提供什么功能
+* 什么是缓冲区溢出？
+* 介绍下进程的地址空间（虚拟地址和物理地址）
+* 一段代码从程序到执行经历怎么样的过程（程序在计算机中是如何运行起来的）
+* 什么是页表、什么是快表
 * [从本地读取一个文件通过网络发送到另一端，中间涉及几次拷贝](problems__%E4%BB%8E%E6%9C%AC%E5%9C%B0%E8%AF%BB%E5%8F%96%E4%B8%80%E4%B8%AA%E6%96%87%E4%BB%B6%E9%80%9A%E8%BF%87%E7%BD%91%E7%BB%9C%E5%8F%91%E9%80%81%E5%88%B0%E5%8F%A6%E4%B8%80%E7%AB%AF%EF%BC%8C%E4%B8%AD%E9%97%B4%E6%B6%89%E5%8F%8A%E5%87%A0%E6%AC%A1%E6%8B%B7%E8%B4%9D.md)
-* [单线程怎么保证高并发？](../%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5/problems__%E5%8D%95%E7%BA%BF%E7%A8%8B%E6%80%8E%E4%B9%88%E4%BF%9D%E8%AF%81%E9%AB%98%E5%B9%B6%E5%8F%91%EF%BC%9F.md)
+* 单线程怎么保证高并发？
 * [select/poll/epoll 分别讲讲](problems__selectpollepoll%E5%88%86%E5%88%AB%E8%AE%B2%E8%AE%B2.md)
 
 ## linux 服务器
 
-* [32位系统一个进程最多有多少堆内存](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__32%E4%BD%8D%E7%B3%BB%E7%BB%9F%E4%B8%80%E4%B8%AA%E8%BF%9B%E7%A8%8B%E6%9C%80%E5%A4%9A%E6%9C%89%E5%A4%9A%E5%B0%91%E5%A0%86%E5%86%85%E5%AD%98.md)
-* [五种I/O 模式:阻塞I/O,非阻塞 I/O,I/O 多路复用,信号驱动 I/O,异步 I/O](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E4%BA%94%E7%A7%8DIO%E6%A8%A1%E5%BC%8F.md)
+* 32位系统一个进程最多有多少堆内存
+* 五种I/O 模式:阻塞I/O,非阻塞 I/O,I/O 多路复用,信号驱动 I/O,异步 I/O
     * [介绍下 Socket 编程](problems__%E4%BB%8B%E7%BB%8D%E4%B8%8BSocket%E7%BC%96%E7%A8%8B.md)
     * [Socket 和 WebSocket 的区别](problems__Socket%E5%92%8CWebSocket%E7%9A%84%E5%8C%BA%E5%88%AB.md)
     * [WebSocket 底层原理](problems__WebSocket%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86.md)
@@ -211,15 +213,15 @@ ctest --test-dir build --output-on-failure
     * [socket服务端的实现，select和epoll的区别(必问)](problems__socket%E6%9C%8D%E5%8A%A1%E7%AB%AF%E7%9A%84%E5%AE%9E%E7%8E%B0%EF%BC%8Cselect%E5%92%8Cepoll%E7%9A%84%E5%8C%BA%E5%88%AB.md)
     * [epoll哪些触发模式，有啥区别？](problems__epoll%E5%93%AA%E4%BA%9B%E8%A7%A6%E5%8F%91%E6%A8%A1%E5%BC%8F%EF%BC%8C%E6%9C%89%E5%95%A5%E5%8C%BA%E5%88%AB%EF%BC%9F.md)
 
-* [用户态和内核态的区别](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81%E7%9A%84%E5%8C%BA%E5%88%AB.md)
-* [linux文件系统：inode，inode存储了哪些东西，目录名，文件名存在哪里](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__linux%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%9Ainode%EF%BC%8Cinode%E5%AD%98%E5%82%A8%E4%BA%86%E5%93%AA%E4%BA%9B%E4%B8%9C%E8%A5%BF%EF%BC%8C%E7%9B%AE%E5%BD%95%E5%90%8D%EF%BC%8C%E6%96%87%E4%BB%B6%E5%90%8D%E5%AD%98%E5%9C%A8%E5%93%AA%E9%87%8C.md)
-* [分段和分页的区别有哪些？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E5%88%86%E6%AE%B5%E5%92%8C%E5%88%86%E9%A1%B5%E7%9A%84%E5%8C%BA%E5%88%AB%E6%9C%89%E9%82%A3%E4%BA%9B%EF%BC%9F.md)
-* [进程终止的方式有哪些？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E8%BF%9B%E7%A8%8B%E7%BB%88%E6%AD%A2%E7%9A%84%E6%96%B9%E5%BC%8F%E6%9C%89%E9%82%A3%E4%BA%9B%EF%BC%9F.md)
-* [软中断和硬中断分别指的是什么](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E8%BD%AF%E4%B8%AD%E6%96%AD%E5%92%8C%E7%A1%AC%E4%B8%AD%E6%96%AD%E5%88%86%E5%88%AB%E6%8C%87%E7%9A%84%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F.md)
+* 用户态和内核态的区别
+* linux文件系统：inode，inode存储了哪些东西，目录名，文件名存在哪里
+* 分段和分页的区别有哪些？
+* 进程终止的方式有哪些？
+* 软中断和硬中断分别指的是什么
 * [同步，异步，阻塞和非阻塞的概念](problems__%E5%90%8C%E6%AD%A5%EF%BC%8C%E5%BC%82%E6%AD%A5%EF%BC%8C%E9%98%BB%E5%A1%9E%E5%92%8C%E9%9D%9E%E9%98%BB%E5%A1%9E%E7%9A%84%E6%A6%82%E5%BF%B5.md)
-* [如果发现自己的Linux服务器负载过高，应该怎么排查原因呢？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E5%A6%82%E6%9E%9C%E5%8F%91%E7%8E%B0%E8%87%AA%E5%B7%B1%E7%9A%84Linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%B4%9F%E8%BD%BD%E8%BF%87%E9%AB%98%EF%BC%8C%E5%BA%94%E8%AF%A5%E6%80%8E%E4%B9%88%E6%8E%92%E6%9F%A5%E5%8E%9F%E5%9B%A0%E5%91%A2%EF%BC%9F.md)
+* 如果发现自己的Linux服务器负载过高，应该怎么排查原因呢？
 * [NGINX在Linux上是如何工作的？简单描述一下](problems__NGINX%E5%9C%A8Linux%E4%B8%8A%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84%EF%BC%9F%E7%AE%80%E5%8D%95%E6%8F%8F%E8%BF%B0%E4%B8%80%E4%B8%8B.md)
-* [Linux上有个二进制程序一直在运行，我修改代码置换重新编译把原来的二进制程序覆盖了，会怎么样？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__Linux%E4%B8%8A%E6%9C%89%E4%B8%AA%E4%BA%8C%E8%BF%9B%E5%88%B6%E7%A8%8B%E5%BA%8F%E4%B8%80%E7%9B%B4%E5%9C%A8%E8%BF%90%E8%A1%8C%EF%BC%8C%E6%88%91%E4%BF%AE%E6%94%B9%E4%BB%A3%E7%A0%81%E7%BD%AE%E6%8D%A2%E9%87%8D%E6%96%B0%E7%BC%96%E8%AF%91%E6%8A%8A%E5%8E%9F%E6%9D%A5%E7%9A%84%E4%BA%8C%E8%BF%9B%E5%88%B6%E7%A8%8B%E5%BA%8F%E8%A6%86%E7%9B%96%E4%BA%86%EF%BC%8C%E4%BC%9A%E6%80%8E%E4%B9%88%E6%A0%B7%EF%BC%9F.md)
+* Linux上有个二进制程序一直在运行，我修改代码置换重新编译把原来的二进制程序覆盖了，会怎么样？
 
 ## 计算机网络
 
@@ -327,77 +329,77 @@ ctest --test-dir build --output-on-failure
 
 ## 数据库
 
-* [谈谈数据库中索引的理解，索引和主键区别](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E8%B0%88%E8%B0%88%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E7%B4%A2%E5%BC%95%E7%9A%84%E7%90%86%E8%A7%A3%EF%BC%8C%E7%B4%A2%E5%BC%95%E5%92%8C%E4%B8%BB%E9%94%AE%E5%8C%BA%E5%88%AB.md)
-* [现在普通关系数据库用得数据结构是什么类型的数据结构](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E7%8E%B0%E5%9C%A8%E6%99%AE%E9%80%9A%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93%E7%94%A8%E5%BE%97%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E6%98%AF%E4%BB%80%E4%B9%88%E7%B1%BB%E5%9E%8B%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.md)
-* [索引的优点和缺点](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E7%B4%A2%E5%BC%95%E7%9A%84%E4%BC%98%E7%82%B9%E5%92%8C%E7%BC%BA%E7%82%B9.md)
-* [关系型数据库和非关系数据库的特点](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E5%92%8C%E9%9D%9E%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E7%89%B9%E7%82%B9.md)
-* [乐观锁与悲观锁的区别](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E4%B9%90%E8%A7%82%E9%94%81%E4%B8%8E%E6%82%B2%E8%A7%82%E9%94%81%E7%9A%84%E5%8C%BA%E5%88%AB.md)
-* [数据库范式:第一第二第三范式](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E6%95%B0%E6%8D%AE%E5%BA%93%E8%8C%83%E5%BC%8F%E7%AC%AC%E4%B8%80%E7%AC%AC%E4%BA%8C%E7%AC%AC%E4%B8%89%E8%8C%83%E5%BC%8F.md)
-* [数据库日志类型作用](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E6%95%B0%E6%8D%AE%E5%BA%93%E6%97%A5%E5%BF%97%E7%B1%BB%E5%9E%8B%E4%BD%9C%E7%94%A8.md)
-* [B TREE 和B+TREE的区别](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__BTREE%E5%92%8CB%2BTREE%E7%9A%84%E5%8C%BA%E5%88%AB.md)
-* [union和join](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__union%E5%92%8Cjoin.md)
-* [Innodb和Myisam的区别](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Innodb%E5%92%8CMyisam%E7%9A%84%E5%8C%BA%E5%88%AB.md)
-* [mysql架构是什么样的？](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__mysql%E6%9E%B6%E6%9E%84%E6%98%AF%E4%BB%80%E4%B9%88%E6%A0%B7%E7%9A%84%EF%BC%9F.md)
-* [一条SQL语句在数据库框架中的执行过程](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E4%B8%80%E6%9D%A1SQL%E8%AF%AD%E5%8F%A5%E5%9C%A8%E6%95%B0%E6%8D%AE%E5%BA%93%E6%A1%86%E6%9E%B6%E4%B8%AD%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B.md)
+* 谈谈数据库中索引的理解，索引和主键区别
+* 现在普通关系数据库用得数据结构是什么类型的数据结构
+* 索引的优点和缺点
+* 关系型数据库和非关系数据库的特点
+* 乐观锁与悲观锁的区别
+* 数据库范式:第一第二第三范式
+* 数据库日志类型作用
+* B TREE 和B+TREE的区别
+* union和join
+* Innodb和Myisam的区别
+* mysql架构是什么样的？
+* 一条SQL语句在数据库框架中的执行过程
 * 数据库中常见的锁都有哪些？
-* [优化索引的办法有哪些](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E4%BC%98%E5%8C%96%E7%B4%A2%E5%BC%95%E7%9A%84%E5%8A%9E%E6%B3%95%E6%9C%89%E9%82%A3%E4%BA%9B.md)
-* [mysql为啥会产生死锁呢？如何避免他？](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__mysql%E4%B8%BA%E5%95%A5%E4%BC%9A%E4%BA%A7%E7%94%9F%E6%AD%BB%E9%94%81%E5%91%A2%EF%BC%9F%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E4%BB%96%EF%BC%9F.md)
-* [在Mysql中，数据要写入磁盘，redolog也要写入磁盘，为什么要多此一举？](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E5%9C%A8Mysql%E4%B8%AD%EF%BC%8C%E6%95%B0%E6%8D%AE%E8%A6%81%E5%86%99%E5%85%A5%E7%A3%81%E7%9B%98%EF%BC%8Credolog%E4%B9%9F%E8%A6%81%E5%86%99%E5%85%A5%E7%A3%81%E7%9B%98%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%A4%9A%E6%AD%A4%E4%B8%80%E4%B8%BE%EF%BC%9F.md)
-* [MySQL的行级锁有哪些种类？](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__MySQL%E7%9A%84%E8%A1%8C%E7%BA%A7%E9%94%81%E6%9C%89%E9%82%A3%E4%BA%9B%E7%A7%8D%E7%B1%BB%EF%BC%9F.md)
-* [mysql索引失效有哪几种情况？](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__mysql%E7%B4%A2%E5%BC%95%E5%A4%B1%E6%95%88%E6%9C%89%E5%93%AA%E5%87%A0%E7%A7%8D%E6%83%85%E5%86%B5%EF%BC%9F.md)
-* [数据库事务隔离级别有哪些？](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E6%9C%89%E9%82%A3%E4%BA%9B%EF%BC%9F.md)
-* [mysql数据库中，产生的redolog都会直接写入磁盘吗？](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%EF%BC%8C%E4%BA%A7%E7%94%9F%E7%9A%84redolog%E9%83%BD%E4%BC%9A%E7%9B%B4%E6%8E%A5%E5%86%99%E5%85%A5%E7%A3%81%E7%9B%98%E5%90%97%EF%BC%9F.md)
-* [数据库的ACID特性](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84ACID%E7%89%B9%E6%80%A7.md)
-* [MySQL的主从复制是如何实现的？](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__MySQL%E7%9A%84%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84%EF%BC%9F.md)
-* [mysql的索引都有哪些？](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__mysql%E7%9A%84%E7%B4%A2%E5%BC%95%E9%83%BD%E6%9C%89%E9%82%A3%E4%BA%9B%EF%BC%9F.md)
+* 优化索引的办法有哪些
+* mysql为啥会产生死锁呢？如何避免他？
+* 在Mysql中，数据要写入磁盘，redolog也要写入磁盘，为什么要多此一举？
+* MySQL的行级锁有哪些种类？
+* mysql索引失效有哪几种情况？
+* 数据库事务隔离级别有哪些？
+* mysql数据库中，产生的redolog都会直接写入磁盘吗？
+* 数据库的ACID特性
+* MySQL的主从复制是如何实现的？
+* mysql的索引都有哪些？
 * Redis 有什么作用？为什么要用 Redis
-* [Redis 的底层数据结构有哪些](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E7%9A%84%E5%BA%95%E5%B1%82%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E6%9C%89%E5%93%AA%E4%BA%9B.md)
+* Redis 的底层数据结构有哪些
 * 介绍 intset 及其升级过程，支持降级吗
 * 介绍 SDS，Redis 为什么要使用 SDS 而不是 C 字符串
-* [介绍 dict，什么是 rehash？什么是渐进式 rehash](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E4%BB%8B%E7%BB%8Ddict%EF%BC%8C%E4%BB%80%E4%B9%88%E6%98%AFrehash%EF%BC%9F%E4%BB%80%E4%B9%88%E6%98%AF%E6%B8%90%E8%BF%9B%E5%BC%8Frehash.md)
-* [介绍 ziplist，什么是连锁更新？quicklist、listpack](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E4%BB%8B%E7%BB%8Dziplist%EF%BC%8C%E4%BB%80%E4%B9%88%E6%98%AF%E8%BF%9E%E9%94%81%E6%9B%B4%E6%96%B0%EF%BC%9Fquicklist%E3%80%81listpack.md)
+* 介绍 dict，什么是 rehash？什么是渐进式 rehash
+* 介绍 ziplist，什么是连锁更新？quicklist、listpack
 * 介绍 Redis 的 skiplist
-* [Redis 数据类型（对象）有哪些](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%EF%BC%88%E5%AF%B9%E8%B1%A1%EF%BC%89%E6%9C%89%E5%93%AA%E4%BA%9B.md)
-* [Redis String 原理和使用场景（分布式锁）](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__RedisString%E5%8E%9F%E7%90%86%E5%92%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%EF%BC%88%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%EF%BC%89.md)
-* [Redis List 的原理和使用场景](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__RedisList%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF.md)
-* [Redis Set 的原理和使用场景](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__RedisSet%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF.md)
-* [Redis ZSet 的原理和使用场景（延迟队列）](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__RedisZSet%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%EF%BC%88%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97%EF%BC%89.md)
-* [为什么 Zset 需要同时使用跳表和字典来实现？](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E4%B8%BA%E4%BB%80%E4%B9%88Zset%E9%9C%80%E8%A6%81%E5%90%8C%E6%97%B6%E4%BD%BF%E7%94%A8%E8%B7%B3%E8%A1%A8%E5%92%8C%E5%AD%97%E5%85%B8%E6%9D%A5%E5%AE%9E%E7%8E%B0%EF%BC%9F.md)
-* [为什么 Redis 使用跳表而不是红黑树来实现 Zset](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E4%B8%BA%E4%BB%80%E4%B9%88Redis%E4%BD%BF%E7%94%A8%E8%B7%B3%E8%A1%A8%E8%80%8C%E4%B8%8D%E6%98%AF%E7%BA%A2%E9%BB%91%E6%A0%91%E6%9D%A5%E5%AE%9E%E7%8E%B0Zset.md)
-* [Redis Hash 的原理和使用场景](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__RedisHash%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF.md)
-* [Redis的HyperLogLog的原理和使用场景](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E7%9A%84HyperLogLog%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF.md)
-* [Redis的Bitmap的原理和使用场景](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E7%9A%84Bitmap%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF.md)
-* [Redis中Stream的原理和使用场景](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E4%B8%ADStream%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF.md)
-* [Redis中数据（键值对）是怎么存储的](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E4%B8%AD%E6%95%B0%E6%8D%AE%EF%BC%88%E9%94%AE%E5%80%BC%E5%AF%B9%EF%BC%89%E6%98%AF%E6%80%8E%E4%B9%88%E5%AD%98%E5%82%A8%E7%9A%84.md)
-* [Redis如何判断键是否过期？过期键的删除策略有哪些](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E9%94%AE%E6%98%AF%E5%90%A6%E8%BF%87%E6%9C%9F%EF%BC%9F%E8%BF%87%E6%9C%9F%E9%94%AE%E7%9A%84%E5%88%A0%E9%99%A4%E7%AD%96%E7%95%A5%E6%9C%89%E5%93%AA%E4%BA%9B.md)
-* [Redis的key设定24h过期时间，那么24h后就一定会过期吗](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E7%9A%84key%E8%AE%BE%E5%AE%9A24h%E8%BF%87%E6%9C%9F%E6%97%B6%E9%97%B4%EF%BC%8C%E9%82%A3%E4%B9%8824h%E5%90%8E%E5%B0%B1%E4%B8%80%E5%AE%9A%E4%BC%9A%E8%BF%87%E6%9C%9F%E5%90%97.md)
-* [Redis内存淘汰策略](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5.md)
-* [Redis的两种持久化方式以及优缺点](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%8C%81%E4%B9%85%E5%8C%96%E6%96%B9%E5%BC%8F%E4%BB%A5%E5%8F%8A%E4%BC%98%E7%BC%BA%E7%82%B9.md)
-* [为什么AOF后台重写和BGSAVE命令都用子进程而不是线程？](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E4%B8%BA%E4%BB%80%E4%B9%88AOF%E5%90%8E%E5%8F%B0%E9%87%8D%E5%86%99%E5%92%8CBGSAVE%E5%91%BD%E4%BB%A4%E9%83%BD%E7%94%A8%E5%AD%90%E8%BF%9B%E7%A8%8B%E8%80%8C%E4%B8%8D%E6%98%AF%E7%BA%BF%E7%A8%8B%EF%BC%9F.md)
-* [Redis是单线程还是多线程？Redis6.0之后为何又引入了多线程](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E6%98%AF%E5%8D%95%E7%BA%BF%E7%A8%8B%E8%BF%98%E6%98%AF%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%9FRedis6.0%E4%B9%8B%E5%90%8E%E4%B8%BA%E4%BD%95%E5%8F%88%E5%BC%95%E5%85%A5%E4%BA%86%E5%A4%9A%E7%BA%BF%E7%A8%8B.md)
-* [Redis不是单线程吗，为什么会存在并发安全问题](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E4%B8%8D%E6%98%AF%E5%8D%95%E7%BA%BF%E7%A8%8B%E5%90%97%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E5%AD%98%E5%9C%A8%E5%B9%B6%E5%8F%91%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98.md)
-* [Redis单线程在多核机器里使用会不会浪费机器资源](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E5%8D%95%E7%BA%BF%E7%A8%8B%E5%9C%A8%E5%A4%9A%E6%A0%B8%E6%9C%BA%E5%99%A8%E9%87%8C%E4%BD%BF%E7%94%A8%E4%BC%9A%E4%B8%8D%E4%BC%9A%E6%B5%AA%E8%B4%B9%E6%9C%BA%E5%99%A8%E8%B5%84%E6%BA%90.md)
-* [讲一讲Redis主从复制](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E8%AE%B2%E4%B8%80%E8%AE%B2Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6.md)
-* [讲一讲Redis的哨兵](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E8%AE%B2%E4%B8%80%E8%AE%B2Redis%E7%9A%84%E5%93%A8%E5%85%B5.md)
-* [讲一讲Redis的集群](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E8%AE%B2%E4%B8%80%E8%AE%B2Redis%E7%9A%84%E9%9B%86%E7%BE%A4.md)
-* [Redis主从复制、哨兵、集群的区别](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E3%80%81%E5%93%A8%E5%85%B5%E3%80%81%E9%9B%86%E7%BE%A4%E7%9A%84%E5%8C%BA%E5%88%AB.md)
-* [什么是一致性哈希，Redis集群为什么不用一致性哈希](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E4%BB%80%E4%B9%88%E6%98%AF%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%EF%BC%8CRedis%E9%9B%86%E7%BE%A4%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E7%94%A8%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C.md)
-* [如何解决Redis集群数据丢失问题（异步复制、集群脑裂）](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3Redis%E9%9B%86%E7%BE%A4%E6%95%B0%E6%8D%AE%E4%B8%A2%E5%A4%B1%E9%97%AE%E9%A2%98%EF%BC%88%E5%BC%82%E6%AD%A5%E5%A4%8D%E5%88%B6%E3%80%81%E9%9B%86%E7%BE%A4%E8%84%91%E8%A3%82%EF%BC%89.md)
-* [介绍Redis事务（Redis能实现ACID吗）](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E4%BB%8B%E7%BB%8DRedis%E4%BA%8B%E5%8A%A1%EF%BC%88Redis%E8%83%BD%E5%AE%9E%E7%8E%B0ACID%E5%90%97%EF%BC%89.md)
-* [Redis缓存穿透问题及其解决方案](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E9%97%AE%E9%A2%98%E5%8F%8A%E5%85%B6%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.md)
-* [Redis缓存雪崩问题及其解决方案](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9%E9%97%AE%E9%A2%98%E5%8F%8A%E5%85%B6%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.md)
-* [Redis缓存击穿问题及其解决方案](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E9%97%AE%E9%A2%98%E5%8F%8A%E5%85%B6%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.md)
-* [Redis的BigKey问题及其解决方案](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E7%9A%84BigKey%E9%97%AE%E9%A2%98%E5%8F%8A%E5%85%B6%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.md)
-* [如何解决缓存和数据库一致性问题](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E7%BC%93%E5%AD%98%E5%92%8C%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98.md)
-* [Redis和Memcached的区别](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E5%92%8CMemcached%E7%9A%84%E5%8C%BA%E5%88%AB.md)
-* [Redis为什么这么快](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%B9%88%E5%BF%AB.md)
+* Redis 数据类型（对象）有哪些
+* Redis String 原理和使用场景（分布式锁）
+* Redis List 的原理和使用场景
+* Redis Set 的原理和使用场景
+* Redis ZSet 的原理和使用场景（延迟队列）
+* 为什么 Zset 需要同时使用跳表和字典来实现？
+* 为什么 Redis 使用跳表而不是红黑树来实现 Zset
+* Redis Hash 的原理和使用场景
+* Redis的HyperLogLog的原理和使用场景
+* Redis的Bitmap的原理和使用场景
+* Redis中Stream的原理和使用场景
+* Redis中数据（键值对）是怎么存储的
+* Redis如何判断键是否过期？过期键的删除策略有哪些
+* Redis的key设定24h过期时间，那么24h后就一定会过期吗
+* Redis内存淘汰策略
+* Redis的两种持久化方式以及优缺点
+* 为什么AOF后台重写和BGSAVE命令都用子进程而不是线程？
+* Redis是单线程还是多线程？Redis6.0之后为何又引入了多线程
+* Redis不是单线程吗，为什么会存在并发安全问题
+* Redis单线程在多核机器里使用会不会浪费机器资源
+* 讲一讲Redis主从复制
+* 讲一讲Redis的哨兵
+* 讲一讲Redis的集群
+* Redis主从复制、哨兵、集群的区别
+* 什么是一致性哈希，Redis集群为什么不用一致性哈希
+* 如何解决Redis集群数据丢失问题（异步复制、集群脑裂）
+* 介绍Redis事务（Redis能实现ACID吗）
+* Redis缓存穿透问题及其解决方案
+* Redis缓存雪崩问题及其解决方案
+* Redis缓存击穿问题及其解决方案
+* Redis的BigKey问题及其解决方案
+* 如何解决缓存和数据库一致性问题
+* Redis和Memcached的区别
+* Redis为什么这么快
 
 ## 海量数据处理
 
-* [bitmap](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__bitmap.md)
-* [Map-Reduce原理](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__Map-Reduce%E5%8E%9F%E7%90%86.md)
-* [BloomFilter原理](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__BloomFilter%E5%8E%9F%E7%90%86.md)
-* [Trie树原理](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__Trie%E6%A0%91%E5%8E%9F%E7%90%86.md)
+* bitmap
+* Map-Reduce原理
+* BloomFilter原理
+* Trie树原理
 * LSM树原理
 
 ## linux下操作命令以及工具
