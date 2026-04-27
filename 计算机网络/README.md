@@ -1,406 +1,2051 @@
-如下是C++后台研发技术路线以及知识点，这里有很多细节，还需要不断完善。 
+# Interview__Network__README.md
 
-欢迎大家[提交PR](https://www.programmercarl.com/qita/join.html)来一起完善这个知识库，成为contributor！ 
+## Network
 
-👉 如果你是编程零基础，或者想入门C++，推荐 [【卡码网】C++基础课](https://kamacoder.com/course.php?course_id=1)
-👉 如果你有C++基础，想手写STL，推荐 [【卡码网】手写简单版本STL（C++）](https://kamacoder.com/course.php?course_id=10)
+这个工程实现了一个最小本地 `TCP echo server/client`，适合面试里讲 socket 生命周期、绑定监听、连接、收发和资源管理。
+
+### 构建
+
+```bash
+cd /home/wj/Code/C++/Interview/Network
+cmake -S . -B build
+cmake --build build
+ctest --test-dir build --output-on-failure
+```
+
+### 目标
+
+- `network_demo`：启动一次本地 echo server 并发起一次回显请求。
+- `network_tests`：验证客户端收到的回显内容正确。
+
+### 面试知识点
+
+- TCP 服务端典型流程：`socket -> bind -> listen -> accept -> recv/send -> close`。
+- 客户端典型流程：`socket -> connect -> send/recv -> close`。
+- 高频追问：半包粘包、阻塞与非阻塞、IO 多路复用、连接关闭时序、心跳机制。
+- RAII 封装文件描述符是很常见的加分点。
 
 
-# C++primer B站视频讲解 
+# README.md
 
-* [学习C++书籍推荐](https://www.bilibili.com/video/BV1rK4y1e7ed)
-* [听说C++ primer 太厚了 看不进去？](https://www.bilibili.com/video/BV1Z5411874t)
-* [C++ primer 第一章，你要知道的知识点还有这些！](https://www.bilibili.com/video/BV1Kv41117Ya)
-* [C++ primer 第二章，前两节](https://www.bilibili.com/video/BV1MA411j74g)
+## 综合 C++ 后台学习路线
+
+如下是C++后台研发技术路线以及知识点，这里有很多细节，还需要不断完善。
+
+欢迎大家提交PR来一起完善这个知识库，成为contributor！
+
+👉 如果你是编程零基础，或者想入门C++，推荐 【卡码网】C++基础课
+👉 如果你有C++基础，想手写STL，推荐 【卡码网】手写简单版本STL（C++）
+
+
+## C++primer B站视频讲解
+
+* 学习C++书籍推荐
+* 听说C++ primer 太厚了 看不进去？
+* C++ primer 第一章，你要知道的知识点还有这些！
+* C++ primer 第二章，前两节
 
 （玩命更新ing...）
 
-# 编程语言C++
+## 编程语言C++
 
-* [C++primer5笔记代码资料](https://github.com/youngyangyang04/TechCPP/tree/master/docs/C++primer5笔记代码资料)
-* [volatile static const extern等关键字](../操作系统与Linux/problems__volatile%2Cstatic%2Cconst%2Cextern等关键字.md) 
-* [宏定义和展开、内联函数区别](../进阶C%2B%2B与标准库/problems__宏定义和展开%E3%80%81内联函数区别.md)
+* C++primer5笔记代码资料
+* [volatile static const extern等关键字](../%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/problems__volatile%2Cstatic%2Cconst%2Cextern%E7%AD%89%E5%85%B3%E9%94%AE%E5%AD%97.md)
+* [宏定义和展开、内联函数区别](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%AE%8F%E5%AE%9A%E4%B9%89%E5%92%8C%E5%B1%95%E5%BC%80%E3%80%81%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0%E5%8C%BA%E5%88%AB.md)
 * 常用库函数实现
-    * [malloc,strcpy,strcmp的实现，常用库函数实现，哪些库函数属于高危函数](../操作系统与Linux/problems__malloc%2Cstrcpy%2Cstrcmp的实现%EF%BC%8C常用库函数实现%EF%BC%8C哪些库函数属于高危函数.md)
-* [STL原理及实现](../数据库与缓存/problems__STL原理及实现.md)
-* [虚函数的作用和实现原理，什么是虚函数,有什么作用?](../数据库与缓存/problems__虚函数的作用和实现原理%EF%BC%8C什么是虚函数%2C有什么作用.md)
-    * [纯虚函数，为什么需要纯虚函数？](../进阶C%2B%2B与标准库/problems__纯虚函数%EF%BC%8C为什么需要纯虚函数.md)
-    * [为什么需要虚析构函数,什么时候不需要?](../进阶C%2B%2B与标准库/problems__为什么需要虚析构函数%2C什么时候不需要.md)
-    * [内联函数、构造函数、静态成员函数可以是虚函数吗?](../进阶C%2B%2B与标准库/problems__内联函数%E3%80%81构造函数%E3%80%81静态成员函数可以是虚函数吗.md)
-    * [构造函数中可以调用虚函数吗?](../进阶C%2B%2B与标准库/problems__构造函数中可以调用虚函数吗.md)
-    * [为什么需要虚继承?虚继承实现原理解析](../进阶C%2B%2B与标准库/problems__为什么需要虚继承.md)
-    * [虚函数是针对类还是针对对象的？](../进阶C%2B%2B与标准库/problems__虚函数是针对类还是针对对象的%EF%BC%9F.md)
-    * [同一个类的两个对象的虚函数表是如何维护的？](../进阶C%2B%2B与标准库/problems__同一个类的两个对象的虚函数表是如何维护的%EF%BC%9F.md)
-* [C++ 内存分配机制](../数据结构与算法/problems__C%2B%2B内存分配.md)
+    * [malloc,strcpy,strcmp的实现，常用库函数实现，哪些库函数属于高危函数](../%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/problems__malloc%2Cstrcpy%2Cstrcmp%E7%9A%84%E5%AE%9E%E7%8E%B0%EF%BC%8C%E5%B8%B8%E7%94%A8%E5%BA%93%E5%87%BD%E6%95%B0%E5%AE%9E%E7%8E%B0%EF%BC%8C%E5%93%AA%E4%BA%9B%E5%BA%93%E5%87%BD%E6%95%B0%E5%B1%9E%E4%BA%8E%E9%AB%98%E5%8D%B1%E5%87%BD%E6%95%B0.md)
+* [STL原理及实现](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__STL%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0.md)
+* [虚函数的作用和实现原理，什么是虚函数,有什么作用?](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E8%99%9A%E5%87%BD%E6%95%B0%E7%9A%84%E4%BD%9C%E7%94%A8%E5%92%8C%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%EF%BC%8C%E4%BB%80%E4%B9%88%E6%98%AF%E8%99%9A%E5%87%BD%E6%95%B0%2C%E6%9C%89%E4%BB%80%E4%B9%88%E4%BD%9C%E7%94%A8.md)
+    * [纯虚函数，为什么需要纯虚函数？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E7%BA%AF%E8%99%9A%E5%87%BD%E6%95%B0%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E7%BA%AF%E8%99%9A%E5%87%BD%E6%95%B0.md)
+    * [为什么需要虚析构函数,什么时候不需要?](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E8%99%9A%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0%2C%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E4%B8%8D%E9%9C%80%E8%A6%81.md)
+    * [内联函数、构造函数、静态成员函数可以是虚函数吗?](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0%E3%80%81%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E3%80%81%E9%9D%99%E6%80%81%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0%E5%8F%AF%E4%BB%A5%E6%98%AF%E8%99%9A%E5%87%BD%E6%95%B0%E5%90%97.md)
+    * [构造函数中可以调用虚函数吗?](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E4%B8%AD%E5%8F%AF%E4%BB%A5%E8%B0%83%E7%94%A8%E8%99%9A%E5%87%BD%E6%95%B0%E5%90%97.md)
+    * [为什么需要虚继承?虚继承实现原理解析](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E8%99%9A%E7%BB%A7%E6%89%BF.md)
+    * [虚函数是针对类还是针对对象的？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E8%99%9A%E5%87%BD%E6%95%B0%E6%98%AF%E9%92%88%E5%AF%B9%E7%B1%BB%E8%BF%98%E6%98%AF%E9%92%88%E5%AF%B9%E5%AF%B9%E8%B1%A1%E7%9A%84%EF%BC%9F.md)
+    * [同一个类的两个对象的虚函数表是如何维护的？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%90%8C%E4%B8%80%E4%B8%AA%E7%B1%BB%E7%9A%84%E4%B8%A4%E4%B8%AA%E5%AF%B9%E8%B1%A1%E7%9A%84%E8%99%9A%E5%87%BD%E6%95%B0%E8%A1%A8%E6%98%AF%E5%A6%82%E4%BD%95%E7%BB%B4%E6%8A%A4%E7%9A%84%EF%BC%9F.md)
+* [C++ 内存分配机制](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__C%2B%2B%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D.md)
 * 指针
-    * [迭代器与普通指针有什么区别](../数据结构与算法/problems__迭代器与普通指针有什么区别.md) 
-    * [C++的智能指针及其原理](../进阶C%2B%2B与标准库/problems__C%2B%2B的智能指针及其原理.md)
-    * [悬挂指针和野指针有什么区别？](../进阶C%2B%2B与标准库/problems__悬挂指针和野指针有什么区别%EF%BC%9F.md)
-    * [指针常量和常量指针的区别](../进阶C%2B%2B与标准库/problems__指针常量和常量指针的区别.md)
-    * [指针和引用有什么区别呢？](../进阶C%2B%2B与标准库/problems__指针和引用有什么区别呢%EF%BC%9F.md)
-    * [如何避免悬挂指针？](../进阶C%2B%2B与标准库/problems__如何避免悬挂指针%EF%BC%9F.md)
-* [override和overload的区别](../进阶C%2B%2B与标准库/problems__override和overload的区别有那些.md)
-* [写string类的构造，析构，拷贝函数](../进阶C%2B%2B与标准库/problems__写string类的构造%EF%BC%8C析构%EF%BC%8C拷贝函数.md)
-* [C++中类成员的访问权限有那些？](../进阶C%2B%2B与标准库/problems__C%2B%2B中类成员的访问权限有那些%EF%BC%9F.md)
-* [C++多态的实现有那几种？他们有什么不同？](../进阶C%2B%2B与标准库/problems__C%2B%2B多态的实现有那几种%EF%BC%9F他们有什么不同%EF%BC%9F.md)
-* [C++中右值引用有什么作用？](problems__C%2B%2B中右值引用有什么作用%EF%BC%9F.md)
-* [面向对象的三大特征是什么](../数据结构与算法/problems__面向对象的三大特征是什么.md)
-* [静态分配内存和动态分配内存有什么区别？](../进阶C%2B%2B与标准库/problems__静态分配内存和动态分配内存有什么区别%EF%BC%9F.md)
-* [C++结构体内存对齐](../进阶C%2B%2B与标准库/problems__C%2B%2B结构体内存对齐.md)
-* [讲一讲C++中的原子操作有那些？](../操作系统与Linux/problems__讲一讲C%2B%2B中的原子操作有那些%EF%BC%9F.md)
-* [简单说说STL中的优先级队列是如何实现的？](../数据结构与算法/problems__简单说说STL中的优先级队列是如何实现的%EF%BC%9F.md)
-* [C++中动态链接库和静态连接库的区别是什么？](../进阶C%2B%2B与标准库/problems__C%2B%2B中动态链接库和静态连接库的区别是什么%EF%BC%9F.md)
-* [在C++中，对一个对象先malloc后delete这样使用可以吗？有什么风险？](../数据结构与算法/problems__在C%2B%2B中%EF%BC%8C对一个对象先malloc后delete这样使用可以吗%EF%BC%9F有什么风险.md)
-* [在C++中，三个全局变量相互依赖，程序应该如何初始化呢？300个呢？](../设计模式与项目实践/problems__在C%2B%2B中%EF%BC%8C三个全局变量相互依赖%EF%BC%8C程序应该如何初始化呢%EF%BC%9F300个呢%EF%BC%9F.md)
-* [STL中的优先级队列是如何实现的？](../数据结构与算法/problems__STL中的优先级队列是如何实现的%EF%BC%9F.md)
-* [如果拿到虚函数表的储存地址，是否可以改写虚函数表的内容？](../进阶C%2B%2B与标准库/problems__如果拿到虚函数表的储存地址%EF%BC%8C是否可以改写虚函数表的内容%EF%BC%9F.md)
-* [在C++中为什么需要深拷贝，浅拷贝会存在哪些问题？](../进阶C%2B%2B与标准库/problems__在C%2B%2B中为什么需要深拷贝%EF%BC%8C浅拷贝会存在哪些问题%EF%BC%9F.md)
-* [如何构造一个类使得只能在堆上或者栈上分配内存？](../数据结构与算法/problems__如何构造一个类使得只能在堆上或者栈上分配内存%EF%BC%9F.md)
-* [什么是C++的内存模型？](../操作系统与Linux/problems__什么是C%2B%2B的内存模型%EF%BC%9F.md)
-* [指针和引用在内存中的表现形式有何不同？](../进阶C%2B%2B与标准库/problems__指针和引用在内存中的表现形式有何不同%EF%BC%9F.md)
-* [内存映射文件是什么？如何用它来处理大文件？](problems__内存映射文件是什么%EF%BC%9F如何用它来处理大文件%EF%BC%9F.md)
-* [C++中结构体内存布局的规则是什么？](../进阶C%2B%2B与标准库/problems__C%2B%2B中结构体内存布局的规则是什么%EF%BC%9F.md)
-* [在C++中，用堆和用栈谁更快一点？](../数据库与缓存/problems__在C%2B%2B中%EF%BC%8C用堆和用栈谁更快一点%EF%BC%9F.md)
-* [C++中struct和class有什么区别？](../进阶C%2B%2B与标准库/problems__C%2B%2B中struct和class有什么区别%EF%BC%9F.md)
-* [如果A这个对象对应的类是一个空类，那么sizeof(A)的值是多少？](../进阶C%2B%2B与标准库/problems__如果A这个对象对应的类是一个空类%EF%BC%8C那么sizeof%28A%29的值是多少%EF%BC%9F.md)
-* [如果A这个指针指向一个数组，那么sizeof(A)的值是多少？](../进阶C%2B%2B与标准库/problems__如果A这个指针指向一个数组%EF%BC%8C那么sizeof%28A%29的值是多少%EF%BC%9F.md)
-* [如果A是某一个类的指针，那么在它等于nullptr的情况下能直接调用里面的A对应类里面的public函数吗？](./problems/如果A是某一个类的指针，那么在它等于nullptr的情况下能直接调用里面的A对应类里面的public函数吗？.md)
-* [STL中一般都有那些常见的算法库呢？](../数据结构与算法/problems__STL中一般都有那些常见的算法库呢%EF%BC%9F.md)
-* [C++中，结构体可以直接赋值吗？](../进阶C%2B%2B与标准库/problems__C%2B%2B中%EF%BC%8C结构体可以直接赋值吗%EF%BC%9F.md)
-* [\#define和const的区别有那些？](../进阶C%2B%2B与标准库/problems__%23define和const的区别有那些%EF%BC%9F.md)
-* [在C++的map中，[]与insert有那些区别？](../进阶C%2B%2B与标准库/problems__在C%2B%2B的map中%EF%BC%8C%5B%5D与insert有那些区别%EF%BC%9F.md)
-* [在32位和64位系统中，指针分别为多大？](../进阶C%2B%2B与标准库/problems__在32位和64位系统中%EF%BC%8C指针分别为多大%EF%BC%9F.md)
-* [weak_ptr是如何解决shared_ptr循环引用的？](../进阶C%2B%2B与标准库/problems__weak_ptr是如何解决shared_ptr循环引用的%EF%BC%9F.md)
-* [虚函数是否可以声明为static？](../进阶C%2B%2B与标准库/problems__虚函数是否可以声明为static%EF%BC%9F.md)
-* [如何使用gdb来定位C++程序中的死锁？](../操作系统与Linux/problems__如何使用gdb来定位C%2B%2B程序中的死锁%EF%BC%9F.md)
-* [C++中常用的类优化技术有那些？](../进阶C%2B%2B与标准库/problems__C%2B%2B中常用的类优化技术有那些%EF%BC%9F.md)
-* [C++的atomic<bool>代码底层是如何实现的？](../操作系统与Linux/problems__C%2B%2B的atomic-bool代码底层是如何实现的%EF%BC%9F.md)
-* [原子变量的内存序是什么？](../操作系统与Linux/problems__原子变量的内存序是什么%EF%BC%9F.md)
-* [什么是左值？什么是右值？有什么不同？](../进阶C%2B%2B与标准库/problems__什么是左值%EF%BC%9F什么是右值%EF%BC%9F有什么不同%EF%BC%9F.md)
-* [什么是完美转发？](problems__什么是完美转发%EF%BC%9F.md)
-* [C++中四种cast的转换？](../进阶C%2B%2B与标准库/problems__C%2B%2B中四种cast的转换%EF%BC%9F.md)
-* [内存池是什么？在C++中如何设计一个简单的内存池？](../设计模式与项目实践/problems__内存池是什么%EF%BC%9F在C%2B%2B中如何设计一个简单的内存池%EF%BC%9F.md)
-* [STL中，map的底层是如何实现的？](../数据结构与算法/problems__STL中%EF%BC%8Cmap的底层是如何实现的%EF%BC%9F.md)
-* [STL中，set的底层是如何实现的？](../数据结构与算法/problems__STL中%EF%BC%8Cset的底层是如何实现的%EF%BC%9F.md)
-* [set，mutiset，map，mutimap之间都有什么区别？](../数据结构与算法/problems__set%EF%BC%8Cmutiset%EF%BC%8Cmap%EF%BC%8Cmutimap之间都有什么区别%EF%BC%9F.md)
-* [在C++的算法库中，find()和binary_search()有什么区别？](../数据结构与算法/problems__在C%2B%2B的算法库中%EF%BC%8Cfind%28%29和binary_search%28%29有什么区别%EF%BC%9F.md)
-* [lower_bound()和upper_bound()有什么区别？](../进阶C%2B%2B与标准库/problems__lower_bound%28%29和upper_bound%28%29有什么区别%EF%BC%9F.md)
-* [为什么需要allocator？他在STL中有什么作用？](../设计模式与项目实践/problems__为什么需要allocator%EF%BC%9F他在STL中有什么作用%EF%BC%9F.md)
-* [什么是RAII原则，他在STL是怎么应用的？](../进阶C%2B%2B与标准库/problems__什么是RAII原则%EF%BC%8C他在STL是怎么应用的%EF%BC%9F.md)
-* [STL容器是线程安全的吗？](../操作系统与Linux/problems__STL容器是线程安全的吗%EF%BC%9F.md)
-* [什么是泛型编程，他在STL中是怎么使用的？](../数据结构与算法/problems__什么是泛型编程%EF%BC%8C他在STL中是怎么使用的%EF%BC%9F.md)
-* [如何选择合适的STL容器](problems__如何选择合适的STL容器.md)
-* [函数参数的入栈顺序是什么，从左到右还是从右到左?](../进阶C%2B%2B与标准库/problems__函数参数的入栈顺序是什么%EF%BC%8C从左到右还是从右到左.md)
-* [讲讲函数调用的过程](../进阶C%2B%2B与标准库/problems__讲讲函数调用的过程.md)
-* [git的merge和rebase有什么区别?](../进阶C%2B%2B与标准库/problems__git的merge和rebase有什么区别.md)
-
-# 数据结构与算法
-
-* [数据结构与算法学习攻略](https://github.com/youngyangyang04/leetcode-master)
-* [数组和链表的区别、适用场景](../数据库与缓存/problems__数组和链表的区别%E3%80%81适用场景.md)
-* [栈和队列的区别、适用场景](../操作系统与Linux/problems__栈和队列的区别%E3%80%81适用场景.md)
-* [什么时候会产生栈溢出，为什么一直递归就会栈溢出](../进阶C%2B%2B与标准库/problems__什么时候会产生栈溢出%EF%BC%8C为什么一直递归就会栈溢出.md)
-* [循环队列怎么实现](../数据结构与算法/problems__循环队列怎么实现.md)
-* [什么是二叉树、二叉搜索树、平衡二叉树、完全二叉树、满二叉树](../数据库与缓存/problems__什么是二叉树%E3%80%81二叉搜索树%E3%80%81平衡二叉树%E3%80%81完全二叉树%E3%80%81满二叉树.md)
-* [二叉树和链表的区别](../数据库与缓存/problems__二叉树和链表的区别.md)
-* [什么是哈夫曼树？构造过程？应用场景](problems__什么是哈夫曼树%EF%BC%9F构造过程%EF%BC%9F应用场景.md)
-* [什么是堆？如何维护堆](../数据结构与算法/problems__什么是堆%EF%BC%9F如何维护堆.md)
-* [什么是红黑树？红黑树与平衡二叉树、B/B+ 树的区别](../数据结构与算法/problems__什么是红黑树%EF%BC%9F红黑树与平衡二叉树%E3%80%81B和B%2B树的区别.md)
-* [什么是跳表？跳表和平衡二叉树的区别](../数据库与缓存/problems__什么是跳表%EF%BC%9F跳表和平衡二叉树的区别.md)
-* [如何判断图中是否有环（拓扑排序）](../数据结构与算法/problems__如何判断图中是否有环%EF%BC%88拓扑排序%EF%BC%89.md)
-* [时间复杂度和空间复杂度的定义？时间换空间 & 空间换时间的例子有哪些](../数据库与缓存/problems__时间复杂度和空间复杂度的定义%EF%BC%9F时间换空间%26空间换时间的例子有哪些.md)
-* [常见排序算法及其时间复杂度、各种排序算法对比](../数据结构与算法/problems__常见排序算法及其时间复杂度%E3%80%81各种排序算法对比.md)
-* [内存有限，怎么对100亿数据进行排序（大数据小内存排序问题，答案不唯一）](../数据结构与算法/problems__内存有限%EF%BC%8C怎么对100亿数据进行排序%EF%BC%88大数据小内存排序问题%EF%BC%89.md)
-* [如何判断某网页的URL是否存在于包含100亿条数据的黑名单上（大数据小内存去重问题，答案不唯一）](../数据结构与算法/problems__如何判断某网页的URL是否存在于包含100亿条数据的黑名单上%EF%BC%88大数据小内存去重问题%EF%BC%89.md)
-* [检查手机号是否存在于百万数据电话号中（答案不唯一）](../数据库与缓存/problems__检查手机号是否存在于百万数据电话号中.md)
-* [内存有限，如何在20亿个整数中找到出现次数最多的数（答案不唯一）](../数据结构与算法/problems__内存有限%EF%BC%8C如何在20亿个整数中找到出现次数最多的数.md)
-* [内存有限，如何在 40 亿个非负整数中找到所有未出现的数（答案不唯一）](../数据结构与算法/problems__内存有限%EF%BC%8C如何在40亿个非负整数中找到所有未出现的数.md)
-* [内存有限，如何在 100 亿数据中找到中位数（答案不唯一）](../数据结构与算法/problems__内存有限%EF%BC%8C如何在100亿数据中找到中位数.md) 
-* [内存有限，如何在 2 亿个整数中找出不连续的最小数（答案不唯一）](../数据结构与算法/problems__内存有限%EF%BC%8C如何在2亿个整数中找出不连续的最小数.md)
-
-# 设计模式
-
-* [C++设计模式](https://github.com/youngyangyang04/DesignPattern)
-* [C++单例模式](../设计模式与项目实践/problems__C%2B%2B单例模式.md) 
-* [用C++设计一个不能被继承的类](../进阶C%2B%2B与标准库/problems__用C%2B%2B设计一个不能被继承的类.md)
-* [如何定义一个只能在堆上定义对象的类?栈上呢](../数据结构与算法/problems__如何定义一个只能在堆上定义对象的类栈上呢.md)
-* [类构造和析构的顺序](../进阶C%2B%2B与标准库/problems__类构造和析构的顺序.md)
-
-# 操作系统 
-
-* [linux的内存管理机制，内存寻址方式，什么叫虚拟内存，内存调页算法，任务调度算法](../操作系统与Linux/problems__linux的内存管理机制内存寻址方式什么叫虚拟内存内存调页算法任务调度算法.md) 
-* [锁：互斥锁，乐观锁，悲观锁](../数据库与缓存/problems__锁%EF%BC%9A互斥锁%EF%BC%8C乐观锁%EF%BC%8C悲观锁.md) 
-    * [死锁必要条件及避免算法](../操作系统与Linux/problems__死锁必要条件及避免算法.md) 
-* [动态链接和静态链接的区别](../进阶C%2B%2B与标准库/problems__动态链接和静态链接的区别.md)
-* [常见的信号、系统如何将一个信号通知到进程](../设计模式与项目实践/problems__常见的信号%E3%80%81系统如何将一个信号通知到进程.md)
-* [linux系统的各类同步机制、linux系统的各类异步机制](problems__linux系统的各类同步机制%E3%80%81linux系统的各类异步机制.md)
-* [如何实现守护进程](../操作系统与Linux/problems__如何实现守护进程.md)
-* [标准库函数和系统调用的区别](problems__标准库函数和系统调用的区别.md)
-* [协程是什么，为什么需要协程](../操作系统与Linux/problems__协程是什么%EF%BC%8C为什么需要协程.md)
-* [进程的状态转换有那些？](../操作系统与Linux/problems__进程的状态转换有那些%EF%BC%9F.md)
-* [什么是进程？什么是线程？他们的区别是什么？](../操作系统与Linux/problems__什么是进程%EF%BC%9F什么是线程%EF%BC%9F他们的区别是什么%EF%BC%9F.md)
-* [进程间的通信方式有那些？](../设计模式与项目实践/problems__进程间的通信方式有那些%EF%BC%9F.md)
-* [线程间的通信方式有那些？](../操作系统与Linux/problems__线程间的通信方式有那些%EF%BC%9F.md)
-* [线程，进程和协程是否有自己独立的堆区和栈区？](../操作系统与Linux/problems__线程%EF%BC%8C进程和协程是否有自己独立的堆区和栈区%EF%BC%9F.md)
-* [什么是PCB？](../操作系统与Linux/problems__什么是PCB%EF%BC%9F.md)
-* [分页和分段的区别是什么？](../操作系统与Linux/problems__分页和分段的区别是什么%EF%BC%9F.md)
-* [为什么有了进程还需要线程和协程？](../操作系统与Linux/problems__为什么有了进程还需要线程和协程%EF%BC%9F.md)
-* [外中断和内中断有什么区别？](../操作系统与Linux/problems__外中断和内中断有什么区别%EF%BC%9F.md)
-* [什么是僵尸进程？](../操作系统与Linux/problems__什么是僵尸进程%EF%BC%9F.md)
-* [程序编译的过程](problems__程序编译的过程.md)
-* [并行和并发的区别](../操作系统与Linux/problems__并行和并发的区别.md)
-* [什么是缺页中断](../操作系统与Linux/problems__什么是缺页中断.md)
-* [为什么用户态和内核态的相互切换过程开销比较大](../数据库与缓存/problems__为什么用户态和内核态的相互切换过程开销比较大.md)
-* [介绍下分层存储体系和 CPU 三级缓存](../数据库与缓存/problems__介绍下分层存储体系和CPU三级缓存.md)
-* [为什么 CPU访问寄存器的速度比访问内存或CPUCache 的速度快](../操作系统与Linux/problems__为什么CPU访问寄存器的速度比访问内存或CPUCache的速度快.md)
-* [固态硬盘和机械硬盘区别](../操作系统与Linux/problems__固态硬盘和机械硬盘区别.md)
-* [操作系统本身为用户提供什么功能](problems__操作系统本身为用户提供什么功能.md)
-* [什么是缓冲区溢出？](../数据结构与算法/problems__什么是缓冲区溢出%EF%BC%9F.md)
-* [介绍下进程的地址空间（虚拟地址和物理地址）](../操作系统与Linux/problems__介绍下进程的地址空间%EF%BC%88虚拟地址和物理地址%EF%BC%89.md)
-* [一段代码从程序到执行经历怎么样的过程（程序在计算机中是如何运行起来的）](../操作系统与Linux/problems__一段代码从程序到执行经历怎么样的过程%EF%BC%88程序在计算机中是如何运行起来的%EF%BC%89.md)
-* [什么是页表、什么是快表](../数据库与缓存/problems__什么是页表%E3%80%81什么是快表.md)
-* [从本地读取一个文件通过网络发送到另一端，中间涉及几次拷贝](problems__从本地读取一个文件通过网络发送到另一端%EF%BC%8C中间涉及几次拷贝.md)
-* [单线程怎么保证高并发？](../设计模式与项目实践/problems__单线程怎么保证高并发%EF%BC%9F.md)
-* [select/poll/epoll 分别讲讲](problems__selectpollepoll分别讲讲.md)
+    * [迭代器与普通指针有什么区别](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E8%BF%AD%E4%BB%A3%E5%99%A8%E4%B8%8E%E6%99%AE%E9%80%9A%E6%8C%87%E9%92%88%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB.md)
+    * [C++的智能指针及其原理](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__C%2B%2B%E7%9A%84%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86.md)
+    * [悬挂指针和野指针有什么区别？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E6%82%AC%E6%8C%82%E6%8C%87%E9%92%88%E5%92%8C%E9%87%8E%E6%8C%87%E9%92%88%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F.md)
+    * [指针常量和常量指针的区别](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E6%8C%87%E9%92%88%E5%B8%B8%E9%87%8F%E5%92%8C%E5%B8%B8%E9%87%8F%E6%8C%87%E9%92%88%E7%9A%84%E5%8C%BA%E5%88%AB.md)
+    * [指针和引用有什么区别呢？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E6%8C%87%E9%92%88%E5%92%8C%E5%BC%95%E7%94%A8%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%E5%91%A2%EF%BC%9F.md)
+    * [如何避免悬挂指针？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E6%82%AC%E6%8C%82%E6%8C%87%E9%92%88%EF%BC%9F.md)
+* [override和overload的区别](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__override%E5%92%8Coverload%E7%9A%84%E5%8C%BA%E5%88%AB%E6%9C%89%E9%82%A3%E4%BA%9B.md)
+* [写string类的构造，析构，拷贝函数](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%86%99string%E7%B1%BB%E7%9A%84%E6%9E%84%E9%80%A0%EF%BC%8C%E6%9E%90%E6%9E%84%EF%BC%8C%E6%8B%B7%E8%B4%9D%E5%87%BD%E6%95%B0.md)
+* [C++中类成员的访问权限有那些？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__C%2B%2B%E4%B8%AD%E7%B1%BB%E6%88%90%E5%91%98%E7%9A%84%E8%AE%BF%E9%97%AE%E6%9D%83%E9%99%90%E6%9C%89%E9%82%A3%E4%BA%9B%EF%BC%9F.md)
+* [C++多态的实现有那几种？他们有什么不同？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__C%2B%2B%E5%A4%9A%E6%80%81%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%9C%89%E9%82%A3%E5%87%A0%E7%A7%8D%EF%BC%9F%E4%BB%96%E4%BB%AC%E6%9C%89%E4%BB%80%E4%B9%88%E4%B8%8D%E5%90%8C%EF%BC%9F.md)
+* [C++中右值引用有什么作用？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__C%2B%2B%E4%B8%AD%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E6%9C%89%E4%BB%80%E4%B9%88%E4%BD%9C%E7%94%A8%EF%BC%9F.md)
+* [面向对象的三大特征是什么](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84%E4%B8%89%E5%A4%A7%E7%89%B9%E5%BE%81%E6%98%AF%E4%BB%80%E4%B9%88.md)
+* [静态分配内存和动态分配内存有什么区别？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E9%9D%99%E6%80%81%E5%88%86%E9%85%8D%E5%86%85%E5%AD%98%E5%92%8C%E5%8A%A8%E6%80%81%E5%88%86%E9%85%8D%E5%86%85%E5%AD%98%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F.md)
+* [C++结构体内存对齐](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__C%2B%2B%E7%BB%93%E6%9E%84%E4%BD%93%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90.md)
+* [讲一讲C++中的原子操作有那些？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E8%AE%B2%E4%B8%80%E8%AE%B2C%2B%2B%E4%B8%AD%E7%9A%84%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E6%9C%89%E9%82%A3%E4%BA%9B%EF%BC%9F.md)
+* [简单说说STL中的优先级队列是如何实现的？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__STL%E4%B8%AD%E7%9A%84%E4%BC%98%E5%85%88%E7%BA%A7%E9%98%9F%E5%88%97%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84%EF%BC%9F.md)
+* [C++中动态链接库和静态连接库的区别是什么？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__C%2B%2B%E4%B8%AD%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5%E5%BA%93%E5%92%8C%E9%9D%99%E6%80%81%E8%BF%9E%E6%8E%A5%E5%BA%93%E7%9A%84%E5%8C%BA%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F.md)
+* [在C++中，对一个对象先malloc后delete这样使用可以吗？有什么风险？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%9C%A8C%2B%2B%E4%B8%AD%EF%BC%8C%E5%AF%B9%E4%B8%80%E4%B8%AA%E5%AF%B9%E8%B1%A1%E5%85%88malloc%E5%90%8Edelete%E8%BF%99%E6%A0%B7%E4%BD%BF%E7%94%A8%E5%8F%AF%E4%BB%A5%E5%90%97%EF%BC%9F%E6%9C%89%E4%BB%80%E4%B9%88%E9%A3%8E%E9%99%A9.md)
+* [在C++中，三个全局变量相互依赖，程序应该如何初始化呢？300个呢？](../%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5/problems__%E5%9C%A8C%2B%2B%E4%B8%AD%EF%BC%8C%E4%B8%89%E4%B8%AA%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E7%9B%B8%E4%BA%92%E4%BE%9D%E8%B5%96%EF%BC%8C%E7%A8%8B%E5%BA%8F%E5%BA%94%E8%AF%A5%E5%A6%82%E4%BD%95%E5%88%9D%E5%A7%8B%E5%8C%96%E5%91%A2%EF%BC%9F300%E4%B8%AA%E5%91%A2%EF%BC%9F.md)
+* [STL中的优先级队列是如何实现的？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__STL%E4%B8%AD%E7%9A%84%E4%BC%98%E5%85%88%E7%BA%A7%E9%98%9F%E5%88%97%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84%EF%BC%9F.md)
+* [如果拿到虚函数表的储存地址，是否可以改写虚函数表的内容？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%A6%82%E6%9E%9C%E6%8B%BF%E5%88%B0%E8%99%9A%E5%87%BD%E6%95%B0%E8%A1%A8%E7%9A%84%E5%82%A8%E5%AD%98%E5%9C%B0%E5%9D%80%EF%BC%8C%E6%98%AF%E5%90%A6%E5%8F%AF%E4%BB%A5%E6%94%B9%E5%86%99%E8%99%9A%E5%87%BD%E6%95%B0%E8%A1%A8%E7%9A%84%E5%86%85%E5%AE%B9%EF%BC%9F.md)
+* [在C++中为什么需要深拷贝，浅拷贝会存在哪些问题？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%9C%A8C%2B%2B%E4%B8%AD%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E6%B7%B1%E6%8B%B7%E8%B4%9D%EF%BC%8C%E6%B5%85%E6%8B%B7%E8%B4%9D%E4%BC%9A%E5%AD%98%E5%9C%A8%E5%93%AA%E4%BA%9B%E9%97%AE%E9%A2%98%EF%BC%9F.md)
+* [如何构造一个类使得只能在堆上或者栈上分配内存？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%A6%82%E4%BD%95%E6%9E%84%E9%80%A0%E4%B8%80%E4%B8%AA%E7%B1%BB%E4%BD%BF%E5%BE%97%E5%8F%AA%E8%83%BD%E5%9C%A8%E5%A0%86%E4%B8%8A%E6%88%96%E8%80%85%E6%A0%88%E4%B8%8A%E5%88%86%E9%85%8D%E5%86%85%E5%AD%98%EF%BC%9F.md)
+* [什么是C++的内存模型？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E4%BB%80%E4%B9%88%E6%98%AFC%2B%2B%E7%9A%84%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%EF%BC%9F.md)
+* [指针和引用在内存中的表现形式有何不同？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E6%8C%87%E9%92%88%E5%92%8C%E5%BC%95%E7%94%A8%E5%9C%A8%E5%86%85%E5%AD%98%E4%B8%AD%E7%9A%84%E8%A1%A8%E7%8E%B0%E5%BD%A2%E5%BC%8F%E6%9C%89%E4%BD%95%E4%B8%8D%E5%90%8C%EF%BC%9F.md)
+* [内存映射文件是什么？如何用它来处理大文件？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E5%86%85%E5%AD%98%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E5%A6%82%E4%BD%95%E7%94%A8%E5%AE%83%E6%9D%A5%E5%A4%84%E7%90%86%E5%A4%A7%E6%96%87%E4%BB%B6%EF%BC%9F.md)
+* [C++中结构体内存布局的规则是什么？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__C%2B%2B%E4%B8%AD%E7%BB%93%E6%9E%84%E4%BD%93%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80%E7%9A%84%E8%A7%84%E5%88%99%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F.md)
+* [在C++中，用堆和用栈谁更快一点？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%9C%A8C%2B%2B%E4%B8%AD%EF%BC%8C%E7%94%A8%E5%A0%86%E5%92%8C%E7%94%A8%E6%A0%88%E8%B0%81%E6%9B%B4%E5%BF%AB%E4%B8%80%E7%82%B9%EF%BC%9F.md)
+* [C++中struct和class有什么区别？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__C%2B%2B%E4%B8%ADstruct%E5%92%8Cclass%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F.md)
+* [如果A这个对象对应的类是一个空类，那么sizeof(A)的值是多少？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%A6%82%E6%9E%9CA%E8%BF%99%E4%B8%AA%E5%AF%B9%E8%B1%A1%E5%AF%B9%E5%BA%94%E7%9A%84%E7%B1%BB%E6%98%AF%E4%B8%80%E4%B8%AA%E7%A9%BA%E7%B1%BB%EF%BC%8C%E9%82%A3%E4%B9%88sizeof%28A%29%E7%9A%84%E5%80%BC%E6%98%AF%E5%A4%9A%E5%B0%91%EF%BC%9F.md)
+* [如果A这个指针指向一个数组，那么sizeof(A)的值是多少？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%A6%82%E6%9E%9CA%E8%BF%99%E4%B8%AA%E6%8C%87%E9%92%88%E6%8C%87%E5%90%91%E4%B8%80%E4%B8%AA%E6%95%B0%E7%BB%84%EF%BC%8C%E9%82%A3%E4%B9%88sizeof%28A%29%E7%9A%84%E5%80%BC%E6%98%AF%E5%A4%9A%E5%B0%91%EF%BC%9F.md)
+* [如果A是某一个类的指针，那么在它等于nullptr的情况下能直接调用里面的A对应类里面的public函数吗](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%A6%82%E6%9E%9CA%E6%98%AF%E6%9F%90%E4%B8%80%E4%B8%AA%E7%B1%BB%E7%9A%84%E6%8C%87%E9%92%88%EF%BC%8C%E9%82%A3%E4%B9%88%E5%9C%A8%E5%AE%83%E7%AD%89%E4%BA%8Enullptr%E7%9A%84%E6%83%85%E5%86%B5%E4%B8%8B%E8%83%BD%E7%9B%B4%E6%8E%A5%E8%B0%83%E7%94%A8%E9%87%8C%E9%9D%A2%E7%9A%84A%E5%AF%B9%E5%BA%94%E7%B1%BB%E9%87%8C%E9%9D%A2%E7%9A%84public%E5%87%BD%E6%95%B0%E5%90%97.md)
+* [STL中一般都有那些常见的算法库呢？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__STL%E4%B8%AD%E4%B8%80%E8%88%AC%E9%83%BD%E6%9C%89%E9%82%A3%E4%BA%9B%E5%B8%B8%E8%A7%81%E7%9A%84%E7%AE%97%E6%B3%95%E5%BA%93%E5%91%A2%EF%BC%9F.md)
+* [C++中，结构体可以直接赋值吗？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__C%2B%2B%E4%B8%AD%EF%BC%8C%E7%BB%93%E6%9E%84%E4%BD%93%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E8%B5%8B%E5%80%BC%E5%90%97%EF%BC%9F.md)
+* [#define和const的区别有那些？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%23define%E5%92%8Cconst%E7%9A%84%E5%8C%BA%E5%88%AB%E6%9C%89%E9%82%A3%E4%BA%9B%EF%BC%9F.md)
+* [在C++的map中，\[\]与insert有那些区别？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%9C%A8C%2B%2B%E7%9A%84map%E4%B8%AD%EF%BC%8C%5B%5D%E4%B8%8Einsert%E6%9C%89%E9%82%A3%E4%BA%9B%E5%8C%BA%E5%88%AB%EF%BC%9F.md)
+* [在32位和64位系统中，指针分别为多大？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%9C%A832%E4%BD%8D%E5%92%8C64%E4%BD%8D%E7%B3%BB%E7%BB%9F%E4%B8%AD%EF%BC%8C%E6%8C%87%E9%92%88%E5%88%86%E5%88%AB%E4%B8%BA%E5%A4%9A%E5%A4%A7%EF%BC%9F.md)
+* [weak_ptr是如何解决shared_ptr循环引用的？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__weak_ptr%E6%98%AF%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3shared_ptr%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8%E7%9A%84%EF%BC%9F.md)
+* [虚函数是否可以声明为static？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E8%99%9A%E5%87%BD%E6%95%B0%E6%98%AF%E5%90%A6%E5%8F%AF%E4%BB%A5%E5%A3%B0%E6%98%8E%E4%B8%BAstatic%EF%BC%9F.md)
+* [如何使用gdb来定位C++程序中的死锁？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8gdb%E6%9D%A5%E5%AE%9A%E4%BD%8DC%2B%2B%E7%A8%8B%E5%BA%8F%E4%B8%AD%E7%9A%84%E6%AD%BB%E9%94%81%EF%BC%9F.md)
+* [C++中常用的类优化技术有那些？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__C%2B%2B%E4%B8%AD%E5%B8%B8%E7%94%A8%E7%9A%84%E7%B1%BB%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF%E6%9C%89%E9%82%A3%E4%BA%9B%EF%BC%9F.md)
+* [C++的atomic<bool>代码底层是如何实现的？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__C%2B%2B%E7%9A%84atomic-bool%E4%BB%A3%E7%A0%81%E5%BA%95%E5%B1%82%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84%EF%BC%9F.md)
+* [原子变量的内存序是什么？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%8E%9F%E5%AD%90%E5%8F%98%E9%87%8F%E7%9A%84%E5%86%85%E5%AD%98%E5%BA%8F%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F.md)
+* [什么是左值？什么是右值？有什么不同？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E4%BB%80%E4%B9%88%E6%98%AF%E5%B7%A6%E5%80%BC%EF%BC%9F%E4%BB%80%E4%B9%88%E6%98%AF%E5%8F%B3%E5%80%BC%EF%BC%9F%E6%9C%89%E4%BB%80%E4%B9%88%E4%B8%8D%E5%90%8C%EF%BC%9F.md)
+* [什么是完美转发？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E4%BB%80%E4%B9%88%E6%98%AF%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91%EF%BC%9F.md)
+* [C++中四种cast的转换？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__C%2B%2B%E4%B8%AD%E5%9B%9B%E7%A7%8Dcast%E7%9A%84%E8%BD%AC%E6%8D%A2%EF%BC%9F.md)
+* [内存池是什么？在C++中如何设计一个简单的内存池？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%86%85%E5%AD%98%E6%B1%A0%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E5%9C%A8C%2B%2B%E4%B8%AD%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E5%86%85%E5%AD%98%E6%B1%A0%EF%BC%9F.md)
+* [STL中，map的底层是如何实现的？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__STL%E4%B8%AD%EF%BC%8Cmap%E7%9A%84%E5%BA%95%E5%B1%82%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84%EF%BC%9F.md)
+* [STL中，set的底层是如何实现的？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__STL%E4%B8%AD%EF%BC%8Cset%E7%9A%84%E5%BA%95%E5%B1%82%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84%EF%BC%9F.md)
+* [set，multiset，map，multimap之间都有什么区别？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__set%EF%BC%8Cmultiset%EF%BC%8Cmap%EF%BC%8Cmultimap%E4%B9%8B%E9%97%B4%E9%83%BD%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F.md)
+* [在C++的算法库中，find()和binary_search()有什么区别？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%9C%A8C%2B%2B%E7%9A%84%E7%AE%97%E6%B3%95%E5%BA%93%E4%B8%AD%EF%BC%8Cfind%28%29%E5%92%8Cbinary_search%28%29%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F.md)
+* [lower_bound()和upper_bound()有什么区别？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__lower_bound%28%29%E5%92%8Cupper_bound%28%29%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F.md)
+* [为什么需要allocator？他在STL中有什么作用？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81allocator%EF%BC%9F%E4%BB%96%E5%9C%A8STL%E4%B8%AD%E6%9C%89%E4%BB%80%E4%B9%88%E4%BD%9C%E7%94%A8%EF%BC%9F.md)
+* [什么是RAII原则，他在STL是怎么应用的？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E4%BB%80%E4%B9%88%E6%98%AFRAII%E5%8E%9F%E5%88%99%EF%BC%8C%E4%BB%96%E5%9C%A8STL%E6%98%AF%E6%80%8E%E4%B9%88%E5%BA%94%E7%94%A8%E7%9A%84%EF%BC%9F.md)
+* [STL容器是线程安全的吗？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__STL%E5%AE%B9%E5%99%A8%E6%98%AF%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E5%90%97%EF%BC%9F.md)
+* [什么是泛型编程，他在STL中是怎么使用的？](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E4%BB%80%E4%B9%88%E6%98%AF%E6%B3%9B%E5%9E%8B%E7%BC%96%E7%A8%8B%EF%BC%8C%E4%BB%96%E5%9C%A8STL%E4%B8%AD%E6%98%AF%E6%80%8E%E4%B9%88%E4%BD%BF%E7%94%A8%E7%9A%84%EF%BC%9F.md)
+* [如何选择合适的STL容器](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9%E5%90%88%E9%80%82%E7%9A%84STL%E5%AE%B9%E5%99%A8.md)
+* [函数参数的入栈顺序是什么，从左到右还是从右到左?](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E7%9A%84%E5%85%A5%E6%A0%88%E9%A1%BA%E5%BA%8F%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%8C%E4%BB%8E%E5%B7%A6%E5%88%B0%E5%8F%B3%E8%BF%98%E6%98%AF%E4%BB%8E%E5%8F%B3%E5%88%B0%E5%B7%A6.md)
+* [讲讲函数调用的过程](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E8%AE%B2%E8%AE%B2%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B.md)
+* [git的merge和rebase有什么区别?](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__git%E7%9A%84merge%E5%92%8Crebase%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB.md)
+
+## 数据结构与算法
+
+* 数据结构与算法学习攻略
+* [数组和链表的区别、适用场景](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E6%95%B0%E7%BB%84%E5%92%8C%E9%93%BE%E8%A1%A8%E7%9A%84%E5%8C%BA%E5%88%AB%E3%80%81%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF.md)
+* [栈和队列的区别、适用场景](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E6%A0%88%E5%92%8C%E9%98%9F%E5%88%97%E7%9A%84%E5%8C%BA%E5%88%AB%E3%80%81%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF.md)
+* [什么时候会产生栈溢出，为什么一直递归就会栈溢出](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E4%BC%9A%E4%BA%A7%E7%94%9F%E6%A0%88%E6%BA%A2%E5%87%BA%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%80%E7%9B%B4%E9%80%92%E5%BD%92%E5%B0%B1%E4%BC%9A%E6%A0%88%E6%BA%A2%E5%87%BA.md)
+* [循环队列怎么实现](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E5%BE%AA%E7%8E%AF%E9%98%9F%E5%88%97%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0.md)
+* [什么是二叉树、二叉搜索树、平衡二叉树、完全二叉树、满二叉树](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E4%BB%80%E4%B9%88%E6%98%AF%E4%BA%8C%E5%8F%89%E6%A0%91%E3%80%81%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E3%80%81%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91%E3%80%81%E5%AE%8C%E5%85%A8%E4%BA%8C%E5%8F%89%E6%A0%91%E3%80%81%E6%BB%A1%E4%BA%8C%E5%8F%89%E6%A0%91.md)
+* [二叉树和链表的区别](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E4%BA%8C%E5%8F%89%E6%A0%91%E5%92%8C%E9%93%BE%E8%A1%A8%E7%9A%84%E5%8C%BA%E5%88%AB.md)
+* [什么是哈夫曼树？构造过程？应用场景](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E4%BB%80%E4%B9%88%E6%98%AF%E5%93%88%E5%A4%AB%E6%9B%BC%E6%A0%91%EF%BC%9F%E6%9E%84%E9%80%A0%E8%BF%87%E7%A8%8B%EF%BC%9F%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF.md)
+* [什么是堆？如何维护堆](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E4%BB%80%E4%B9%88%E6%98%AF%E5%A0%86%EF%BC%9F%E5%A6%82%E4%BD%95%E7%BB%B4%E6%8A%A4%E5%A0%86.md)
+* [什么是红黑树？红黑树与平衡二叉树、B/B+ 树的区别](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E4%BB%80%E4%B9%88%E6%98%AF%E7%BA%A2%E9%BB%91%E6%A0%91%EF%BC%9F%E7%BA%A2%E9%BB%91%E6%A0%91%E4%B8%8E%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91%E3%80%81B%E5%92%8CB%2B%E6%A0%91%E7%9A%84%E5%8C%BA%E5%88%AB.md)
+* [什么是跳表？跳表和平衡二叉树的区别](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E4%BB%80%E4%B9%88%E6%98%AF%E8%B7%B3%E8%A1%A8%EF%BC%9F%E8%B7%B3%E8%A1%A8%E5%92%8C%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%8C%BA%E5%88%AB.md)
+* [如何判断图中是否有环（拓扑排序）](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E5%9B%BE%E4%B8%AD%E6%98%AF%E5%90%A6%E6%9C%89%E7%8E%AF%EF%BC%88%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F%EF%BC%89.md)
+* [时间复杂度和空间复杂度的定义？时间换空间 & 空间换时间的例子有哪些](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%92%8C%E7%A9%BA%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E7%9A%84%E5%AE%9A%E4%B9%89%EF%BC%9F%E6%97%B6%E9%97%B4%E6%8D%A2%E7%A9%BA%E9%97%B4%26%E7%A9%BA%E9%97%B4%E6%8D%A2%E6%97%B6%E9%97%B4%E7%9A%84%E4%BE%8B%E5%AD%90%E6%9C%89%E5%93%AA%E4%BA%9B.md)
+* [常见排序算法及其时间复杂度、各种排序算法对比](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E5%B8%B8%E8%A7%81%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E5%8F%8A%E5%85%B6%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E3%80%81%E5%90%84%E7%A7%8D%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E5%AF%B9%E6%AF%94.md)
+* [内存有限，怎么对100亿数据进行排序（大数据小内存排序问题，答案不唯一）](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E5%86%85%E5%AD%98%E6%9C%89%E9%99%90%EF%BC%8C%E6%80%8E%E4%B9%88%E5%AF%B9100%E4%BA%BF%E6%95%B0%E6%8D%AE%E8%BF%9B%E8%A1%8C%E6%8E%92%E5%BA%8F%EF%BC%88%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%B0%8F%E5%86%85%E5%AD%98%E6%8E%92%E5%BA%8F%E9%97%AE%E9%A2%98%EF%BC%89.md)
+* [如何判断某网页的URL是否存在于包含100亿条数据的黑名单上（大数据小内存去重问题，答案不唯一）](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E6%9F%90%E7%BD%91%E9%A1%B5%E7%9A%84URL%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8%E4%BA%8E%E5%8C%85%E5%90%AB100%E4%BA%BF%E6%9D%A1%E6%95%B0%E6%8D%AE%E7%9A%84%E9%BB%91%E5%90%8D%E5%8D%95%E4%B8%8A%EF%BC%88%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%B0%8F%E5%86%85%E5%AD%98%E5%8E%BB%E9%87%8D%E9%97%AE%E9%A2%98%EF%BC%89.md)
+* [检查手机号是否存在于百万数据电话号中（答案不唯一）](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E6%A3%80%E6%9F%A5%E6%89%8B%E6%9C%BA%E5%8F%B7%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8%E4%BA%8E%E7%99%BE%E4%B8%87%E6%95%B0%E6%8D%AE%E7%94%B5%E8%AF%9D%E5%8F%B7%E4%B8%AD.md)
+* [内存有限，如何在20亿个整数中找到出现次数最多的数（答案不唯一）](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E5%86%85%E5%AD%98%E6%9C%89%E9%99%90%EF%BC%8C%E5%A6%82%E4%BD%95%E5%9C%A820%E4%BA%BF%E4%B8%AA%E6%95%B4%E6%95%B0%E4%B8%AD%E6%89%BE%E5%88%B0%E5%87%BA%E7%8E%B0%E6%AC%A1%E6%95%B0%E6%9C%80%E5%A4%9A%E7%9A%84%E6%95%B0.md)
+* [内存有限，如何在 40 亿个非负整数中找到所有未出现的数（答案不唯一）](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E5%86%85%E5%AD%98%E6%9C%89%E9%99%90%EF%BC%8C%E5%A6%82%E4%BD%95%E5%9C%A840%E4%BA%BF%E4%B8%AA%E9%9D%9E%E8%B4%9F%E6%95%B4%E6%95%B0%E4%B8%AD%E6%89%BE%E5%88%B0%E6%89%80%E6%9C%89%E6%9C%AA%E5%87%BA%E7%8E%B0%E7%9A%84%E6%95%B0.md)
+* [内存有限，如何在 100 亿数据中找到中位数（答案不唯一）](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E5%86%85%E5%AD%98%E6%9C%89%E9%99%90%EF%BC%8C%E5%A6%82%E4%BD%95%E5%9C%A8100%E4%BA%BF%E6%95%B0%E6%8D%AE%E4%B8%AD%E6%89%BE%E5%88%B0%E4%B8%AD%E4%BD%8D%E6%95%B0.md)
+* [内存有限，如何在 2 亿个整数中找出不连续的最小数（答案不唯一）](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E5%86%85%E5%AD%98%E6%9C%89%E9%99%90%EF%BC%8C%E5%A6%82%E4%BD%95%E5%9C%A82%E4%BA%BF%E4%B8%AA%E6%95%B4%E6%95%B0%E4%B8%AD%E6%89%BE%E5%87%BA%E4%B8%8D%E8%BF%9E%E7%BB%AD%E7%9A%84%E6%9C%80%E5%B0%8F%E6%95%B0.md)
+
+## 设计模式
+
+* C++设计模式
+* [C++单例模式](../%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5/problems__C%2B%2B%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F.md)
+* [用C++设计一个不能被继承的类](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E7%94%A8C%2B%2B%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E4%B8%8D%E8%83%BD%E8%A2%AB%E7%BB%A7%E6%89%BF%E7%9A%84%E7%B1%BB.md)
+* [如何定义一个只能在堆上定义对象的类?栈上呢](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%A6%82%E4%BD%95%E5%AE%9A%E4%B9%89%E4%B8%80%E4%B8%AA%E5%8F%AA%E8%83%BD%E5%9C%A8%E5%A0%86%E4%B8%8A%E5%AE%9A%E4%B9%89%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%B1%BB%E6%A0%88%E4%B8%8A%E5%91%A2.md)
+* [类构造和析构的顺序](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E7%B1%BB%E6%9E%84%E9%80%A0%E5%92%8C%E6%9E%90%E6%9E%84%E7%9A%84%E9%A1%BA%E5%BA%8F.md)
+
+## 操作系统
+
+* [linux的内存管理机制，内存寻址方式，什么叫虚拟内存，内存调页算法，任务调度算法](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__linux%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E6%9C%BA%E5%88%B6%E5%86%85%E5%AD%98%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F%E4%BB%80%E4%B9%88%E5%8F%AB%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E5%86%85%E5%AD%98%E8%B0%83%E9%A1%B5%E7%AE%97%E6%B3%95%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95.md)
+* [锁：互斥锁，乐观锁，悲观锁](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E9%94%81%EF%BC%9A%E4%BA%92%E6%96%A5%E9%94%81%EF%BC%8C%E4%B9%90%E8%A7%82%E9%94%81%EF%BC%8C%E6%82%B2%E8%A7%82%E9%94%81.md)
+    * [死锁必要条件及避免算法](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E6%AD%BB%E9%94%81%E5%BF%85%E8%A6%81%E6%9D%A1%E4%BB%B6%E5%8F%8A%E9%81%BF%E5%85%8D%E7%AE%97%E6%B3%95.md)
+* [动态链接和静态链接的区别](../%E8%BF%9B%E9%98%B6C%2B%2B%E4%B8%8E%E6%A0%87%E5%87%86%E5%BA%93/problems__%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5%E5%92%8C%E9%9D%99%E6%80%81%E9%93%BE%E6%8E%A5%E7%9A%84%E5%8C%BA%E5%88%AB.md)
+* [常见的信号、系统如何将一个信号通知到进程](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E5%B8%B8%E8%A7%81%E7%9A%84%E4%BF%A1%E5%8F%B7%E3%80%81%E7%B3%BB%E7%BB%9F%E5%A6%82%E4%BD%95%E5%B0%86%E4%B8%80%E4%B8%AA%E4%BF%A1%E5%8F%B7%E9%80%9A%E7%9F%A5%E5%88%B0%E8%BF%9B%E7%A8%8B.md)
+* [linux系统的各类同步机制、linux系统的各类异步机制](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__linux%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%90%84%E7%B1%BB%E5%90%8C%E6%AD%A5%E6%9C%BA%E5%88%B6%E3%80%81linux%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%90%84%E7%B1%BB%E5%BC%82%E6%AD%A5%E6%9C%BA%E5%88%B6.md)
+* [如何实现守护进程](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B.md)
+* [标准库函数和系统调用的区别](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E6%A0%87%E5%87%86%E5%BA%93%E5%87%BD%E6%95%B0%E5%92%8C%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%8C%BA%E5%88%AB.md)
+* [协程是什么，为什么需要协程](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E5%8D%8F%E7%A8%8B%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%8D%8F%E7%A8%8B.md)
+* [进程的状态转换有那些？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E8%BF%9B%E7%A8%8B%E7%9A%84%E7%8A%B6%E6%80%81%E8%BD%AC%E6%8D%A2%E6%9C%89%E9%82%A3%E4%BA%9B%EF%BC%9F.md)
+* [什么是进程？什么是线程？他们的区别是什么？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E4%BB%80%E4%B9%88%E6%98%AF%E8%BF%9B%E7%A8%8B%EF%BC%9F%E4%BB%80%E4%B9%88%E6%98%AF%E7%BA%BF%E7%A8%8B%EF%BC%9F%E4%BB%96%E4%BB%AC%E7%9A%84%E5%8C%BA%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F.md)
+* [进程间的通信方式有那些？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E8%BF%9B%E7%A8%8B%E9%97%B4%E7%9A%84%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F%E6%9C%89%E9%82%A3%E4%BA%9B%EF%BC%9F.md)
+* [线程间的通信方式有那些？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E7%BA%BF%E7%A8%8B%E9%97%B4%E7%9A%84%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F%E6%9C%89%E9%82%A3%E4%BA%9B%EF%BC%9F.md)
+* [线程，进程和协程是否有自己独立的堆区和栈区？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E7%BA%BF%E7%A8%8B%EF%BC%8C%E8%BF%9B%E7%A8%8B%E5%92%8C%E5%8D%8F%E7%A8%8B%E6%98%AF%E5%90%A6%E6%9C%89%E8%87%AA%E5%B7%B1%E7%8B%AC%E7%AB%8B%E7%9A%84%E5%A0%86%E5%8C%BA%E5%92%8C%E6%A0%88%E5%8C%BA%EF%BC%9F.md)
+* [什么是PCB？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E4%BB%80%E4%B9%88%E6%98%AFPCB%EF%BC%9F.md)
+* [分页和分段的区别是什么？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E5%88%86%E9%A1%B5%E5%92%8C%E5%88%86%E6%AE%B5%E7%9A%84%E5%8C%BA%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F.md)
+* [为什么有了进程还需要线程和协程？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%89%E4%BA%86%E8%BF%9B%E7%A8%8B%E8%BF%98%E9%9C%80%E8%A6%81%E7%BA%BF%E7%A8%8B%E5%92%8C%E5%8D%8F%E7%A8%8B%EF%BC%9F.md)
+* [外中断和内中断有什么区别？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E5%A4%96%E4%B8%AD%E6%96%AD%E5%92%8C%E5%86%85%E4%B8%AD%E6%96%AD%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F.md)
+* [什么是僵尸进程？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E4%BB%80%E4%B9%88%E6%98%AF%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B%EF%BC%9F.md)
+* [程序编译的过程](../%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/problems__%E7%A8%8B%E5%BA%8F%E7%BC%96%E8%AF%91%E7%9A%84%E8%BF%87%E7%A8%8B.md)
+* [并行和并发的区别](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E5%B9%B6%E8%A1%8C%E5%92%8C%E5%B9%B6%E5%8F%91%E7%9A%84%E5%8C%BA%E5%88%AB.md)
+* [什么是缺页中断](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E4%BB%80%E4%B9%88%E6%98%AF%E7%BC%BA%E9%A1%B5%E4%B8%AD%E6%96%AD.md)
+* [为什么用户态和内核态的相互切换过程开销比较大](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E4%B8%BA%E4%BB%80%E4%B9%88%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81%E7%9A%84%E7%9B%B8%E4%BA%92%E5%88%87%E6%8D%A2%E8%BF%87%E7%A8%8B%E5%BC%80%E9%94%80%E6%AF%94%E8%BE%83%E5%A4%A7.md)
+* [介绍下分层存储体系和 CPU 三级缓存](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E4%BB%8B%E7%BB%8D%E4%B8%8B%E5%88%86%E5%B1%82%E5%AD%98%E5%82%A8%E4%BD%93%E7%B3%BB%E5%92%8CCPU%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98.md)
+* [为什么 CPU访问寄存器的速度比访问内存或CPUCache 的速度快](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E4%B8%BA%E4%BB%80%E4%B9%88CPU%E8%AE%BF%E9%97%AE%E5%AF%84%E5%AD%98%E5%99%A8%E7%9A%84%E9%80%9F%E5%BA%A6%E6%AF%94%E8%AE%BF%E9%97%AE%E5%86%85%E5%AD%98%E6%88%96CPUCache%E7%9A%84%E9%80%9F%E5%BA%A6%E5%BF%AB.md)
+* [固态硬盘和机械硬盘区别](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98%E5%92%8C%E6%9C%BA%E6%A2%B0%E7%A1%AC%E7%9B%98%E5%8C%BA%E5%88%AB.md)
+* [操作系统本身为用户提供什么功能](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%9C%AC%E8%BA%AB%E4%B8%BA%E7%94%A8%E6%88%B7%E6%8F%90%E4%BE%9B%E4%BB%80%E4%B9%88%E5%8A%9F%E8%83%BD.md)
+* [什么是缓冲区溢出？](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__%E4%BB%80%E4%B9%88%E6%98%AF%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%EF%BC%9F.md)
+* [介绍下进程的地址空间（虚拟地址和物理地址）](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E4%BB%8B%E7%BB%8D%E4%B8%8B%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%EF%BC%88%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E5%92%8C%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%EF%BC%89.md)
+* [一段代码从程序到执行经历怎么样的过程（程序在计算机中是如何运行起来的）](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E4%B8%80%E6%AE%B5%E4%BB%A3%E7%A0%81%E4%BB%8E%E7%A8%8B%E5%BA%8F%E5%88%B0%E6%89%A7%E8%A1%8C%E7%BB%8F%E5%8E%86%E6%80%8E%E4%B9%88%E6%A0%B7%E7%9A%84%E8%BF%87%E7%A8%8B%EF%BC%88%E7%A8%8B%E5%BA%8F%E5%9C%A8%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%B8%AD%E6%98%AF%E5%A6%82%E4%BD%95%E8%BF%90%E8%A1%8C%E8%B5%B7%E6%9D%A5%E7%9A%84%EF%BC%89.md)
+* [什么是页表、什么是快表](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E4%BB%80%E4%B9%88%E6%98%AF%E9%A1%B5%E8%A1%A8%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF%E5%BF%AB%E8%A1%A8.md)
+* [从本地读取一个文件通过网络发送到另一端，中间涉及几次拷贝](problems__%E4%BB%8E%E6%9C%AC%E5%9C%B0%E8%AF%BB%E5%8F%96%E4%B8%80%E4%B8%AA%E6%96%87%E4%BB%B6%E9%80%9A%E8%BF%87%E7%BD%91%E7%BB%9C%E5%8F%91%E9%80%81%E5%88%B0%E5%8F%A6%E4%B8%80%E7%AB%AF%EF%BC%8C%E4%B8%AD%E9%97%B4%E6%B6%89%E5%8F%8A%E5%87%A0%E6%AC%A1%E6%8B%B7%E8%B4%9D.md)
+* [单线程怎么保证高并发？](../%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5/problems__%E5%8D%95%E7%BA%BF%E7%A8%8B%E6%80%8E%E4%B9%88%E4%BF%9D%E8%AF%81%E9%AB%98%E5%B9%B6%E5%8F%91%EF%BC%9F.md)
+* [select/poll/epoll 分别讲讲](problems__selectpollepoll%E5%88%86%E5%88%AB%E8%AE%B2%E8%AE%B2.md)
 
-# linux 服务器
+## linux 服务器
 
-* [32位系统一个进程最多有多少堆内存](../操作系统与Linux/problems__32位系统一个进程最多有多少堆内存.md)
-* [五种I/O 模式:阻塞I/O,非阻塞 I/O,I/O 多路复用,信号驱动 I/O,异步 I/O](problems__五种IO模式.md)
-    * [介绍下 Socket 编程](problems__介绍下Socket编程.md)
-    * [Socket 和 WebSocket 的区别](problems__Socket和WebSocket的区别.md)
-    * [WebScoket 底层原理](problems__WebScoket底层原理.md)
-    * [IO 模型了解哪些？](problems__IO模型了解哪些%EF%BC%9F.md)
-    * [select 模型和 poll 模型，epoll模型](problems__select模型和poll模型epoll模型.md)
-    * [socket服务端的实现，select和epoll的区别(必问)](problems__socket服务端的实现%EF%BC%8Cselect和epoll的区别.md)
-    * [epoll哪些触发模式，有啥区别？](problems__epoll哪些触发模式%EF%BC%8C有啥区别%EF%BC%9F.md)
+* [32位系统一个进程最多有多少堆内存](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__32%E4%BD%8D%E7%B3%BB%E7%BB%9F%E4%B8%80%E4%B8%AA%E8%BF%9B%E7%A8%8B%E6%9C%80%E5%A4%9A%E6%9C%89%E5%A4%9A%E5%B0%91%E5%A0%86%E5%86%85%E5%AD%98.md)
+* [五种I/O 模式:阻塞I/O,非阻塞 I/O,I/O 多路复用,信号驱动 I/O,异步 I/O](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E4%BA%94%E7%A7%8DIO%E6%A8%A1%E5%BC%8F.md)
+    * [介绍下 Socket 编程](problems__%E4%BB%8B%E7%BB%8D%E4%B8%8BSocket%E7%BC%96%E7%A8%8B.md)
+    * [Socket 和 WebSocket 的区别](problems__Socket%E5%92%8CWebSocket%E7%9A%84%E5%8C%BA%E5%88%AB.md)
+    * [WebSocket 底层原理](problems__WebSocket%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86.md)
+    * [IO 模型了解哪些？](problems__IO%E6%A8%A1%E5%9E%8B%E4%BA%86%E8%A7%A3%E5%93%AA%E4%BA%9B%EF%BC%9F.md)
+    * [select 模型和 poll 模型，epoll模型](problems__select%E6%A8%A1%E5%9E%8B%E5%92%8Cpoll%E6%A8%A1%E5%9E%8Bepoll%E6%A8%A1%E5%9E%8B.md)
+    * [socket服务端的实现，select和epoll的区别(必问)](problems__socket%E6%9C%8D%E5%8A%A1%E7%AB%AF%E7%9A%84%E5%AE%9E%E7%8E%B0%EF%BC%8Cselect%E5%92%8Cepoll%E7%9A%84%E5%8C%BA%E5%88%AB.md)
+    * [epoll哪些触发模式，有啥区别？](problems__epoll%E5%93%AA%E4%BA%9B%E8%A7%A6%E5%8F%91%E6%A8%A1%E5%BC%8F%EF%BC%8C%E6%9C%89%E5%95%A5%E5%8C%BA%E5%88%AB%EF%BC%9F.md)
 
-* [用户态和内核态的区别](problems__用户态和内核态的区别.md)
-* [linux文件系统：inode，inode存储了哪些东西，目录名，文件名存在哪里](../操作系统与Linux/problems__linux文件系统%EF%BC%9Ainode%EF%BC%8Cinode存储了哪些东西%EF%BC%8C目录名%EF%BC%8C文件名存在哪里.md)
-* [分段和分页的区别有那些？](../操作系统与Linux/problems__分段和分页的区别有那些%EF%BC%9F.md)
-* [进程终止的方式有那些？](../操作系统与Linux/problems__进程终止的方式有那些%EF%BC%9F.md)
-* [软中断和硬中断分别指的是什么](../操作系统与Linux/problems__软中断和硬中断分别指的是什么%EF%BC%9F.md)
-* [同步，异步，阻塞和非阻塞的概念](problems__同步%EF%BC%8C异步%EF%BC%8C阻塞和非阻塞的概念.md)
-* [如果发现自己的Linux服务器负载过高，应该怎么排查原因呢？](problems__如果发现自己的Linux服务器负载过高%EF%BC%8C应该怎么排查原因呢%EF%BC%9F.md)
-* [NGINX在Linux上是如何工作的？简单描述一下](problems__NGINX在Linux上是如何工作的%EF%BC%9F简单描述一下.md)
-* [Linux上有个二进制程序一直在运行，我修改代码置换重新编译把原来的二进制程序覆盖了，会怎么样？](../操作系统与Linux/problems__Linux上有个二进制程序一直在运行%EF%BC%8C我修改代码置换重新编译把原来的二进制程序覆盖了%EF%BC%8C会怎么样%EF%BC%9F.md)
+* [用户态和内核态的区别](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81%E7%9A%84%E5%8C%BA%E5%88%AB.md)
+* [linux文件系统：inode，inode存储了哪些东西，目录名，文件名存在哪里](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__linux%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%9Ainode%EF%BC%8Cinode%E5%AD%98%E5%82%A8%E4%BA%86%E5%93%AA%E4%BA%9B%E4%B8%9C%E8%A5%BF%EF%BC%8C%E7%9B%AE%E5%BD%95%E5%90%8D%EF%BC%8C%E6%96%87%E4%BB%B6%E5%90%8D%E5%AD%98%E5%9C%A8%E5%93%AA%E9%87%8C.md)
+* [分段和分页的区别有那些？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E5%88%86%E6%AE%B5%E5%92%8C%E5%88%86%E9%A1%B5%E7%9A%84%E5%8C%BA%E5%88%AB%E6%9C%89%E9%82%A3%E4%BA%9B%EF%BC%9F.md)
+* [进程终止的方式有那些？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E8%BF%9B%E7%A8%8B%E7%BB%88%E6%AD%A2%E7%9A%84%E6%96%B9%E5%BC%8F%E6%9C%89%E9%82%A3%E4%BA%9B%EF%BC%9F.md)
+* [软中断和硬中断分别指的是什么](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E8%BD%AF%E4%B8%AD%E6%96%AD%E5%92%8C%E7%A1%AC%E4%B8%AD%E6%96%AD%E5%88%86%E5%88%AB%E6%8C%87%E7%9A%84%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F.md)
+* [同步，异步，阻塞和非阻塞的概念](problems__%E5%90%8C%E6%AD%A5%EF%BC%8C%E5%BC%82%E6%AD%A5%EF%BC%8C%E9%98%BB%E5%A1%9E%E5%92%8C%E9%9D%9E%E9%98%BB%E5%A1%9E%E7%9A%84%E6%A6%82%E5%BF%B5.md)
+* [如果发现自己的Linux服务器负载过高，应该怎么排查原因呢？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__%E5%A6%82%E6%9E%9C%E5%8F%91%E7%8E%B0%E8%87%AA%E5%B7%B1%E7%9A%84Linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%B4%9F%E8%BD%BD%E8%BF%87%E9%AB%98%EF%BC%8C%E5%BA%94%E8%AF%A5%E6%80%8E%E4%B9%88%E6%8E%92%E6%9F%A5%E5%8E%9F%E5%9B%A0%E5%91%A2%EF%BC%9F.md)
+* [NGINX在Linux上是如何工作的？简单描述一下](problems__NGINX%E5%9C%A8Linux%E4%B8%8A%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84%EF%BC%9F%E7%AE%80%E5%8D%95%E6%8F%8F%E8%BF%B0%E4%B8%80%E4%B8%8B.md)
+* [Linux上有个二进制程序一直在运行，我修改代码置换重新编译把原来的二进制程序覆盖了，会怎么样？](../%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8ELinux/problems__Linux%E4%B8%8A%E6%9C%89%E4%B8%AA%E4%BA%8C%E8%BF%9B%E5%88%B6%E7%A8%8B%E5%BA%8F%E4%B8%80%E7%9B%B4%E5%9C%A8%E8%BF%90%E8%A1%8C%EF%BC%8C%E6%88%91%E4%BF%AE%E6%94%B9%E4%BB%A3%E7%A0%81%E7%BD%AE%E6%8D%A2%E9%87%8D%E6%96%B0%E7%BC%96%E8%AF%91%E6%8A%8A%E5%8E%9F%E6%9D%A5%E7%9A%84%E4%BA%8C%E8%BF%9B%E5%88%B6%E7%A8%8B%E5%BA%8F%E8%A6%86%E7%9B%96%E4%BA%86%EF%BC%8C%E4%BC%9A%E6%80%8E%E4%B9%88%E6%A0%B7%EF%BC%9F.md)
 
-# 计算机网络
+## 计算机网络
 
-* [OSI七层模型分别是？各自的功能分别是什么？](problems__OSI七层模型分别是%EF%BC%9F各自的功能分别是什么%EF%BC%9F.md)
+* [OSI七层模型分别是？各自的功能分别是什么？](problems__OSI%E4%B8%83%E5%B1%82%E6%A8%A1%E5%9E%8B%E5%88%86%E5%88%AB%E6%98%AF%EF%BC%9F%E5%90%84%E8%87%AA%E7%9A%84%E5%8A%9F%E8%83%BD%E5%88%86%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F.md)
 
-* [为什么需要三次握手，两次不行？](problems__为什么需要三次握手%EF%BC%8C两次不行%EF%BC%9F.md)
+* [为什么需要三次握手，两次不行？](problems__%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%EF%BC%8C%E4%B8%A4%E6%AC%A1%E4%B8%8D%E8%A1%8C%EF%BC%9F.md)
 
-* [TCP和UDP区别](problems__TCP和UDP区别.md)
+* [TCP和UDP区别](problems__TCP%E5%92%8CUDP%E5%8C%BA%E5%88%AB.md)
 
-* [TCP和UDP各自的有点](problems__TCP和UDP的区别.md)
+* [TCP和UDP各自的有点](problems__TCP%E5%92%8CUDP%E7%9A%84%E5%8C%BA%E5%88%AB.md)
 
-* [TCP和UDP的首部长什么样子](./problems/TCP和UDP首部长什么样子？.md)
+* TCP和UDP的首部长什么样子
 
-* [TCP和UDP头部字节定义](problems__TCP和UDP头部字节定义.md) 
+* [TCP和UDP头部字节定义](problems__TCP%E5%92%8CUDP%E5%A4%B4%E9%83%A8%E5%AD%97%E8%8A%82%E5%AE%9A%E4%B9%89.md)
 
-* [TCP和UDP三次握手和四次挥手状态及消息类型](problems__TCP和UDP三次握手和四次挥手状态及消息类型.md) 
+* [TCP和UDP三次握手和四次挥手状态及消息类型](problems__TCP%E5%92%8CUDP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B%E7%8A%B6%E6%80%81%E5%8F%8A%E6%B6%88%E6%81%AF%E7%B1%BB%E5%9E%8B.md)
 
-* [time_wait，close_wait状态产生原因，keepalive](problems__time_wait%EF%BC%8Cclose_wait状态产生原因%EF%BC%8Ckeepalive.md)
+* [time_wait，close_wait状态产生原因，keepalive](problems__time_wait%EF%BC%8Cclose_wait%E7%8A%B6%E6%80%81%E4%BA%A7%E7%94%9F%E5%8E%9F%E5%9B%A0%EF%BC%8Ckeepalive.md)
 
-* [什么是滑动窗口，超时重传](../设计模式与项目实践/problems__什么是滑动窗口%EF%BC%8C超时重传.md)
+* [什么是滑动窗口，超时重传](problems__%E4%BB%80%E4%B9%88%E6%98%AF%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%EF%BC%8C%E8%B6%85%E6%97%B6%E9%87%8D%E4%BC%A0.md)
 
-* [列举你所知道的tcp选项](problems__列举你所知道的tcp选项.md)
+* [列举你所知道的tcp选项](problems__%E5%88%97%E4%B8%BE%E4%BD%A0%E6%89%80%E7%9F%A5%E9%81%93%E7%9A%84tcp%E9%80%89%E9%A1%B9.md)
 
-* [socket什么情况下可读？](problems__socket什么情况下可读%EF%BC%9F.md)
+* [socket什么情况下可读？](problems__socket%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5%E4%B8%8B%E5%8F%AF%E8%AF%BB%EF%BC%9F.md)
 
-* [connect会阻塞，怎么解决?(必考必问)](problems__connect会阻塞怎么解决.md) 
+* [connect会阻塞，怎么解决?(必考必问)](problems__connect%E4%BC%9A%E9%98%BB%E5%A1%9E%E6%80%8E%E4%B9%88%E8%A7%A3%E5%86%B3.md)
 
-* [keepalive是什么？如何使用？](../数据库与缓存/problems__keepalive是什么%EF%BC%9F如何使用%EF%BC%9F.md)
+* [keepalive是什么？如何使用？](problems__keepalive%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%EF%BC%9F.md)
 
-* [长连接和短连接](../数据库与缓存/problems__长连接和短连接.md) 
+* [长连接和短连接](problems__%E9%95%BF%E8%BF%9E%E6%8E%A5%E5%92%8C%E7%9F%AD%E8%BF%9E%E6%8E%A5.md)
 
-* [UDP中使用connect的好处](problems__UDP中使用connect的好处.md) 
+* [UDP中使用connect的好处](problems__UDP%E4%B8%AD%E4%BD%BF%E7%94%A8connect%E7%9A%84%E5%A5%BD%E5%A4%84.md)
 
-* [DNS和HTTP协议，HTTP请求方式](problems__DNS和HTTP协议%EF%BC%8CHTTP请求方式.md) 
+* [DNS和HTTP协议，HTTP请求方式](problems__DNS%E5%92%8CHTTP%E5%8D%8F%E8%AE%AE%EF%BC%8CHTTP%E8%AF%B7%E6%B1%82%E6%96%B9%E5%BC%8F.md)
 
-* [SYN队列和ACCEPT队列](problems__SYN队列和Accept队列.md)
+* [SYN队列和ACCEPT队列](problems__SYN%E9%98%9F%E5%88%97%E5%92%8CAccept%E9%98%9F%E5%88%97.md)
 
-* [SYN队列溢出了怎么办](problems__SYN队列溢出了怎么办.md)
+* [SYN队列溢出了怎么办](problems__SYN%E9%98%9F%E5%88%97%E6%BA%A2%E5%87%BA%E4%BA%86%E6%80%8E%E4%B9%88%E5%8A%9E.md)
 
-* [什么是数字签名？](problems__什么是数字签名%EF%BC%9F.md)
+* [什么是数字签名？](problems__%E4%BB%80%E4%B9%88%E6%98%AF%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D%EF%BC%9F.md)
 
-* [什么是数字证书？](problems__什么是数字证书%EF%BC%9F.md)
+* [什么是数字证书？](problems__%E4%BB%80%E4%B9%88%E6%98%AF%E6%95%B0%E5%AD%97%E8%AF%81%E4%B9%A6%EF%BC%9F.md)
 
-* [什么是大小端，他在计算机网络中都有什么应用呢](../数据库与缓存/problems__什么是大小端%EF%BC%8C他在计算机网络中都有什么应用呢.md)
+* [什么是大小端，他在计算机网络中都有什么应用呢](problems__%E4%BB%80%E4%B9%88%E6%98%AF%E5%A4%A7%E5%B0%8F%E7%AB%AF%EF%BC%8C%E4%BB%96%E5%9C%A8%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B8%AD%E9%83%BD%E6%9C%89%E4%BB%80%E4%B9%88%E5%BA%94%E7%94%A8%E5%91%A2.md)
 
-* [局域网的IP分配策略是什么？它是怎么实现的？](problems__局域网的IP分配策略是什么%EF%BC%9F它是怎么实现的%EF%BC%9F.md)
+* [局域网的IP分配策略是什么？它是怎么实现的？](problems__%E5%B1%80%E5%9F%9F%E7%BD%91%E7%9A%84IP%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E5%AE%83%E6%98%AF%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%E7%9A%84%EF%BC%9F.md)
 
-* [在TCP三次握手的时候，如果网络情况非常好且百分百不会发生拥塞，不会重传，不会有历史链接问题，那么三次握手可以改为两次吗？](problems__在TCP三次握手的时候%EF%BC%8C如果网络情况非常好且百分百不会发生拥塞%EF%BC%8C不会重传%EF%BC%8C不会有历史链接问题%EF%BC%8C那么三次握手可以改为两次吗%EF%BC%9F.md)
+* [在TCP三次握手的时候，如果网络情况非常好且百分百不会发生拥塞，不会重传，不会有历史链接问题，那么三次握手可以改为两次吗？](problems__%E5%9C%A8TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E7%9A%84%E6%97%B6%E5%80%99%EF%BC%8C%E5%A6%82%E6%9E%9C%E7%BD%91%E7%BB%9C%E6%83%85%E5%86%B5%E9%9D%9E%E5%B8%B8%E5%A5%BD%E4%B8%94%E7%99%BE%E5%88%86%E7%99%BE%E4%B8%8D%E4%BC%9A%E5%8F%91%E7%94%9F%E6%8B%A5%E5%A1%9E%EF%BC%8C%E4%B8%8D%E4%BC%9A%E9%87%8D%E4%BC%A0%EF%BC%8C%E4%B8%8D%E4%BC%9A%E6%9C%89%E5%8E%86%E5%8F%B2%E9%93%BE%E6%8E%A5%E9%97%AE%E9%A2%98%EF%BC%8C%E9%82%A3%E4%B9%88%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%8F%AF%E4%BB%A5%E6%94%B9%E4%B8%BA%E4%B8%A4%E6%AC%A1%E5%90%97%EF%BC%9F.md)
 
-* [请你介绍一下http1.0](../数据库与缓存/problems__请你介绍一下http1.0.md)
+* [请你介绍一下http1.0](problems__%E8%AF%B7%E4%BD%A0%E4%BB%8B%E7%BB%8D%E4%B8%80%E4%B8%8Bhttp1.0.md)
 
-* [请你介绍一下http1.1](../数据库与缓存/problems__请你介绍一下http1.1.md)
+* [请你介绍一下http1.1](problems__%E8%AF%B7%E4%BD%A0%E4%BB%8B%E7%BB%8D%E4%B8%80%E4%B8%8Bhttp1.1.md)
 
-* [请你介绍一下http2.0](problems__请你介绍一下http2.0.md)
+* [请你介绍一下http2.0](problems__%E8%AF%B7%E4%BD%A0%E4%BB%8B%E7%BB%8D%E4%B8%80%E4%B8%8Bhttp2.0.md)
 
-* [请你介绍一下http3.0](problems__请你介绍一下http3.0.md)
+* [请你介绍一下http3.0](problems__%E8%AF%B7%E4%BD%A0%E4%BB%8B%E7%BB%8D%E4%B8%80%E4%B8%8Bhttp3.0.md)
 
-* [POST和GET的主要区别有那些？](../数据库与缓存/problems__POST和GET的主要区别有那些%EF%BC%9F.md)
+* [POST和GET的主要区别有那些？](problems__POST%E5%92%8CGET%E7%9A%84%E4%B8%BB%E8%A6%81%E5%8C%BA%E5%88%AB%E6%9C%89%E9%82%A3%E4%BA%9B%EF%BC%9F.md)
 
-* [GET请求中，URL编码有什么含义？](problems__GET请求中%EF%BC%8CURL编码有什么含义%EF%BC%9F.md)
+* [GET请求中，URL编码有什么含义？](problems__GET%E8%AF%B7%E6%B1%82%E4%B8%AD%EF%BC%8CURL%E7%BC%96%E7%A0%81%E6%9C%89%E4%BB%80%E4%B9%88%E5%90%AB%E4%B9%89%EF%BC%9F.md)
 
-* [HTTP方法都有那些？](problems__HTTP方法都有那些%EF%BC%9F.md)
+* [HTTP方法都有那些？](problems__HTTP%E6%96%B9%E6%B3%95%E9%83%BD%E6%9C%89%E9%82%A3%E4%BA%9B%EF%BC%9F.md)
 
-* [HTTP中常用的状态码都有那些？](problems__HTTP中常用的状态码都有那些%EF%BC%9F.md)
+* [HTTP中常用的状态码都有那些？](problems__HTTP%E4%B8%AD%E5%B8%B8%E7%94%A8%E7%9A%84%E7%8A%B6%E6%80%81%E7%A0%81%E9%83%BD%E6%9C%89%E9%82%A3%E4%BA%9B%EF%BC%9F.md)
 
-* [HTTP长连接和短链接都用在那些场景？](problems__HTTP长连接和短链接都用在那些场景%EF%BC%9F.md)
+* [HTTP长连接和短链接都用在那些场景？](problems__HTTP%E9%95%BF%E8%BF%9E%E6%8E%A5%E5%92%8C%E7%9F%AD%E9%93%BE%E6%8E%A5%E9%83%BD%E7%94%A8%E5%9C%A8%E9%82%A3%E4%BA%9B%E5%9C%BA%E6%99%AF%EF%BC%9F.md)
 
-* [对称加密和非对称加密的区别都有那些？](../数据库与缓存/problems__对称加密和非对称加密的区别都有那些%EF%BC%9F.md)
+* [对称加密和非对称加密的区别都有那些？](problems__%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E5%92%8C%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%9A%84%E5%8C%BA%E5%88%AB%E9%83%BD%E6%9C%89%E9%82%A3%E4%BA%9B%EF%BC%9F.md)
 
-* [DNS解析的过程？](../数据库与缓存/problems__DNS解析的过程%EF%BC%9F.md)
+* [DNS解析的过程？](problems__DNS%E8%A7%A3%E6%9E%90%E7%9A%84%E8%BF%87%E7%A8%8B%EF%BC%9F.md)
 
-* [为什么DNS会使用UDP而不使用TCP呢？](../数据库与缓存/problems__为什么DNS会使用UDP而不使用TCP呢%EF%BC%9F.md)
+* [为什么DNS会使用UDP而不使用TCP呢？](problems__%E4%B8%BA%E4%BB%80%E4%B9%88DNS%E4%BC%9A%E4%BD%BF%E7%94%A8UDP%E8%80%8C%E4%B8%8D%E4%BD%BF%E7%94%A8TCP%E5%91%A2%EF%BC%9F.md)
 
-* [Cookie和Session](problems__Cookie和SessioN.md)
+* [Cookie和Session](problems__Cookie%E5%92%8CSession.md)
 
-* [DNS域名缓存是什么？](../数据库与缓存/problems__DNS域名缓存是什么%EF%BC%9F.md)
+* [DNS域名缓存是什么？](problems__DNS%E5%9F%9F%E5%90%8D%E7%BC%93%E5%AD%98%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F.md)
 
-* [TCP和UDP对应常见的应用层协议有那些](./problems/TCP和UDP对应常见的应用层协议有那些.md)
+* TCP和UDP对应常见的应用层协议有那些
 
-* [说说你对TCP滑动窗口的理解？](problems__说说你对TCP滑动窗口的理解%EF%BC%9F.md)
+* [说说你对TCP滑动窗口的理解？](problems__%E8%AF%B4%E8%AF%B4%E4%BD%A0%E5%AF%B9TCP%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%9A%84%E7%90%86%E8%A7%A3%EF%BC%9F.md)
 
-* [TCP协议是如何保证可靠传输的？](problems__TCP协议是如何保证可靠传输的%EF%BC%9F.md)
+* [TCP协议是如何保证可靠传输的？](problems__TCP%E5%8D%8F%E8%AE%AE%E6%98%AF%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93%E7%9A%84%EF%BC%9F.md)
 
-* [什么是拆包和粘包？](problems__什么是拆包和粘包%EF%BC%9F.md)
+* [什么是拆包和粘包？](problems__%E4%BB%80%E4%B9%88%E6%98%AF%E6%8B%86%E5%8C%85%E5%92%8C%E7%B2%98%E5%8C%85%EF%BC%9F.md)
 
-* [说说你对TCP流量控制的理解？](problems__说说你对TCP流量控制的理解%EF%BC%9F.md)
+* [说说你对TCP流量控制的理解？](problems__%E8%AF%B4%E8%AF%B4%E4%BD%A0%E5%AF%B9TCP%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6%E7%9A%84%E7%90%86%E8%A7%A3%EF%BC%9F.md)
 
-* [TCP粘包是怎么产生的？](problems__TCP粘包是怎么产生的%EF%BC%9F.md)
+* [TCP粘包是怎么产生的？](problems__TCP%E7%B2%98%E5%8C%85%E6%98%AF%E6%80%8E%E4%B9%88%E4%BA%A7%E7%94%9F%E7%9A%84%EF%BC%9F.md)
 
-* [在TCP拥塞控制中，使用了什么样的算法？](problems__在TCP拥塞控制中%EF%BC%8C使用了什么样的算法%EF%BC%9F.md)
+* [在TCP拥塞控制中，使用了什么样的算法？](problems__%E5%9C%A8TCP%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6%E4%B8%AD%EF%BC%8C%E4%BD%BF%E7%94%A8%E4%BA%86%E4%BB%80%E4%B9%88%E6%A0%B7%E7%9A%84%E7%AE%97%E6%B3%95%EF%BC%9F.md)
 
-* [forward和redirect的区别是什么？](problems__forward和redirect的区别是什么%EF%BC%9F.md)
+* [forward和redirect的区别是什么？](problems__forward%E5%92%8Credirect%E7%9A%84%E5%8C%BA%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F.md)
 
-* [TCP的最大连接数是多少？](problems__TCP的最大连接数是多少%EF%BC%9F.md)
+* [TCP的最大连接数是多少？](problems__TCP%E7%9A%84%E6%9C%80%E5%A4%A7%E8%BF%9E%E6%8E%A5%E6%95%B0%E6%98%AF%E5%A4%9A%E5%B0%91%EF%BC%9F.md)
 
-* [什么是IP地址？可以简单介绍下吗？](problems__什么是IP地址%EF%BC%9F可以简单介绍下吗%EF%BC%9F.md)
+* [什么是IP地址？可以简单介绍下吗？](problems__%E4%BB%80%E4%B9%88%E6%98%AFIP%E5%9C%B0%E5%9D%80%EF%BC%9F%E5%8F%AF%E4%BB%A5%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D%E4%B8%8B%E5%90%97%EF%BC%9F.md)
 
-* [什么是mac地址？可以简单介绍下吗？](problems__什么是mac地址%EF%BC%9F可以简单介绍下吗%EF%BC%9F.md)
+* [什么是mac地址？可以简单介绍下吗？](problems__%E4%BB%80%E4%B9%88%E6%98%AFmac%E5%9C%B0%E5%9D%80%EF%BC%9F%E5%8F%AF%E4%BB%A5%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D%E4%B8%8B%E5%90%97%EF%BC%9F.md)
 
-* [ip地址和mac地址的区别都有那些？](problems__ip地址和mac地址的区别都有那些%EF%BC%9F.md)
+* [ip地址和mac地址的区别都有那些？](problems__ip%E5%9C%B0%E5%9D%80%E5%92%8Cmac%E5%9C%B0%E5%9D%80%E7%9A%84%E5%8C%BA%E5%88%AB%E9%83%BD%E6%9C%89%E9%82%A3%E4%BA%9B%EF%BC%9F.md)
 
-* [针对于ipv4地址不够用的情况，我们是如何解决的？](,.problems/针对于ipv4地址不够用的情况，我们是如何解决的？.md)
+* 针对于ipv4地址不够用的情况，我们是如何解决的？
 
-  
 
-# 数据库 
 
-* [谈谈数据库中索引的理解，索引和主键区别](../数据库与缓存/problems__谈谈数据库中索引的理解%EF%BC%8C索引和主键区别.md)
-* [现在普通关系数据库用得数据结构是什么类型的数据结构](../数据库与缓存/problems__现在普通关系数据库用得数据结构是什么类型的数据结构.md) 
-* [索引的优点和缺点](../数据库与缓存/problems__索引的优点和缺点.md)
-* [关系型数据库和非关系数据库的特点](../数据库与缓存/problems__关系型数据库和非关系数据库的特点.md) 
-* [乐观锁与悲观锁的区别](../数据库与缓存/problems__数据库中乐观锁与悲观锁的区别.md) 
-* [数据库范式:第一第二第三范式](../数据库与缓存/problems__数据库范式第一第二第三范式.md)
-* [数据库日志类型作用](../数据库与缓存/problems__数据库日志类型作用.md) 
-* [B TREE 和B+TREE的区别](../数据库与缓存/problems__BTREE和B%2BTREE的区别.md) 
-* [union和join](../数据库与缓存/problems__union和join.md) 
-* [Innodb和Myisam的区别](../数据库与缓存/problems__Innodb和Myisam的区别.md)
-* [mysql架构是什么样的？](../数据库与缓存/problems__mysql架构是什么样的%EF%BC%9F.md)
-* [一条SQL语句在数据库框架中的执行过程](../数据库与缓存/problems__一条SQL语句在数据库框架中的执行过程.md)
-* [数据库中常见的锁都有哪些？](./problems/数据库中常见的锁都有哪些.md)
-* [优化索引的办法有那些](../数据库与缓存/problems__优化索引的办法有那些.md)
-* [mysql为啥会产生死锁呢？如何避免他？](../数据库与缓存/problems__mysql为啥会产生死锁呢%EF%BC%9F如何避免他%EF%BC%9F.md)
-* [在Mysql中，数据要写入磁盘，redolog也要写入磁盘，为什么要多此一举？](../数据库与缓存/problems__在Mysql中%EF%BC%8C数据要写入磁盘%EF%BC%8Credolog也要写入磁盘%EF%BC%8C为什么要多此一举%EF%BC%9F.md)
-* [MySQL的行级锁有那些种类？](../数据库与缓存/problems__MySQL的行级锁有那些种类%EF%BC%9F.md)
-* [mysql索引失效有哪几种情况？](../数据库与缓存/problems__mysql索引失效有哪几种情况%EF%BC%9F.md)
-* [数据库事务隔离级别有那些？](../数据库与缓存/problems__数据库事务隔离级别有那些%EF%BC%9F.md)
-* [mysql数据库中，产生的redolog都会直接写入磁盘吗？](../数据库与缓存/problems__mysql数据库中%EF%BC%8C产生的redolog都会直接写入磁盘吗%EF%BC%9F.md)
-* [数据库的ACID特性](../数据库与缓存/problems__数据库的ACID特性.md)
-* [MySQL的主从复制是如何实现的？](../数据库与缓存/problems__MySQL的主从复制是如何实现的%EF%BC%9F.md)
-* [mysql的索引都有那些？](../数据库与缓存/problems__mysql的索引都有那些%EF%BC%9F.md)
-* [Redis 有什么作用？为什么要用 Redis](./problems/Redis有什么作用？为什么要用Redis.md)
-* [Redis 的底层数据结构有哪些](../数据库与缓存/problems__Redis的底层数据结构有哪些.md)
-* [介绍 intset 及其升级过程，支持降级吗](介绍intset及其升级过程，支持降级吗.md)
-* [介绍 SDS，Redis 为什么要使用 SDS 而不是 C 字符串](./problems/介绍SDS，Redis为什么要使用SDS而不是C字符串.md)
-* [介绍 dict，什么是 rehash？什么是渐进式 rehash](../数据库与缓存/problems__介绍dict%EF%BC%8C什么是rehash%EF%BC%9F什么是渐进式rehash.md)
-* [介绍 ziplist，什么是连锁更新？quicklist、lispack](../数据库与缓存/problems__介绍ziplist%EF%BC%8C什么是连锁更新%EF%BC%9Fquicklist%E3%80%81lispack.md)
-* [介绍 Redis 的 skiplist](./problems/介绍Redis的skiplist.md)
-* [Redis 数据类型（对象）有哪些](../数据库与缓存/problems__Redis数据类型%EF%BC%88对象%EF%BC%89有哪些.md)
-* [Redis String 原理和使用场景（分布式锁）](../数据库与缓存/problems__RedisString原理和使用场景%EF%BC%88分布式锁%EF%BC%89.md)
-* [Redis List 的原理和使用场景](../数据库与缓存/problems__RedisList的原理和使用场景.md)
-* [Redis Set 的原理和使用场景](../数据库与缓存/problems__RedisSet的原理和使用场景.md)
-* [Redis ZSet 的原理和使用场景（延迟队列）](../数据库与缓存/problems__RedisZSet的原理和使用场景%EF%BC%88延迟队列%EF%BC%89.md)
-* [为什么 Zset 需要同时使用跳表和字典来实现？](../数据库与缓存/problems__为什么Zset需要同时使用跳表和字典来实现%EF%BC%9F.md)
-* [为什么 Redis 使用跳表而不是红黑树来实现 Zset](../数据库与缓存/problems__为什么Redis使用跳表而不是红黑树来实现Zset.md)
-* [Redis Hash 的原理和使用场景](../数据库与缓存/problems__RedisHash的原理和使用场景.md)
-* [Redis的HyperLogLog的原理和使用场景](../数据库与缓存/problems__Redis的HyperLogLog的原理和使用场景.md)
-* [Redis的Bitmap的原理和使用场景](../数据库与缓存/problems__Redis的Bitmap的原理和使用场景.md)
-* [Redis中Stream的原理和使用场景](../数据库与缓存/problems__Redis中Stream的原理和使用场景.md)
-* [Redis中数据（键值对）是怎么存储的](../数据库与缓存/problems__Redis中数据%EF%BC%88键值对%EF%BC%89是怎么存储的.md)
-* [Redis如何判断键是否过期？过期键的删除策略有哪些](../设计模式与项目实践/problems__Redis如何判断键是否过期%EF%BC%9F过期键的删除策略有哪些.md)
-* [Redis的key设定24h过期时间，那么24h后就一定会过期吗](../数据库与缓存/problems__Redis的ke设定24h过期时间%EF%BC%8C那么24h后就一定会过期吗.md)
-* [Redis内存淘汰策略](../数据库与缓存/problems__Redis内存淘汰策略.md)
-* [Redis的两种持久化方式以及优缺点](../数据库与缓存/problems__Redis的两种持久化方式以及优缺点.md)
-* [为什么AOF后台重写和BGSAVE命令都用子进程而不是线程？](../数据库与缓存/problems__为什么AOF后台重写和BGSAVE命令都用子进程而不是线程%EF%BC%9F.md)
-* [Redis是单线程还是多线程？Redis6.0之后为何又引入了多线程](../数据库与缓存/problems__Redis是单线程还是多线程%EF%BC%9FRedis6.0之后为何又引入了多线程.md)
-* [Redis不是单线程吗，为什么会存在并发安全问题](../数据库与缓存/problems__Redis不是单线程吗%EF%BC%8C为什么会存在并发安全问题.md)
-* [Redis单线程在多核机器里使用会不会浪费机器资源](../数据库与缓存/problems__Redis单线程在多核机器里使用会不会浪费机器资源.md)
-* [讲一讲Redis主从复制](../数据库与缓存/problems__讲一讲Redis主从复制.md)
-* [讲一讲Redis的哨兵](../数据库与缓存/problems__讲一讲Redis的哨兵.md)
-* [讲一讲Redis的集群](../数据库与缓存/problems__讲一讲Redis的集群.md)
-* [Redis主从复制、哨兵、集群的区别](../数据库与缓存/problems__Redis主从复制%E3%80%81哨兵%E3%80%81集群的区别.md)
-* [什么是一致性哈希，Redis集群为什么不用一致性哈希](../数据库与缓存/problems__什么是一致性哈希%EF%BC%8CRedis集群为什么不用一致性哈希.md)
-* [如何解决Redis集群数据丢失问题（异步复制、集群脑裂）](../数据库与缓存/problems__如何解决Redis集群数据丢失问题%EF%BC%88异步复制%E3%80%81集群脑裂%EF%BC%89.md)
-* [介绍Redis事务（Redis能实现ACID吗）](../数据库与缓存/problems__介绍Redis事务%EF%BC%88Redis能实现ACID吗%EF%BC%89.md)
-* [Redis缓存穿透问题及其解决方案](../数据库与缓存/problems__Redis缓存穿透问题及其解决方案.md)
-* [Redis缓存雪崩问题及其解决方案](../数据库与缓存/problems__Redis缓存雪崩问题及其解决方案.md)
-* [Redis缓存击穿问题及其解决方案](../数据库与缓存/problems__Redis缓存击穿问题及其解决方案.md)
-* [Redis的BigKey问题及其解决方案](../数据库与缓存/problems__Redis的BigKey问题及其解决方案.md)
-* [如何解决缓存和数据库一致性问题](../数据库与缓存/problems__如何解决缓存和数据库一致性问题.md)
-* [Redis和Memcached的区别](../数据库与缓存/problems__Redis和Memcached的区别.md)
-* [Redis为什么这么快](../数据库与缓存/problems__Redis为什么这么快.md)
+## 数据库
 
-# 海量数据处理 
+* [谈谈数据库中索引的理解，索引和主键区别](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E8%B0%88%E8%B0%88%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E7%B4%A2%E5%BC%95%E7%9A%84%E7%90%86%E8%A7%A3%EF%BC%8C%E7%B4%A2%E5%BC%95%E5%92%8C%E4%B8%BB%E9%94%AE%E5%8C%BA%E5%88%AB.md)
+* [现在普通关系数据库用得数据结构是什么类型的数据结构](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E7%8E%B0%E5%9C%A8%E6%99%AE%E9%80%9A%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93%E7%94%A8%E5%BE%97%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E6%98%AF%E4%BB%80%E4%B9%88%E7%B1%BB%E5%9E%8B%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.md)
+* [索引的优点和缺点](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E7%B4%A2%E5%BC%95%E7%9A%84%E4%BC%98%E7%82%B9%E5%92%8C%E7%BC%BA%E7%82%B9.md)
+* [关系型数据库和非关系数据库的特点](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E5%92%8C%E9%9D%9E%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E7%89%B9%E7%82%B9.md)
+* [乐观锁与悲观锁的区别](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E4%B9%90%E8%A7%82%E9%94%81%E4%B8%8E%E6%82%B2%E8%A7%82%E9%94%81%E7%9A%84%E5%8C%BA%E5%88%AB.md)
+* [数据库范式:第一第二第三范式](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E6%95%B0%E6%8D%AE%E5%BA%93%E8%8C%83%E5%BC%8F%E7%AC%AC%E4%B8%80%E7%AC%AC%E4%BA%8C%E7%AC%AC%E4%B8%89%E8%8C%83%E5%BC%8F.md)
+* [数据库日志类型作用](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E6%95%B0%E6%8D%AE%E5%BA%93%E6%97%A5%E5%BF%97%E7%B1%BB%E5%9E%8B%E4%BD%9C%E7%94%A8.md)
+* [B TREE 和B+TREE的区别](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__BTREE%E5%92%8CB%2BTREE%E7%9A%84%E5%8C%BA%E5%88%AB.md)
+* [union和join](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__union%E5%92%8Cjoin.md)
+* [Innodb和Myisam的区别](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Innodb%E5%92%8CMyisam%E7%9A%84%E5%8C%BA%E5%88%AB.md)
+* [mysql架构是什么样的？](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__mysql%E6%9E%B6%E6%9E%84%E6%98%AF%E4%BB%80%E4%B9%88%E6%A0%B7%E7%9A%84%EF%BC%9F.md)
+* [一条SQL语句在数据库框架中的执行过程](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E4%B8%80%E6%9D%A1SQL%E8%AF%AD%E5%8F%A5%E5%9C%A8%E6%95%B0%E6%8D%AE%E5%BA%93%E6%A1%86%E6%9E%B6%E4%B8%AD%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B.md)
+* 数据库中常见的锁都有哪些？
+* [优化索引的办法有那些](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E4%BC%98%E5%8C%96%E7%B4%A2%E5%BC%95%E7%9A%84%E5%8A%9E%E6%B3%95%E6%9C%89%E9%82%A3%E4%BA%9B.md)
+* [mysql为啥会产生死锁呢？如何避免他？](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__mysql%E4%B8%BA%E5%95%A5%E4%BC%9A%E4%BA%A7%E7%94%9F%E6%AD%BB%E9%94%81%E5%91%A2%EF%BC%9F%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E4%BB%96%EF%BC%9F.md)
+* [在Mysql中，数据要写入磁盘，redolog也要写入磁盘，为什么要多此一举？](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E5%9C%A8Mysql%E4%B8%AD%EF%BC%8C%E6%95%B0%E6%8D%AE%E8%A6%81%E5%86%99%E5%85%A5%E7%A3%81%E7%9B%98%EF%BC%8Credolog%E4%B9%9F%E8%A6%81%E5%86%99%E5%85%A5%E7%A3%81%E7%9B%98%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%A4%9A%E6%AD%A4%E4%B8%80%E4%B8%BE%EF%BC%9F.md)
+* [MySQL的行级锁有那些种类？](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__MySQL%E7%9A%84%E8%A1%8C%E7%BA%A7%E9%94%81%E6%9C%89%E9%82%A3%E4%BA%9B%E7%A7%8D%E7%B1%BB%EF%BC%9F.md)
+* [mysql索引失效有哪几种情况？](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__mysql%E7%B4%A2%E5%BC%95%E5%A4%B1%E6%95%88%E6%9C%89%E5%93%AA%E5%87%A0%E7%A7%8D%E6%83%85%E5%86%B5%EF%BC%9F.md)
+* [数据库事务隔离级别有那些？](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E6%9C%89%E9%82%A3%E4%BA%9B%EF%BC%9F.md)
+* [mysql数据库中，产生的redolog都会直接写入磁盘吗？](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%EF%BC%8C%E4%BA%A7%E7%94%9F%E7%9A%84redolog%E9%83%BD%E4%BC%9A%E7%9B%B4%E6%8E%A5%E5%86%99%E5%85%A5%E7%A3%81%E7%9B%98%E5%90%97%EF%BC%9F.md)
+* [数据库的ACID特性](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84ACID%E7%89%B9%E6%80%A7.md)
+* [MySQL的主从复制是如何实现的？](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__MySQL%E7%9A%84%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84%EF%BC%9F.md)
+* [mysql的索引都有那些？](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__mysql%E7%9A%84%E7%B4%A2%E5%BC%95%E9%83%BD%E6%9C%89%E9%82%A3%E4%BA%9B%EF%BC%9F.md)
+* Redis 有什么作用？为什么要用 Redis
+* [Redis 的底层数据结构有哪些](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E7%9A%84%E5%BA%95%E5%B1%82%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E6%9C%89%E5%93%AA%E4%BA%9B.md)
+* 介绍 intset 及其升级过程，支持降级吗
+* 介绍 SDS，Redis 为什么要使用 SDS 而不是 C 字符串
+* [介绍 dict，什么是 rehash？什么是渐进式 rehash](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E4%BB%8B%E7%BB%8Ddict%EF%BC%8C%E4%BB%80%E4%B9%88%E6%98%AFrehash%EF%BC%9F%E4%BB%80%E4%B9%88%E6%98%AF%E6%B8%90%E8%BF%9B%E5%BC%8Frehash.md)
+* [介绍 ziplist，什么是连锁更新？quicklist、listpack](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E4%BB%8B%E7%BB%8Dziplist%EF%BC%8C%E4%BB%80%E4%B9%88%E6%98%AF%E8%BF%9E%E9%94%81%E6%9B%B4%E6%96%B0%EF%BC%9Fquicklist%E3%80%81listpack.md)
+* 介绍 Redis 的 skiplist
+* [Redis 数据类型（对象）有哪些](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%EF%BC%88%E5%AF%B9%E8%B1%A1%EF%BC%89%E6%9C%89%E5%93%AA%E4%BA%9B.md)
+* [Redis String 原理和使用场景（分布式锁）](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__RedisString%E5%8E%9F%E7%90%86%E5%92%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%EF%BC%88%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%EF%BC%89.md)
+* [Redis List 的原理和使用场景](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__RedisList%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF.md)
+* [Redis Set 的原理和使用场景](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__RedisSet%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF.md)
+* [Redis ZSet 的原理和使用场景（延迟队列）](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__RedisZSet%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%EF%BC%88%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97%EF%BC%89.md)
+* [为什么 Zset 需要同时使用跳表和字典来实现？](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E4%B8%BA%E4%BB%80%E4%B9%88Zset%E9%9C%80%E8%A6%81%E5%90%8C%E6%97%B6%E4%BD%BF%E7%94%A8%E8%B7%B3%E8%A1%A8%E5%92%8C%E5%AD%97%E5%85%B8%E6%9D%A5%E5%AE%9E%E7%8E%B0%EF%BC%9F.md)
+* [为什么 Redis 使用跳表而不是红黑树来实现 Zset](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E4%B8%BA%E4%BB%80%E4%B9%88Redis%E4%BD%BF%E7%94%A8%E8%B7%B3%E8%A1%A8%E8%80%8C%E4%B8%8D%E6%98%AF%E7%BA%A2%E9%BB%91%E6%A0%91%E6%9D%A5%E5%AE%9E%E7%8E%B0Zset.md)
+* [Redis Hash 的原理和使用场景](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__RedisHash%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF.md)
+* [Redis的HyperLogLog的原理和使用场景](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E7%9A%84HyperLogLog%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF.md)
+* [Redis的Bitmap的原理和使用场景](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E7%9A%84Bitmap%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF.md)
+* [Redis中Stream的原理和使用场景](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E4%B8%ADStream%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF.md)
+* [Redis中数据（键值对）是怎么存储的](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E4%B8%AD%E6%95%B0%E6%8D%AE%EF%BC%88%E9%94%AE%E5%80%BC%E5%AF%B9%EF%BC%89%E6%98%AF%E6%80%8E%E4%B9%88%E5%AD%98%E5%82%A8%E7%9A%84.md)
+* [Redis如何判断键是否过期？过期键的删除策略有哪些](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E9%94%AE%E6%98%AF%E5%90%A6%E8%BF%87%E6%9C%9F%EF%BC%9F%E8%BF%87%E6%9C%9F%E9%94%AE%E7%9A%84%E5%88%A0%E9%99%A4%E7%AD%96%E7%95%A5%E6%9C%89%E5%93%AA%E4%BA%9B.md)
+* [Redis的key设定24h过期时间，那么24h后就一定会过期吗](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E7%9A%84key%E8%AE%BE%E5%AE%9A24h%E8%BF%87%E6%9C%9F%E6%97%B6%E9%97%B4%EF%BC%8C%E9%82%A3%E4%B9%8824h%E5%90%8E%E5%B0%B1%E4%B8%80%E5%AE%9A%E4%BC%9A%E8%BF%87%E6%9C%9F%E5%90%97.md)
+* [Redis内存淘汰策略](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5.md)
+* [Redis的两种持久化方式以及优缺点](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%8C%81%E4%B9%85%E5%8C%96%E6%96%B9%E5%BC%8F%E4%BB%A5%E5%8F%8A%E4%BC%98%E7%BC%BA%E7%82%B9.md)
+* [为什么AOF后台重写和BGSAVE命令都用子进程而不是线程？](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E4%B8%BA%E4%BB%80%E4%B9%88AOF%E5%90%8E%E5%8F%B0%E9%87%8D%E5%86%99%E5%92%8CBGSAVE%E5%91%BD%E4%BB%A4%E9%83%BD%E7%94%A8%E5%AD%90%E8%BF%9B%E7%A8%8B%E8%80%8C%E4%B8%8D%E6%98%AF%E7%BA%BF%E7%A8%8B%EF%BC%9F.md)
+* [Redis是单线程还是多线程？Redis6.0之后为何又引入了多线程](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E6%98%AF%E5%8D%95%E7%BA%BF%E7%A8%8B%E8%BF%98%E6%98%AF%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%9FRedis6.0%E4%B9%8B%E5%90%8E%E4%B8%BA%E4%BD%95%E5%8F%88%E5%BC%95%E5%85%A5%E4%BA%86%E5%A4%9A%E7%BA%BF%E7%A8%8B.md)
+* [Redis不是单线程吗，为什么会存在并发安全问题](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E4%B8%8D%E6%98%AF%E5%8D%95%E7%BA%BF%E7%A8%8B%E5%90%97%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E5%AD%98%E5%9C%A8%E5%B9%B6%E5%8F%91%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98.md)
+* [Redis单线程在多核机器里使用会不会浪费机器资源](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E5%8D%95%E7%BA%BF%E7%A8%8B%E5%9C%A8%E5%A4%9A%E6%A0%B8%E6%9C%BA%E5%99%A8%E9%87%8C%E4%BD%BF%E7%94%A8%E4%BC%9A%E4%B8%8D%E4%BC%9A%E6%B5%AA%E8%B4%B9%E6%9C%BA%E5%99%A8%E8%B5%84%E6%BA%90.md)
+* [讲一讲Redis主从复制](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E8%AE%B2%E4%B8%80%E8%AE%B2Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6.md)
+* [讲一讲Redis的哨兵](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E8%AE%B2%E4%B8%80%E8%AE%B2Redis%E7%9A%84%E5%93%A8%E5%85%B5.md)
+* [讲一讲Redis的集群](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E8%AE%B2%E4%B8%80%E8%AE%B2Redis%E7%9A%84%E9%9B%86%E7%BE%A4.md)
+* [Redis主从复制、哨兵、集群的区别](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E3%80%81%E5%93%A8%E5%85%B5%E3%80%81%E9%9B%86%E7%BE%A4%E7%9A%84%E5%8C%BA%E5%88%AB.md)
+* [什么是一致性哈希，Redis集群为什么不用一致性哈希](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E4%BB%80%E4%B9%88%E6%98%AF%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%EF%BC%8CRedis%E9%9B%86%E7%BE%A4%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E7%94%A8%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C.md)
+* [如何解决Redis集群数据丢失问题（异步复制、集群脑裂）](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3Redis%E9%9B%86%E7%BE%A4%E6%95%B0%E6%8D%AE%E4%B8%A2%E5%A4%B1%E9%97%AE%E9%A2%98%EF%BC%88%E5%BC%82%E6%AD%A5%E5%A4%8D%E5%88%B6%E3%80%81%E9%9B%86%E7%BE%A4%E8%84%91%E8%A3%82%EF%BC%89.md)
+* [介绍Redis事务（Redis能实现ACID吗）](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E4%BB%8B%E7%BB%8DRedis%E4%BA%8B%E5%8A%A1%EF%BC%88Redis%E8%83%BD%E5%AE%9E%E7%8E%B0ACID%E5%90%97%EF%BC%89.md)
+* [Redis缓存穿透问题及其解决方案](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E9%97%AE%E9%A2%98%E5%8F%8A%E5%85%B6%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.md)
+* [Redis缓存雪崩问题及其解决方案](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9%E9%97%AE%E9%A2%98%E5%8F%8A%E5%85%B6%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.md)
+* [Redis缓存击穿问题及其解决方案](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E9%97%AE%E9%A2%98%E5%8F%8A%E5%85%B6%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.md)
+* [Redis的BigKey问题及其解决方案](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E7%9A%84BigKey%E9%97%AE%E9%A2%98%E5%8F%8A%E5%85%B6%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.md)
+* [如何解决缓存和数据库一致性问题](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E7%BC%93%E5%AD%98%E5%92%8C%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98.md)
+* [Redis和Memcached的区别](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E5%92%8CMemcached%E7%9A%84%E5%8C%BA%E5%88%AB.md)
+* [Redis为什么这么快](../%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E7%BC%93%E5%AD%98/problems__Redis%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%B9%88%E5%BF%AB.md)
 
-* [bitmap](../数据结构与算法/problems__bitmap.md) 
-* [Map-Reduce原理](../数据库与缓存/problems__Map-Reduce原理.md) 
-* [BloomFilter原理](../数据库与缓存/problems__BloomFilter原理.md) 
-* [Trie树原理](../数据结构与算法/problems__Trie树原理.md) 
-* LSM树原理 
+## 海量数据处理
 
-# linux下操作命令以及工具
+* [bitmap](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__bitmap.md)
+* [Map-Reduce原理](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__Map-Reduce%E5%8E%9F%E7%90%86.md)
+* [BloomFilter原理](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__BloomFilter%E5%8E%9F%E7%90%86.md)
+* [Trie树原理](../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/problems__Trie%E6%A0%91%E5%8E%9F%E7%90%86.md)
+* LSM树原理
 
-* [工作中常用的linux 命令](docs__linux常用操作命令.md)
-* 编译工具GCC 
+## linux下操作命令以及工具
+
+* [工作中常用的linux 命令](docs__linux%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4.md)
+* 编译工具GCC
 * 调试工具GDB
-* 性能优化工具Perf 
+* 性能优化工具Perf
 * 内存泄露检查工具Valgrind
 * makefile编写
 
-# 程序员求职
+## 程序员求职
 
-* [简历模板](https://github.com/youngyangyang04/Markdown-Resume-Template)
+* 简历模板
 
 
-# 程序员的工具
+## 程序员的工具
 
 工欲善其事必先利其器
 
-* [vim配置](https://github.com/youngyangyang04/PowerVim)
+* vim配置
 
 
-# 适合新手的开源项目
+## 适合新手的开源项目
 
-* [联机五子棋（c实现）](https://github.com/youngyangyang04/Gomoku)
-* [fileHttpServer(go语言实现)](https://github.com/youngyangyang04/fileHttpServer)
-* [Sqlgen（shell脚本实现的批量操作mysql）](https://github.com/youngyangyang04/PowerSqlgen)
-* [单机存储引擎（C++实现的跳表）](https://github.com/youngyangyang04/Skiplist-CPP)
-* [NosqlAttack （python实现）](https://github.com/youngyangyang04/NoSQLAttack)
+* 联机五子棋（c实现）
+* fileHttpServer(go语言实现)
+* Sqlgen（shell脚本实现的批量操作mysql）
+* 单机存储引擎（C++实现的跳表）
+* NosqlAttack （python实现）
 
-# 关于作者
+## 关于作者
 
-大家好，我是程序员Carl，[《代码随想录》](https://programmercarl.com/other/publish.html)作者，哈工大师兄，先后在腾讯和百度从事分布式技术研发。
+大家好，我是程序员Carl，《代码随想录》作者，哈工大师兄，先后在腾讯和百度从事分布式技术研发。
 
-* [代码随想录网站](https://programmercarl.com)
-* [代码随想录Github](https://github.com/youngyangyang04/leetcode-master)
-* [代码随想录算法公开课](https://www.bilibili.com/video/BV1fA4y1o715)
-* [卡码网-专业ACM练习网站](https://kamacoder.com/)
+* 代码随想录网站
+* 代码随想录Github
+* 代码随想录算法公开课
+* 卡码网-专业ACM练习网站
+
+# docs__linux常用操作命令.md
+
+## OP
+
+### CPU
+
+```
+    有几个cpu cpu num                       cat /proc/cpuinfo | grep "physical id" | sort | uniq
+    一个cpu里有几个core cpu core num        cat /proc/cpuinfo | grep "cores" | uniq
+    逻辑cpu num                             cat /proc/cpuinfo | grep "processor" | wc -l   or  top 然后按 1
+    cpu info                                cat /proc/cpuinfo
+```
+
+### IO
+
+```
+    iostat -x -d 1
+    iostat -x 1 3           就显示三条
+    iostat -x 1 100         查看io读写状态,sda 为home盘，sdb为disk1，sdc为disk2
+    iotop                   看谁在占用IO，tid 为线程id
+    sudo iotop -P --only    看具体进程实际正在做io的
+```
+
+### Memory
+
+```
+    top
+    free -g/ free -m
+```
+### free
+![]
+
+* 第1行Mem数据：
+
+total 内存总数: 189
+used 已经使用的内存数: 188
+free 空闲的内存数: 0
+shared 当前已经废弃不用，总是0
+buffers Buffer Cache内存数: 3
+cached Page Cache内存数: 149
+
+* 第2行-/+ buffers/cache：
+
+-buffers/cache 的内存数：34 (等于第1行的 used - buffers - cached)
++buffers/cache 的内存数: 154 (等于第1行的 free + buffers + cached)
+可见-buffers/cache反映的是被程序实实在在吃掉的内存，而+buffers/cache反映的是可以挪用的内存总数。
+第三行数据是交换分区SWAP的，也就是我们通常所说的虚拟内存。
+
+### top
+* top 中的VIRT,RES,SHR
+
+VIRT ：
+1. 进程“需要的”虚拟内存大小，包括进程使用的库、代码、数据，以及malloc、new分配的堆空间和分配的栈空间等；
+2. 假如进程新申请10MB的内存，但实际只使用了1MB，那么它会增长10MB，而不是实际的1MB使用量.
+
+RES :
+1. 进程当前使用的内存大小，包括使用中的malloc、new分配的堆空间和分配的栈空间，但不包括swap out量；
+2. 包含其他进程的共享；
+3. 关于库占用内存的情况，它只统计加载的库文件所占内存大小。
+4. RES = CODE + DATA
+
+SHR：
+1. 除了自身进程的共享内存，也包括其他进程的共享内存；
+2. 虽然进程只使用了几个共享库的函数，但它包含了整个共享库的大小；
+3. 计算某个进程所占的物理内存大小公式：RES – SHR；
+
+### OS
+
+```
+lsb_release -a                  系统版本，操作系统 和 版本
+uname -a
+uname -r                        内核版本
+```
+
+### Disk
+
+```
+du -sh filename                 看文件大小
+df -H                           查看各个磁盘空间
+lsblk -d -o name,rota           ROTA 1 for hard disks, 0 for ssd
+du -h --max-depth=1             列出当前目录所有文件夹的大小
+```
+
+### Network
+
+```
+    ethtool xgbe0                   查看网卡信息，看网卡是百兆还是千兆，xgbe0是网卡的名字，可以通过ifconfig获取到
+    curl ip:port                    判断当前ip和端口号是否在监听
+    curl -vv                        可以看到发出和接受的报头信息等
+    curl -v https                   访问https
+    lsof -i:port                    列出在监听的端口号  list open files
+    lsof(list open file) -p pid     列出指定进程打开的文件 （真的有用）
+    netstat -tunlp | grep port      列出监听的端口号 netstat -tunlp | grep pid       可以看当前进程监听哪些端口
+    netstat -nap | grep port        看那些端口被监听
+    ping -c 1 www.baidu.com
+    telnet www.test.com 8090        看这个域名加端口是否可以访问
+    host -i IP                      根据ip 找域名
+    netstat | grep 端口号           看哪个IP在访问这个端口号
+```
+
+### Linux
+
+```
+    tar -zxvf                       解压
+    tar -zcvf  output.tar output/   压缩
+    tar -cvf  output.tar output/    打包 不压缩
+    tar -tvf test.tar.gz            预览压缩文件夹内容
+    ldd                             查看一个 应用需要哪些依赖的动态库
+    curl url -o obj                 下载该url的文件，类似wget
+    curl -vk  https                 验证https
+    vim --version | grep clipboard  看vim是否支持系统剪切板
+    ls -lht                         看目录下文件大小以K/M/G 单位
+    ll -tr                          看修改顺序
+    /usr/libexec/java_home -V       java 路径
+    nohup cmd &                     在后台运行cmd命令
+    ssh -i id_rsa root@ip     使用私钥登录目标机器
+    authorized_keys
+    file                            查看文件信息
+    strings                         查看bin文件下的字符串
+    0 stdin，1 stdout，2 stderr
+    2>&1                            将标准错误输出到标准输出中tai
+    nohup myprogram > myprogram.out 2> myprogram.err &              将标准输出到特定的文件，err分开，后台起线程运行
+    ctrl+A/ctrl+E                   定位到行首行未
+    ctrl+U/ctrl+K                   删除到行首/行未
+    ctrl+R                          查找历史命令
+    ctags --list-languages          看ctags支持哪些语言
+    find  ./  -name "*.xml"         递归查找一定要加双引号
+    cal -3 / cal -y                 查看前一个月后一个月日历/显示全年的
+    su - name                       切换到该用户，同时加载一些列环境配置，例如bash_profile
+    sudo su                         切root账户
+    rsync -av src/ 172.18.188.106:/Users/sunxiuyang/tmp/ 172.18.188.106为目标机器ip，copy src下的文件到目标机器tmp下
+    rsync -av src 172.18.188.106:/Users/sunxiuyang/tmp/  把src这个目录copy过去
+    for i in `cat gzns01_all`; do ssh -o StrictHostKeyChecking=no $i "cd /root && sh name_env_setup.sh"; done      root 已经是相互信任的
+    ln -s jdk-8u161 jdk             软链
+    ll | grep taf                   查看文件
+    sort -k3 -n filename            按照（k3）第三个列 的数字(-n) 从小到大排序
+    for i in `cat ip.list`;do host $i;done > tmp    按行读取ip.list文件, 并执行 host操作
+    for i in `cat gzns01_all`; do scp -o no StrictHostKeyChecking `pwd`/home_env_setup.sh $i:/root/; done
+    for i in `cat gzns01_all`; do ssh -o StrictHostKeyChecking=no $i "cd /root && sh home_env_setup.sh"; done
+    dig www.baidu.com               dig命令可以执行查询域名相关的任务
+    crontab
+    rm node.log.* node.log.wf.* -f &    起一个进程删掉
+    pstack pid                      打印出pid进程下所有的线程栈信息
+    jstack -l pid                   打印java进程的堆栈信息
+    for i in `echo -e "name1\n name2\n name3"`; do echo $i" "$RANDOM; done > ./tmp; cat ./tmp | sort -nk2        随机排序名字
+    cat /proc/version
+    cat /etc/issue
+    ll /proc/340/fg | grep socket | wc -l       查看fd数量
+    uptime                          看机器启动时间
+    /etc/security/limits.conf       把core文件打开
+    ulimit -c                       看core文件是否打开
+    ulimit -c unlimited             不设置core文件大小
+    /var/log/messages               看系统日志
+    ls -l /proc/15430/fd/ | wc -l   查看这个进程打开的文件描述符的个数
+    cat /proc/sys/fs/file-max       查看系统可打开的最大描述符
+    lsof -p 24405                   看这个进程打开的fd
+    netstat -antp | grep 24405      看该进程的链接的情况
+    /var/log/message                系统启动后的信息和错误日志，是Red Hat Linux中最常用的日志之一
+    sysctl -a | grep keepalive      看系统内核是不是那tcp得探活关了
+    top -Hp 32554                   查看32554进程的线程情况
+    lsblk -d -o name,rota           查看磁盘是否是ssd 或者 HDD， 如果ROTA：0 就是ssd
+    curl http://test.com:8302/metrics -o tmp 把这个url的内容输出到文本里
+    export TMOUT=0                  不超时
+
+    asan/pmap                       看内存泄漏
+    sed                             正则，各种替换
+    fdisk -l                        切换root 账号 看机器链接的磁盘数量
+    ls /dev                         看机器设备，看有多少块盘
+    useradd name                   机器添加 name 用户
+    passwd name                    给name 用户添加密码
+    cat /dev/null > fe.log          清空文件
+    awk -v RS='' -v ORS='\n\n' '/搜索的词/' 文件名字     搜出关键词所在的段落
+```
+
+#### user_manager
+
+```
+    useradd testuser                创建用户testuser
+    passwd testuser                 给testuser设置密码
+    userdel testuser                删除该用户
+```
+
+### git
+
+```
+    git reset HEAD                  如果add了的话，全都取消
+    git checkout filename           恢复最新版本
+    git commit --amend              改变提交的commit message 或者 对同一个提交进行代码上的修改
+    git log -p -2                   最近两次的修改详细记录
+
+    git reset test.cpp              如果add了test.cpp，要取消add
+    git log                         查看提交文件的 logid
+    git log -p  filename            查看该文件的提交历史， 可以通过关键字
+    git reset --hard ${logid}                       回滚该logid的提交（已经commit，没有push）f you don't care about keeping the changes you made
+    git reset --soft ${logid}                       use --soft if you want to keep your changes
+    git diff --stat --cached origin/master          看commit但没有push的文件
+    git log --graph                                 图形化显示
+    git branch -d the_local_branch                  删除对应分支
+
+
+    git brach tmp                                   创建一个branch分支，把当天提交记录都保存起来
+    git co 当前branch
+    git lg tmp                                      查看tmp这个分支的日志
+    git cherry-pick  commitid                       把tmp上某个分支的commit合并到本分支后面
+    git cm --amend                                  把change id 改了，要不把changeid也考到这个分支上，改分支提交合入的时候就会出现问题
+    git merge feature-show-create-table-partition   当前分支是feature-show-create-table-partition-info，merge一下feature-show-create-table-partition ，响应的提交也会 merge过来
+    git merge feature-show-create-table-partition-info --no-ff
+
+    git co develop
+    git branch
+    git diff develop master
+    git pull --rebase
+    git branch feature-split-blacklist
+    git add fe/src
+    git rebase --abort
+    git cm
+    git branch feature origin/feature               把在本地新建一个feature分支并把远端的分支feature同步下来
+
+    // 分支拉的久远了，和develop上差距比较大，先把把本地备份到 tmp分支
+     git rebase develop                             rebase 本地develop的分支，（我当前的分支是tmp）·
+
+     git format-patch -1                            生成对应的patch文件
+     git am 0001-Add-delete-range-http-and-rpc-interface.patch
+
+     git branch -d dev                              删除本地分支
+     git branch -a                                  显示所有分支
+     git push origin --delete dev                   删除远端分支
+
+     git show ce8c290d23ebaf5e1348ff74df5c61a0d8185856  看这个commitid属于哪个分支
+     git branch -a --contains 5c64d8be4950b0adc9352de848b1edb915c4ccd4  看远端和本地是否有这个分支
+
+
+     git clone http://github.com/large-repository --depth 1
+     cd large-repository
+     git fetch --unshallow
+     git fetch是将远程主机的最新内容拉到本地，用户在检查了以后决定是否合并到工作本机分支中。
+     git reset --hard origin/hotfix-leader-balance
+     git stash
+     git stash save "save message"                  执行存储时，添加备注，方便查找，只有git stash 也要可以的，但查找时不方便识别
+     git stash pop                                  恢复
+     git reset --hard origin/master                 恢复到和远端一致
+     git show  commit_id  可以看到每个文件具体的改动内容
+
+```
+
+### Mysql
+
+```
+select count(*) from table_name         table记录数量
+select * from meta_tablet_1 limit 1;    取一条看一下
+SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'db_name';      看该库有多少张表
+SHOW CREATE TABLE tablename             看创建table的语句
+```
+### Gdb
+
+```
+    gdb lib/name_be ~/core.24563
+    bt(backtrace)                 当前堆栈信息
+    f(frame)                        n是一个从0开始的整数，是栈中的层编号。比如：frame 0，表示栈顶，frame 1，表示栈的第二层。
+```
+
+
+###  dot
+
+```
+dot -Tpng test.dot > output.png
+dot -Tsvg test.dot > output.svg
+```
+
+### webserver
+* nohup python -m SimpleHTTPServer 8000 &  使用python可以快速搭建一个web服务
+
+## Software shortcuts
+
+### Tmux
+
+```
+    ctrl + b
+    ,                         重命名当前窗口,这样便于识别
+    .                         修改当前窗口编号,相当于窗口重新排序
+    "                         将当前面板平分为上下两块
+    %                         将当前面板平分为左右两块
+    x                         关闭当前面板
+    数字键                    切换至指定窗口
+    &                         关闭当前窗口
+    c                         创建新窗口
+    w                         通过窗口列表切换窗口
+    方向键                   移动光标以选择面板
+    [                        "["，此时进入所谓的copy-mode
+    set -g terminal-overrides              For tmux version 2.1 and up scroll up , modify on .tmux.conf
+    set-option -g mouse on          scroll up
+```
+
+### Taglist
+
+```
+    u                           更新taglist窗口中的tag
+    x                           taglist窗口放大和缩小，方便查看较长的tag
+```
+
+### Chrome
+
+```
+    ⌘ + t                       Open a new tab, and jump to it
+    ⌘ + 9                       Jump to the last tab
+    ⌘ + Option + Right arrow    Jump to the next open tab/ Left arrow for previous open tab
+    ⌘ + w                       Closes the current tab or pop-up
+    Control + Command + F       Full screen
+```
+
+## Java compile
+
+```
+    javac -cp ".:./third-party/*:./lib/*" Sample.java       complie with jar
+    java -cp ".:./third-party/*:./lib/*" Sample             run
+```
+
+## Maven
+
+```
+    ~/.m2/settings.xml      This is a reference for the user-specific configuration for Maven.
+    mvn install             download plugin maven need
+    mvn package             compile
+    ~/.m2/                  When maven build is executed, Maven automatically downloads all the dependency jars into the local repository.
+    mvn package -Dmaven.test.skip=true      skip simple test
+    mvn package -Dmaven.javadoc.skip=true   skip doc generator
+```
+
+## Ack
+
+```
+
+ack -w wordname         //  Force PATTERN to match only whole words
+
+```
+## crontab
+
+```
+    crontab –e          // open crontab jobs          0 18 * * * sh /home/name/test/test-feature/replica_hot.sh  这里例子就是每天18点执行这个shell
+    crontab –l          // list existing cron jobs
+
+```
+
+## size
+
+### mysql
+5.0版本以上 varchar(20)，指的是20字符
+bigint  8个字节
+
+
+## 排除问题的思路
+
+* 查看机器 内存和CPU
+* 在看日志
+
+
+# problems__Cookie和Session.md
+
+#### Cookie
+
+Cookie是存储在客户端（通常是用户的浏览器）上的小型数据片段。服务器通过HTTP响应头向浏览器发送Cookie，浏览器会将这些信息存储起来，并在之后的每个请求中通过HTTP请求头将Cookie发送回服务器。Cookie主要用于：
+
+- 跟踪用户会话
+- 存储用户偏好
+- 实现自动登录等功能
+
+Cookie数据是以键值对的形式存储的，每个Cookie都有过期时间，过期后会自动删除。由于Cookie存储在客户端，因此其容量受到限制（每个域名下大约4KB），且存在安全隐患，比如易于被篡改和第三方读取。
+
+#### Session
+
+Session是服务器端用来存储信息的机制。当用户访问Web应用时，服务器可以为该用户创建一个唯一的Session对象，并为这个会话分配一个唯一的Session ID。这个Session ID通常会通过Cookie发送给用户浏览器存储（尽管也有其他传输方式，如URL重写）。用户在后续请求中提交这个Session ID，服务器就能识别出对应的用户会话。
+
+使用Session的目的是：
+
+- 管理用户会话
+- 存储用户特定的数据，如购物车内容、用户ID等
+
+与Cookie相比，Session更加安全，因为数据存储在服务器端，外界无法直接访问。此外，由于存储在服务器，理论上可以存储更多的数据，不过这也会增加服务器的内存消耗。
+
+#### Cookie与Session的关联
+
+虽然Cookie和Session各有不同，但它们经常一起使用来管理用户会话。一个典型的流程是：
+
+1. 用户首次访问网站时，服务器创建一个Session对象并生成一个唯一的Session ID。
+2. 这个Session ID通过设置Cookie发送给用户浏览器。
+3. 用户在后续的请求中，浏览器会自动将这个Session ID随着请求一起发送给服务器。
+4. 服务器接收到Session ID后，识别出对应的用户会话，进行相应的处理。
+
+# problems__DNS和HTTP协议，HTTP请求方式.md
+
+**DNS（域名系统）**:
+
+- DNS是一个分布式的服务，它将人类可读的域名（如 www.example.com）转换为机器可读的IP地址（如 192.0.2.1），使得用户能够通过域名访问网站而无需记住复杂的IP地址。
+- 当你输入一个网址时，你的设备会使用DNS来查找对应的IP地址，从而能够连接到正确的服务器。
+- DNS查询通常在用户感知不到的情况下在后台进行，并且大多使用UDP协议进行通信，因为它比TCP更快，而DNS查询需要速度。
+
+**HTTP（超文本传输协议）**:
+
+- HTTP是一种用于传输超媒体文档（例如HTML）的应用层协议。它构建在TCP/IP协议之上，主要用于Web浏览器和服务器之间的通信。
+- HTTP工作在客户端-服务器架构上。用户的Web浏览器（客户端）会发起请求到服务器，服务器处理请求并返回响应。
+- HTTP定义了一系列的请求方法，常见的包括GET、POST、PUT、DELETE等。
+
+**HTTP请求方法**:
+
+1. **GET**: 请求指定的页面信息，并返回实体主体。用于获取资源而不会影响资源状态。
+2. **POST**: 向指定资源提交数据进行处理请求（例如提交表单或者上传文件）。数据包含在请求体中。POST请求可能会导致新的资源的建立或已有资源的修改。
+3. **PUT**: 从客户端向服务器传送的数据取代指定的文档的内容。
+4. **DELETE**: 请求服务器删除指定的页面。
+5. **HEAD**: 类似于GET方法，但服务器将不返回实体的主体部分，用于获取报头。
+6. **OPTIONS**: 允许客户端查看服务器的性能。
+7. **PATCH**: 对资源进行部分修改。
+8. **CONNECT**: 通常用于SSL加密服务器的通信以及代理服务器。
+9. **TRACE**: 回显服务器收到的请求，主要用于测试或诊断。
+
+这些方法各自有其特定的使用场景，它们共同构成了HTTP的一部分，让Web开发者可以根据不同的需求选择合适的方式来与服务器进行交互。
+
+# problems__DNS域名缓存是什么？.md
+
+#### 缓存目的和好处
+
+DNS域名缓存的主要目的是减少对远端DNS服务器的查询次数，加快域名解析速度，减轻DNS服务器的负担，从而提高整个互联网的效率和性能。具体来说，DNS缓存带来的好处包括：
+
+- **提高解析速度**：通过从缓存中直接获取解析结果，避免了每次都进行完整的DNS解析流程，大大加快了域名到IP地址的转换速度。
+- **减少网络延迟**：由于减少了对远端DNS服务器的查询，从而降低了网络延迟。
+- **减轻DNS服务器负担**：缓存可以显著减少DNS服务器接收的请求数量，有助于缓解服务器负载。
+
+#### 缓存位置
+
+1. **浏览器缓存**：现代Web浏览器都会维护自己的DNS缓存，以便重复访问的网站可以更快加载。
+2. **操作系统缓存**：操作系统也会缓存DNS查询结果，当应用程序请求DNS解析时，首先会检查操作系统的DNS缓存。
+3. **递归DNS服务器缓存**：当用户的查询请求发送到递归DNS服务器时，这些服务器也会缓存一份DNS查询结果，供后续相同的查询请求使用。
+4. **权威DNS服务器**：虽然权威DNS服务器本身不缓存外部域名的解析结果，但它们会为自己负责的域名提供TTL（生存时间），告诉其他DNS服务器和客户端可以缓存解析结果的时间长度。
+
+# problems__DNS解析的过程？.md
+
+#### 1. 浏览器缓存
+
+- 当用户在浏览器中输入一个网址时，浏览器首先检查自己的缓存，看看该域名的IP地址是否已经保存在本地。如果找到了相应的记录，DNS解析过程就此结束。
+
+#### 2. 系统缓存
+
+- 如果浏览器缓存中没有找到，操作系统会检查自己的DNS缓存中是否有这个域名对应的IP地址。Windows系统可以通过命令`ipconfig /displaydns`来查看本地DNS缓存内容。
+
+#### 3. 路由器缓存
+
+- 如果操作系统缓存中也没有记录，请求会被发送到路由器，路由器通常会有自己的DNS缓存。
+
+#### 4. ISP的DNS服务器
+
+- 如果之前的步骤都未能解析域名，那么查询请求会被发送到ISP（互联网服务提供商）的DNS服务器。ISP的DNS服务器会检查它的缓存，看看是否可以找到这个域名对应的IP地址。
+
+#### 5. 根DNS服务器
+
+- 如果ISP的DNS服务器也无法解析，它会向根DNS服务器发起请求。根服务器是顶级的DNS服务器，它不直接知道域名的IP地址，但能指引下一步应该查询哪个顶级域（TLD，例如`.com`、`.net`等）服务器。
+
+#### 6. 顶级域（TLD）服务器
+
+- 根据根服务器的指引，ISP的DNS服务器接着向适当的TLD服务器发送查询请求。TLD服务器管理着在该顶级域下注册的所有域名的信息，并能提供存储该域名记录的权威DNS服务器的地址。
+
+#### 7. 权威DNS服务器
+
+- 最后，ISP的DNS服务器会向该域名的权威DNS服务器发起请求。权威服务器直接包含了映射到该域名的IP地址的记录。
+
+#### 8. 缓存结果并返回给客户端
+
+- 一旦ISP的DNS服务器收到权威DNS服务器提供的IP地址，它会缓存这个结果（以便于未来加速同一域名的解析），然后把这个IP地址返回给最初发起请求的客户端（用户的计算机）。
+
+#### 9. 浏览器访问网站
+
+- 浏览器最终收到IP地址后，就可以使用该地址与目标服务器建立连接，并开始加载网站内容。
+
+# problems__GET请求中，URL编码有什么含义？.md
+
+#### URL编码的主要目的包括：
+
+1. **处理非ASCII字符**：URLs原则上仅支持ASCII字符集。对于不属于这个字符集的内容，例如中文、阿拉伯文或特殊符号等，使用URL编码可以安全地加以传输。
+2. **转义保留字符**：URL具有特定的格式，其中某些字符（如`/`, `?`, `&`, `=`等）具有特殊意义。如果这些字符用于其它目的（例如作为数据值的一部分），需要通过URL编码来转义，以避免混淆。例如，在GET请求的查询字符串中，`&`用于分隔键值对，若键或值实际包含`&`，该字符就必须被编码。
+3. **处理空格和控制字符**：URL中直接包含空格（例如，空格通常会被替换为`+`符号或`%20`）和控制字符（如换行符）是不允许的，因此这些字符也需要经过编码后才能在URL中使用。
+
+# problems__HTTP中常用的状态码都有那些？.md
+
+#### 1xx：信息性状态码
+
+- **100 Continue**：客户端应继续其请求
+
+#### 2xx：成功
+
+- **200 OK**：请求成功，对GET、PUT、PATCH或POST操作的标准响应
+- **201 Created**：请求已经被实现，且新的资源已经被创建
+- **204 No Content**：服务器成功处理了请求，但不需要返回任何实体内容
+
+#### 3xx：重定向
+
+- **301 Moved Permanently**：请求的页面已永久移动到新位置
+- **302 Found**（之前“Moved Temporarily”）：服务器目前从不同位置的网页响应请求，但请求者应继续使用原有位置来进行以后的请求
+- **304 Not Modified**：自从上次请求后，请求的网页未修改过
+
+#### 4xx：客户端错误
+
+- **400 Bad Request**：服务器无法理解请求的格式，客户端不应该再次尝试发送同样的请求
+- **401 Unauthorized**：请求未经授权，这个状态代码必须和WWW-Authenticate报头一起使用
+- **403 Forbidden**：服务器拒绝请求
+- **404 Not Found**：请求失败，请求所希望得到的资源未被在服务器上发现
+- **405 Method Not Allowed**：请求行中指定的请求方法不能被用于请求相应的资源
+
+#### 5xx：服务器错误
+
+- **500 Internal Server Error**：服务器遇到了一个未曾预料的状况，导致它无法完成对请求的处理
+- **501 Not Implemented**：服务器不支持当前请求所需要的某个功能
+- **502 Bad Gateway**：作为网关或代理工作的服务器尝试执行请求时，从上游服务器接收到无效的响应
+- **503 Service Unavailable**：由于临时的服务器维护或过载，服务器当前无法处理请求
+- **504 Gateway Timeout**：作为网关或代理的服务器，未能及时从上游服务器或辅助服务器接收请求
+
+# problems__HTTP方法都有那些？.md
+
+1. **GET**：请求指定的资源。GET请求应该只用于获取数据，并且不应当引起服务器上资源状态的改变。
+2. **POST**：向指定的资源提交数据以进行处理（例如，提交表单或上传文件）。数据包含在请求体中。POST请求可能会创建新的资源或修改现有资源。
+3. **PUT**：将请求体中的数据发送到指定的资源以创建或替换该资源。相对于POST，PUT具有幂等性，意味着多次执行相同的PUT请求应该产生相同的结果。
+4. **DELETE**：删除指定的资源。
+5. **HEAD**：与GET方法类似，但服务器在响应中只返回头部信息，不返回实际的资源内容。这常用于检测资源的有效性或最近更新时间。
+6. **OPTIONS**：描述目标资源的通信选项，用于确定服务器支持的HTTP方法。
+7. **PATCH**：对资源应用部分修改。它比PUT更加精细，只更新资源的一部分而不是整个资源。
+8. **CONNECT**：将连接转换为透明的TCP/IP隧道，通常用于SSL加密服务器的代理（通过CONNECT方法将请求转发给HTTPS端口）。
+9. **TRACE**：执行一个消息回环测试，沿路径回显收到的请求。这允许客户端看到请求被中间服务器添加的或修改的字段。
+
+# problems__HTTP长连接和短链接都用在那些场景？.md
+
+#### 短连接
+
+在短连接模式下，客户端与服务器之间的每个请求/响应对都会打开一个新的连接，并在交换完成后立即关闭连接。短连接适用于以下场景：
+
+- **低频请求**：如果客户端只偶尔与服务器通信，使用短连接可以减少服务器维护空闲连接所需的资源。
+- **简单的请求/响应交互**：对于简单且数量不多的请求，短连接可以快速建立，完成数据交换后即刻释放资源。
+- **负载分配**：在负载均衡的环境中，短连接有助于将来自不同客户端的请求更公平地分配到不同的服务器。
+
+#### 长连接
+
+HTTP/1.1默认采用长连接（持久连接），在此模式下，TCP连接在多个请求/响应之间保持开放状态，直到由客户端或服务器明确关闭。长连接适合于：
+
+- **高频请求**：当客户端需要频繁地向服务器发送请求时，长连接减少了因为建立和关闭连接而带来的额外开销。
+- **减少延迟**：对于需要快速响应的应用，如网页浏览和在线游戏，长连接能够减少每次请求所需的往返时间（RTT），提高用户体验。
+- **实时通信**：在聊天应用、实时数据更新等场景中，长连接可以保持一个持续的数据流，允许服务器主动向客户端推送信息。
+
+# problems__IO模型了解哪些？.md
+
+1. **阻塞IO模型**（Blocking IO）：
+   - 在阻塞IO模型中，当应用程序发起IO操作时，会被阻塞直到数据准备好或者IO完成。
+   - 这意味着应用程序在进行IO操作时会暂停执行，直到数据准备好可以读取或写入完成后才会继续执行。
+   - 阻塞IO模型简单易用，但可能导致资源浪费和性能下降。
+2. **非阻塞IO模型**（Non-blocking IO）：
+   - 在非阻塞IO模型中，应用程序发起IO操作后，并不会被阻塞，而是立即返回结果。
+   - 应用程序需要通过轮询等方式主动查询IO操作是否完成，从而实现异步IO操作。
+   - 非阻塞IO模型相比阻塞IO模型可以提高系统的并发性能。
+3. **多路复用IO模型**（I/O multiplexing）：
+   - 多路复用IO模型利用操作系统提供的select、poll、epoll等机制同时监控多个文件描述符的IO状态。
+   - 当某个文件描述符就绪时，应用程序可以通过事件通知来进行IO操作，避免了阻塞等待。
+   - 多路复用IO模型可以有效地管理多个IO操作，提高系统的效率和吞吐量。
+4. **信号驱动IO模型**（Signal-driven IO）：
+   - 信号驱动IO模型通过向内核注册信号处理函数，在IO操作完成时由内核发送信号来通知应用程序。
+   - 应用程序可以继续执行其他任务，而无需阻塞等待IO操作完成。
+   - 信号驱动IO模型相对于非阻塞IO模型提供了更好的异步IO支持。
+5. **异步IO模型**（Asynchronous IO）：
+   - 异步IO模型通过操作系统提供的异步IO接口来实现IO操作，应用程序可以在IO操作完成后得到通知。
+   - 应用程序无需关心IO操作的具体状态，可以继续执行其他任务。
+   - 异步IO模型适合处理大量的IO请求，提高系统的响应速度和并发处理能力。
+
+# problems__NGINX在Linux上是如何工作的？简单描述一下.md
+
+1. **事件驱动与非阻塞I/O**：Nginx的Worker进程内部使用了异步非阻塞的I/O处理方式和事件驱动的机制来处理请求。Nginx可以处理大量并发连接，而且每个Worker进程都可以同时处理多个请求，这意味着Nginx可以支持高并发且高效率。
+2. **反向代理和负载均衡**：Nginx可以设置成反向代理服务器，在这种模式下，Nginx可以接收客户端的请求，然后将该请求转发到后端的其他服务器，并将从后端服务器获取的响应返回给客户端。同时，Nginx也提供负载均衡功能，可以根据预设的策略（如轮询、最少连接等）将请求分发到不同的后端服务器。
+3. **静态资源服务**：对于静态资源的请求，Nginx可以直接读取磁盘上的静态文件（如HTML、CSS、JavaScript文件或图片等）并返回。
+4. **（可选，如果你不了解面试建议不说）Master-Worker架构**：Nginx采用了Master-Worker的模型。在启动Nginx服务时，首先会有一个Master进程被创建出来，在这个Master进程中，会创建多个Worker进程。Master进程主要负责管理Worker进程，包括读取并验证配置信息、创建、绑定套接字然后传递给worker进程、启动、关闭、维护worker进程等。而Worker进程则负责处理实际的请求。
+
+# problems__OSI七层模型分别是？各自的功能分别是什么？.md
+
+#### 1. 物理层
+
+**功能：** 物理层负责数据在物理媒介上的传输，将来自数据链路层的数据帧转换为电信号、光信号或无线信号。它涉及的范围包括电缆类型、接口形状、引脚数量等。
+
+#### 2. 数据链路层
+
+**功能：** 数据链路层管理介质访问控制并进行错误检测与纠正。它将Raw位流组织成逻辑结构称为“数据帧”，并在两个相邻节点之间传输这些帧。此层还负责流量控制和帧同步。
+
+#### 3. 网络层
+
+**功能：** 网络层负责设备间的数据传输和寻址。它决定数据的路径路由，并使用IP地址和子网划分来导向目标位置。它也处理分组路由、拥塞控制和网络互联问题。
+
+#### 4. 传输层
+
+**功能：** 传输层提供端到端的通信服务。它负责数据的分段和重组，并保证数据完整性。主要协议有TCP和UDP，分别提供可靠的连接和不可靠的连接。
+
+#### 5. 会话层
+
+**功能：** 会话层建立、管理和终止应用程序之间的会话。它的职责是建立和维护持久的数据通信会话，并在必要时重新启动会话。
+
+#### 6. 表示层
+
+**功能：** 表示层负责数据的编码、转换和解压。它确保来自应用层的数据被网络格式化为适合传输的格式，并在达到目标后被恢复原样。它还可以处理加密和解密。
+
+#### 7. 应用层
+
+**功能：** 应用层为最终用户提供网络服务接口。它直接支持各种端用户应用，如Web浏览器、Email客户端、远程文件服务等。此层负责识别和建立与远程应用的通信。
+
+# problems__POST和GET的主要区别有那些？.md
+
+1. **语义上的区别**：
+   - GET请求通常用于请求服务器发送资源或数据。它意味着获取信息，而不应该引起服务器上任何资源的状态改变。
+   - POST请求则用于向服务器提交数据以创建或更新资源。它通常会引起服务器上资源的状态变化或副作用。
+2. **数据传输位置**：
+   - 在GET请求中，数据附加在URL之后作为查询字符串参数进行发送，形式为`?key1=value1&key2=value2`。
+   - POST请求将数据包含在请求体中发送给服务器，这意味着数据不会出现在URL中，适合传输敏感信息或大量数据。
+3. **数据大小限制**：
+   - GET请求由于数据直接附加在URL后面，因此受到URL长度限制（由浏览器和服务器决定），通常不适合传输大量数据。
+   - POST请求没有这样的限制，理论上可以传输更多数据，更适合大量数据的传输。
+4. **安全性和隐私**：
+   - GET请求中的数据暴露在URL中，可能会被浏览器历史、Web服务器日志等记录下来，因此不适合传输敏感信息。
+   - POST请求中的数据在请求体内，不会直接暴露在URL中，相对更安全。
+5. **缓存和书签**：
+   - GET请求可以被缓存，也可以保存为书签。
+   - POST请求不会被缓存，也不能保存为书签。
+
+# problems__SYN队列和Accept队列.md
+
+#### SYN 队列和 Accept 队列
+
+（1）SYN 半链接队列
+
+SYN队列存储了收到 SYN 包的连接，它的职责是回复 SYN+ACK 包，并且在没有收到 ACK 包时重传。发送完SYN+ACK之后，SYN 队列等待从客户端发出的ACK包（也即三次握手的最后一个包）。
+
+当收到ACK包时，首先找到对应的SYN队列，再在对应的SYN队列中检查相关的数据看是否匹配，如果匹配，内核将该连接相关的数据从SYN队列中移除，创建一个完整的连接，并将这个连接加入Accept队列。
+
+（2）Accept 全连接队列
+
+（2）Accept（全连接）
+
+Accept队列中存放的是已建立好的连接，也即等待被上层应用程序取走的连接。当进程调用accept()，这个socket从队列中取出，传递给上层应用程序。
+
+# problems__SYN队列溢出了怎么办.md
+
+查看 SYN 队列
+
+就是查看处在 SYN_RECV 状态的进程连接个数
+
+```
+netstat -natp | grep SYN_RECV | wc -l
+```
+
+查看溢出情况
+
+```
+netstat -s
+```
+
+预防 SYN 攻击
+
+- 增大半连接队列
+
+- 开启 SYN cookies 算法
+
+- 减少 SYN+ACK 重传次数
+
+当服务端受到 SYN 攻击时，就会有大量处于 SYN_REVC 状态的 TCP 连接，处于这个状态的 TCP 会重传 SYN+ACK ，当重传超过次数达到上限后，就会断开连接。那我们减少了重传次数，就会加速断开连接，这里可以联想如果在第三次握手失败了之后的场景
+
+# problems__Socket和WebSocket的区别.md
+
+1. **Socket**：
+   - Socket是传统的网络编程接口，用于在客户端和服务器之间建立连接并进行数据传输。Socket基于TCP/IP协议，通过套接字(Socket)接口实现数据交换。
+   - Socket是一种全双工、点对点的通信方式，使用面向连接的TCP协议或无连接的UDP协议。
+   - Socket编程需要程序员手动处理数据的发送和接收，包括数据的分割、粘包等问题。
+   - Socket适用于实时性要求高的一对一通信场景，如即时通讯、远程控制等。
+2. **WebSocket**：
+   - WebSocket是一种在单个TCP连接上实现全双工通信的通信协议，基于HTTP协议的握手机制建立连接，然后升级为WebSocket协议。
+   - WebSocket支持客户端和服务器之间双向实时通信，可以在同一个连接上进行低延迟的数据传输。
+   - WebSocket提供了更高层次的抽象，封装了底层数据帧的处理，简化了数据传输的管理。
+   - WebSocket适用于Web应用中需要实时数据更新的场景，如在线游戏、聊天应用、实时数据展示等。
+
+# problems__TCP协议是如何保证可靠传输的？.md
+
+TCP协议通过以下几种机制来保证可靠传输：
+
+1. 序列号和确认应答：TCP利用序列号和确认号来对数据包进行排序和确认，确保数据包按照正确的顺序传输并且无丢失。
+2. 数据校验和重传机制：TCP采用校验和机制来检测数据是否在传输过程中发生了损坏，如果发现数据错误，则会要求重传。重传机制能够保证数据的完整性。
+3. 滑动窗口和流量控制：TCP使用滑动窗口机制来控制发送端发送数据的速率，避免网络拥塞，并通过流量控制来保证接收方可以及时处理数据。
+4. 连接管理：TCP建立连接时采用三次握手和断开连接时采用四次挥手的方式，确保通信双方同步状态，避免数据丢失或乱序。
+5. 拥塞控制：TCP通过拥塞窗口控制、超时重传和快速重传机制来应对网络拥塞情况，保证数据的稳定传输。
+
+这些机制共同作用，使得TCP协议具有较高的可靠性和稳定性，在互联网上广泛应用于数据传输。
+
+# problems__TCP和UDP三次握手和四次挥手状态及消息类型.md
+
+TCP和UDP是互联网协议套件中的两种主要传输层协议。**TCP是面向连接的协议，提供可靠的、面向字节流的通信，而UDP是无连接的协议，不保证消息的可靠传输。**
+
+TCP的三次握手和四次挥手是建立和关闭连接的过程。这里先说明TCP的三次握手和四次挥手状态及消息类型，再简述UDP。
+
+**TCP三次握手**
+
+建立TCP连接时，需要执行以下步骤：
+
+1. SYN（同步）：客户端发送一个具有SYN标志的TCP包到服务器以请求建立连接。此时客户端进入SYN_SENT状态。
+2. SYN-ACK（同步应答）：服务器收到SYN包后，返回一个具有SYN和ACK标志的TCP包。此时服务器进入SYN_RCVD状态。
+3. ACK（确认）：客户端收到SYN-ACK包后，发送一个具有ACK标志的TCP包来确认连接建立。此时客户端和服务器均进入ESTABLISHED状态。
+
+**TCP四次挥手**
+
+关闭TCP连接时，需要执行以下步骤：
+
+1. FIN（结束）：当一方（如客户端）完成数据传输，发送一个具有FIN标志的TCP包给对方（如服务器），请求关闭连接。此时客户端进入FIN_WAIT_1状态。
+2. ACK（确认）：对方（如服务器）收到FIN包后，发送一个具有ACK标志的TCP包确认收到。此时客户端进入FIN_WAIT_2状态，服务器继续处理剩余数据。
+3. FIN（结束）：当对方（如服务器）完成数据传输，也发送一个具有FIN标志的TCP包给发起方（如客户端），请求关闭连接。此时服务器进入LAST_ACK状态。
+4. ACK（确认）：发起方（如客户端）收到对方的FIN包后，发送一个具有ACK标志的TCP包作为最后的确认。此时客户端进入TIME_WAIT状态，经过一段时间后释放连接，服务器在收到ACK包后则直接释放连接。
+
+值得注意的是，在实际场景中，客户端和服务器通常都可以作为发起方或对方，上述描述仅作为示例。
+
+**UDP**
+
+与TCP不同，UDP是无连接的协议，因此没有类似于三次握手和四次挥手的过程。**在UDP中，应用程序直接将数据封装成数据报，并发送给接收方**。虽然UDP不能保证数据的顺序或可靠性，但由于其低延迟和高效率特点，**在实时应用、广播和多播等场景下非常适用。**
+
+# problems__TCP和UDP区别.md
+
+TCP和UDP都是在网络通信中使用的协议，它们都位于网络模型的第四层(传输层)。但它们之间有一些关键的区别：
+
+1. **连接类型**：
+   - TCP是一种面向连接的协议。在数据传输之前，它需要建立一个连接，这就像是打电话，你需要先拨号建立连接，然后才能通话。
+   - UDP是一种无连接的协议。它不需要预先建立连接，就可以直接发送数据，这就像是寄信，你直接投递到邮筒，不需要先与对方建立联系。
+2. **数据传输的可靠性**：
+   - TCP提供了一种可靠的数据传输服务。它有确认、重传和拥塞控制机制，可以保证数据的正确性和顺序性。
+   - UDP则不提供数据传输的可靠性保证，它只是简单地将数据包发送出去，不关心数据包是否到达目的地，因此可能会出现数据丢失的情况。
+3. **传输速度**：
+   - 由于TCP需要进行连接建立、确认和重传等操作，所以相对来说，其传输速度比UDP慢。
+   - UDP由于没有复杂的控制机制，所以其传输速度通常比TCP要快。
+4. **使用场景**：
+   - TCP常用于需要高可靠性的应用，如网页浏览（HTTP、HTTPS）、邮件发送（SMTP）等。
+   - UDP则适合对实时性要求较高，可容忍少量数据丢失的应用，如视频会议、语音通话、直播等。
+5. **头部开销**：
+   - TCP的头部开销较大，最小20字节，提供了许多选项，如错误检测，序列号，确认号等。
+   - UDP的头部开销小，只有8字节，只提供了最基本的功能。
+
+# problems__TCP和UDP头部字节定义.md
+
+**TCP的头部结构：**
+
+1. **源端口号**：16位，表示数据发送者的端口号。
+2. **目标端口号**：16位，表示数据接收者的端口号。
+3. **序列号**：32位，用于标识从TCP源端向目的端发送的字节流，它表示在这个报文段中的的第一个数据字节。
+4. **确认序列号**：32位，只有ACK标志位为1时，确认序列号字段才有效。它含有期望收到对方下一个报文段的数据的第一个字节的序列号。
+5. **头部长度**：4位，给出了头部长度，以32位为单位。
+6. **保留**：6位，为将来使用而保留，目前未被使用。
+7. **控制位**：其中包括URG，ACK，PSH，RST，SYN，FIN等6个标志位。
+8. **窗口大小**：16位，指定了本段所能接收的最大窗口大小。
+9. **校验和**：16位，用于检测头部和数据部分是否发生错误。
+10. **急救指针**：16位，仅在URG标记为1时有效，否则通常设置为0。
+11. **选项**：可变长，如果存在的话，用于一些额外的功能。
+
+**UDP的头部结构：**
+
+1. **源端口号**：16位，表示数据发送者的端口号。
+2. **目标端口号**：16位，表示数据接收者的端口号。
+3. **长度**：16位，包括UDP头部和数据部分的总长度。
+4. **校验和**：16位，用于检测头部和数据部分是否发生错误。
+
+# problems__TCP和UDP对应常见的应用层协议有那些？.md
+
+TCP和UDP是传输层协议，常见的应用层协议对应如下：
+
+TCP常见的应用层协议有：
+
+1. HTTP（超文本传输协议）：用于在Web服务器和客户端之间传输信息。
+2. FTP（文件传输协议）：用于在网络上进行文件传输。
+3. SMTP（简单邮件传输协议）：用于电子邮件的发送。
+4. Telnet（远程登录协议）：用于远程登陆到主机进行操作。
+
+UDP常见的应用层协议有：
+
+1. DNS（域名系统）：用于将域名解析为IP地址。
+2. DHCP（动态主机配置协议）：用于自动分配IP地址。
+3. SNMP（简单网络管理协议）：用于网络设备的管理和监控。
+4. TFTP（简单文件传输协议）：用于在网络上进行文件传输。
+
+# problems__TCP和UDP的区别.md
+
+#### TCP 和 UDP 各自的优点
+
+1.连接
+
+TCP是⾯向连接的，在传输前需要三次握⼿建⽴连接，UDP不需要连接，即刻传输数据。
+
+2、服务形式
+
+TCP只能⼀对⼀，点对点服务，UDP⽀持⼀对⼀、⼀对多、多对多通信。
+
+3、可靠性（传输的数据）
+
+TCP保证数据可靠交付，拥有**确认应答**和**重传机制**，⽆重复、不丢失、按序到达;
+
+UDP尽可能交付，不保证可靠性。
+
+4、连接控制机制（传输路途）
+
+TCP拥有流量控制、拥塞控制，保证传输安全性等，UDP在⽹络拥堵情况下不会降低发送速率。
+
+5、⾸部⼤⼩
+
+TCP⾸部⻓度不使⽤选项字段是20字节，使⽤选项字段⻓度增加(可变)
+
+<font color='red'>8 位 = 1 字节</font>
+
+<img src="https://pic-1310558294.cos.ap-shanghai.myqcloud.com/img/202204240027703.png" alt="image-20220328231152943" style="zoom:33%;" />
+
+UDP⾸部固定8字节。
+
+<img src="https://pic-1310558294.cos.ap-shanghai.myqcloud.com/img/202204240027685.png" alt="image-20220328231247292" style="zoom:33%;" />
+
+6、数据格式
+
+TCP基于字节流，没有边界，但是保证传输顺序和可靠性;
+
+UDP继承了IP层特性，基于数据包，有边界可能出现乱序和丢包。
+
+7、分⽚⽅式
+
+TCP数据⼤于 MSS 时会在TCP层将数据进⾏分⽚传输，到达⽬的地后同样在传输层进⾏合并，如果有某个⽚丢失则只需要重传丢失的分⽚即可;
+
+UDP数据⼤于MTU时会在IP层分⽚，同样也在⽬的IP层合并，如果某个IP分⽚丢失，则需要将所有分⽚都进⾏重传，开销⼤。
+
+8.应用场景
+
+TCP：FTP 文件传输；Http/Https
+
+UDP：视频音频等多媒体通信；广播通知；包总量较少的通信，如 DNS ，SNMP
+
+# problems__TCP和UDP的首部长什么样子？.md
+
+TCP和UDP的首部如下：
+
+TCP⾸部⻓度不使⽤选项字段是20字节，使⽤选项字段⻓度增加(可变)
+
+<font color='red'>8 位 = 1 字节</font>
+
+<img src="https://pic-1310558294.cos.ap-shanghai.myqcloud.com/img/202204240027703.png" alt="image-20220328231152943" style="zoom:33%;" />
+
+UDP⾸部固定8字节。
+
+<img src="https://pic-1310558294.cos.ap-shanghai.myqcloud.com/img/202204240027685.png" alt="image-20220328231247292" style="zoom:33%;" />
+
+# problems__TCP的最大连接数是多少？.md
+
+TCP的最大连接数取决于多个因素，**包括操作系统、硬件配置和网络环境等**。一般来说，TCP连接数受到以下因素的限制：
+
+1. 操作系统的限制：不同的操作系统对于TCP连接数有不同的限制。例如，在Linux系统中，默认情况下可以支持数以万计的TCP连接，但是可以通过修改内核参数来增加这个限制。
+2. 硬件资源限制：服务器的硬件资源（如CPU、内存）也会影响TCP连接数的最大限制。如果服务器的硬件资源有限，那么能够支持的TCP连接数也会受到限制。
+3. 网络设备限制：网络设备（如防火墙、路由器）的配置也可能对TCP连接数造成限制。这些设备可能会对每个连接的最大并发数设置限制。
+
+总的来说，TCP连接数没有一个固定的最大值，而是受到多个因素的影响。如果需要提高服务器的TCP连接数，可以通过优化操作系统、增加硬件资源、调整网络设备配置等方式来实现。
+
+# problems__TCP粘包是怎么产生的？.md
+
+TCP粘包指的是接收方在一次读取数据时，将多个发送方发送的数据包合并成一个或者少于原始数据包数量的现象。TCP粘包通常发生在基于流式传输（如TCP）的网络通信中，其主要原因有以下几点：
+
+1. TCP为面向流的协议：TCP是面向流的传输协议，发送方可以将数据划分为任意大小的数据块发送，接收方可能一次性接收到多个数据包，导致多个数据包被合并成一个大的数据块。
+2. 接收方缓冲区未及时读取：如果接收方没有及时从缓冲区中读取数据，而发送方持续发送数据，则多个数据包可能会在接收方的缓冲区中累积，从而造成粘包现象。
+3. 网络延迟和拥塞：网络延迟、拥塞等因素也可能导致数据包在传输过程中聚集在一起，形成粘包现象。
+4. 操作系统对数据处理方式不同：不同操作系统对于接收数据的处理方式可能不同，有些操作系统会尽量将接收到的数据进行合并，从而可能导致粘包现象。
+
+为避免TCP粘包问题，可以采用以下方法：
+
+- 在数据包中增加长度字段，让接收方根据长度字段来正确解析数据包。
+- 使用特殊标记或分隔符来标识数据包的边界。
+- 对数据进行序列化和反序列化处理，确保数据的完整性和正确性。
+- 合理设计应用层协议，规范数据的传输方式，避免产生粘包问题。
+
+# problems__UDP中使用connect的好处.md
+
+在使用UDP进行网络编程时，**`connect`函数通常不是必须的**，因为UDP是一个无连接的协议，它不需要像TCP那样进行三次握手来建立连接。**然而，在某些场景下，即使对于UDP，使用`connect`也有一些好处**：
+
+1. **指定默认的对等方**：调用`connect`后，你可以使用`send`和`recv`（而不是`sendto`和`recvfrom`）函数来发送和接收数据。系统会自动使用`connect`时指定的地址作为数据的目的地，这使得代码更简洁，因为你不需要每次发送数据时都提供对等方的地址。
+2. **错误报告**：一旦对UDP套接字调用了`connect`，当往指定的对等方发送数据时，如果发生传输错误，操作系统会将错误报告给套接字。例如，如果目标主机不可达，你可能会收到`ECONNREFUSED`错误。这在没有调用`connect`的情况下是不可能的，因为UDP通常不会为无连接的操作提供错误反馈。
+3. **过滤接收到的数据包**：使用`connect`连接到特定的远程端点后，该套接字只接受来自这个特定端点的数据包。这意味着，该套接字不会接收到其他任何地址的数据，从而相当于为该套接字设置了一个过滤器。
+4. **效率**：虽然这个优点可能不是非常显著，但是在某些情况下，由于内核不需要在每次数据传输时处理源和目的地址，可能会略微减少CPU的工作负载。
+5. **简化状态管理**：对于需要持久通信状态的应用程序，例如一个客户端频繁地与同一个服务器端点进行交互，使用`connect`可以简化程序的状态管理。
+6. **安全性**：使用`connect`可以提高一定的安全性，因为套接字只接收来自已连接对等方的数据，这减少了接收到恶意或无关数据包的可能性。
+
+尽管有这些好处，也要考虑到`connect`对UDP套接字的影响，因为它使得套接字从一个可以与多个对等方通信的套接字变成了只能与一个对等方通信的套接字。如果需要与多个对等方通信，你或许需要创建多个套接字或者不使用`connect`。
+
+# problems__WebSocket底层原理.md
+
+1. **握手阶段**：
+   - 客户端发起WebSocket连接请求时，首先会发送一个HTTP请求给服务器，包含特定的WebSocket头部信息，如Upgrade和Connection字段。
+   - 服务器收到请求后，进行握手确认，返回状态码101 Switching Protocols，表示已经切换到WebSocket协议。
+2. **建立连接**：
+   - 握手完成后，客户端和服务器之间建立了WebSocket连接，此时是持久连接，双方可以随时发送数据。
+3. **数据帧格式**：
+   - WebSocket数据传输采用数据帧的方式，在实际通信中，将数据封装成一系列的数据帧进行传输。
+   - 数据帧由固定的格式组成，包括FIN（结束标志位）、RSV（保留位）、Opcode（操作码）、Mask（掩码位）等字段，用于表示数据的类型、长度和处理方式。
+4. **心跳检测**：
+   - WebSocket连接建立后，客户端和服务器之间可以通过心跳机制来维持连接的稳定性，避免连接超时断开。
+   - 双方定期发送心跳数据帧，以确认对方仍然处于连接状态。
+5. **断开连接**：
+   - 当需要断开WebSocket连接时，可以通过特定的关闭数据帧来结束连接，双方收到关闭帧后，即可安全地关闭连接。
+
+# problems__connect会阻塞怎么解决.md
+
+当你调用`connect`函数对远程服务器进行连接时，如果使用的是阻塞式套接字，`connect`会一直阻塞到连接成功或者发生错误为止。这可能导致应用程序的其它部分无法执行，尤其是在图形用户界面或需要同时处理多个连接的服务器应用程序中，这可能是不可接受的。为了解决`connect`函数的阻塞问题，可以采用以下几种方法：
+
+1. **使用非阻塞套接字**：
+   - 将套接字设置为非阻塞模式，这样`connect`调用将立即返回。如果连接未立即建立，`connect`会返回一个错误码，通常是`EINPROGRESS`，表明连接尝试正在进行中。
+   - 接下来，你可以使用`select`，`poll`或`epoll`等函数来监视套接字的状态。当套接字可写时（`select`等的写集合中返回），这通常意味着连接已经建立或者连接尝试失败，此时可以使用`getsockopt`来检查套接字的`SO_ERROR`选项，以确定是否连接成功。
+2. **使用异步I/O或事件驱动模型**：
+   - 通过异步I/O库（比如Linux的`libaio`或Windows的`IOCP`）或者事件驱动的网络库（比如`libevent`、`libuv`或`Boost.Asio`），可以在不阻塞主线程的情况下执行`connect`。
+   - 这些库通常提供了在连接完成时触发的回调机制。
+3. **创建辅助线程或进程**：
+   - 在单独的线程或进程中执行`connect`调用，这样即使`connect`阻塞，也不会影响主线程或进程的执行。
+   - 连接成功后，可以通过线程间通信机制（如信号量、消息队列、事件等）通知主线程或进程。
+4. **使用`O_NONBLOCK`与`connect`结合后的特殊处理**：
+   - 在某些系统中，对于非阻塞套接字，`connect`可能立即返回`-1`，并设置`errno`为`EINPROGRESS`。在这种情况下，可以使用`select`或`poll`等函数来监视连接是否成功。
 
 
 
+下面用代码来举一个例子：我们先将套接字设置为非阻塞，然后尝试连接。如果`connect`返回`EINPROGRESS`错误，我们利用`select`监视套接字的写事件，如果`select`返回后，套接字的写事件被触发，则调用`getsockopt`检查`SO_ERROR`，看是否连接成功。
+
+```c
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <netinet/in.h>
+#include <stdio.h>
+#include <errno.h>
+// ...
+
+int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+if (sockfd < 0) {
+    perror("socket");
+    return -1;
+}
+
+// 设置套接字为非阻塞
+int flags = fcntl(sockfd, F_GETFL, 0);
+fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
+
+struct sockaddr_in server_addr;
+// 设置server_addr的成员变量...
+// ...
+
+int result = connect(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr));
+if (result < 0) {
+    if (errno == EINPROGRESS) {
+        // 连接正在尝试中
+        fd_set writefds;
+        FD_ZERO(&writefds);
+        FD_SET(sockfd, &writefds);
+        struct timeval timeout = {5, 0};  // 设置超时时间
+
+        // 使用select等待连接完成或超时
+        result = select(sockfd + 1, NULL, &writefds, NULL, &timeout);
+        if (result <= 0) {
+            // select错误或超时
+            perror("select");
+            close(sockfd);
+            return -1;
+        } else {
+            int error = 0;
+            socklen_t len = sizeof(error);
+            // 获取套接字选项
+            if (getsockopt(sockfd, SOL_SOCKET, SO_ERROR, &error, &len) < 0) {
+                perror("getsockopt");
+                close(sockfd);
+                return -1;
+            }
+            // 检查是否有错误发生
+            if (error) {
+                errno = error;
+                perror("connect");
+                close(sockfd);
+                return -1;
+            }
+        }
+    } else {
+        // 连接尝试出错
+        perror("connect");
+        close(sockfd);
+        return -1;
+    }
+}
+
+// 套接字现在已连接
+// ...
+
+close(sockfd);
+
+```
+
+
+# problems__epoll哪些触发模式，有啥区别？.md
+
+epoll有两种触发模式：水平触发（LT）和边缘触发（ET）。
+
+1. 水平触发（LT）：这是epoll的默认工作模式。在这种模式下，只要被监控的文件描述符还有数据可以读取或者还能写入数据，就会一直通知该事件。也就是说，如果你没有处理完所有的数据，那么每次调用epoll的时候，它都会响应这个事件。只有你读或写到了EAGAIN，也就是没有更多的数据可以处理了，那么它在下一次epoll调用的时候才不会响应。
+2. 边缘触发（ET）：在这种模式下，当被监控的文件描述符状态发生变化时，epoll只会通知一次该事件，直到该文件描述符的状态再次发生变化为止。也就是说，如果你没有处理完所有的数据或没有处理该事件，那么在下一次epoll调用的时候，它不会再响应这个事件。
+
+ET模式比LT模式效率更高，因为它避免了多次响应同一个事件，但使用ET模式需要更小心，因为如果你没有处理完所有的数据或没有处理该事件，那么可能会丢失数据。在使用ET模式时，我们通常会使用非阻塞IO，这样我们可以尽可能的读取或写入所有的数据，直到收到EAGAIN错误为止。
+
+# problems__forward和redirect的区别是什么？.md
+
+"forward" 和 "redirect" 是web开发中常用的两个概念，它们之间有着明显的区别：
+
+1. Forward（转发）：当服务器收到一个请求时，可以将该请求转发给另一个资源进行处理，但是客户端并不知道这个过程。在转发过程中，客户端发送的请求仍然保持原始URL，最终结果是由转发目标资源产生并返回给客户端。通常情况下，转发是在服务器内部完成的，因此客户端感知不到。
+2. Redirect（重定向）：与转发不同，重定向会告诉客户端，请求的资源已经被移动到另一个位置。服务器会返回一个特殊的响应码（如302 Found或者301 Moved Permanently），告诉客户端需要重新发送请求到新的URL。客户端接收到重定向响应后，会自动跳转到新的URL去获取资源。
+
+总结来说，转发是服务器内部处理请求并将控制权交给另一个资源，而重定向是告知客户端资源的位置已经改变并需要重新发送请求到新的URL。
+
+# problems__ip地址和mac地址的区别都有那些？.md
+
+IP 地址和 MAC 地址是两层不同的地址体系：
+
+- **层级不同**：IP 地址工作在网络层，MAC 地址工作在数据链路层。
+- **作用不同**：IP 用于逻辑寻址和跨网段路由；MAC 用于局域网内的硬件寻址。
+- **变化性不同**：IP 地址会随着网络环境变化而变化，MAC 地址通常绑定网卡，较稳定。
+- **范围不同**：IP 负责端到端传递，MAC 只在当前链路/局域网内有效。
+- **ARP 协作**：当主机知道对方 IP 但不知道 MAC 时，会通过 ARP 把 IP 解析成对应的 MAC。
+- **转发过程**：数据跨网段转发时，IP 地址基本保持不变；但每经过一跳路由器，二层封装里的源/目的 MAC 都会重新生成。
+
+简单理解：IP 负责“找到谁”，MAC 负责“这一跳怎么送到对方网卡”。
+
+# problems__keepalive是什么？如何使用？.md
+
+Keepalive是一个网络功能，用于检测两台计算机之间的连接是否仍然活跃。在TCP/IP协议中，它是指定期发送探测包以确保连接仍然存在并且对方尚未崩溃或无法到达。Keepalive可以帮助识别死亡、挂起或不再活跃的连接，并允许应用程序采取相应的行动，如重新连接或释放资源。
+
+在很多情况下，默认的TCP连接没有开启Keepalive，因为频繁地发送Keepalive探测包可能会增加不必要的网络流量。但是，在长时间打开的连接中（例如数据库连接），可能需要使用Keepalive来确保持续的服务可用性。
+
+**如何使用Keepalive：**
+
+1. 在Socket编程中设置：
+
+   Keepalive参数通常可以通过socket的选项来设置。例如，在C语言中，你可以使用`setsockopt`函数来设置TCP Keepalive：
+
+   ```c
+   int optval = 1;
+   socklen_t optlen = sizeof(optval);
+
+   // 开启Keepalive属性
+   if(setsockopt(sock, SOL_SOCKET, SO_KEEPALIVE, &optval, optlen) < 0) {
+       perror("setsockopt");
+       close(sock);
+       exit(EXIT_FAILURE);
+   }
+   ```
+
+   具体的Keepalive参数（例如探测包的发送频率和重试次数）依赖于操作系统，并且可能有不同的接口进行配置。
+
+2. 在操作系统级别设置：
+
+   对于类Unix系统，比如Linux，你可以通过修改系统文件中的以下参数来调整Keepalive的行为：
+
+   - `/proc/sys/net/ipv4/tcp_keepalive_time`：在开始发送Keepalive探测前的空闲时间。
+   - `/proc/sys/net/ipv4/tcp_keepalive_probes`：在断开连接前发送Keepalive探测的最大次数。
+   - `/proc/sys/net/ipv4/tcp_keepalive_intvl`：两个Keepalive探测之间的间隔。
+
+   **例如**：
+
+   ```
+   echo 600 > /proc/sys/net/ipv4/tcp_keepalive_time
+   echo 10 > /proc/sys/net/ipv4/tcp_keepalive_probes
+   echo 60 > /proc/sys/net/ipv4/tcp_keepalive_intvl
+   ```
+
+   这些命令将设置TCP连接在空闲10分钟后开始发送Keepalive探测，每次发送间隔1分钟，总共发送10次探测。
+
+3. 在应用程序层面设置：
+
+   很多高级语言的网络库也提供了设置Keepalive的接口。例如，在Python的`socket`模块中，可以这样设置Keepalive：
+
+   ```python
+   import socket
+
+   s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+   s.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+   ```
+
+当Keepalive被启用时，如果在设定的时间内没有数据交换，系统会自动发送Keepalive探测包。如果对端响应，则连接继续保持活跃状态；如果对端未响应（经过一定数量的重试后），则操作系统会认为连接已经失效，并通知应用程序（通过返回错误码等方式），应用程序可以据此关闭连接，清理资源，或者尝试重连等操作。
+
+# problems__selectpollepoll分别讲讲.md
+
+1. **select**：
+   - select是最早的多路复用IO模型之一，通过select系统调用可以同时监视多个文件描述符的IO事件。
+   - 在使用select时，需要将需要监视的文件描述符加入到一个文件描述符集合中，并指定监视的IO事件类型（读、写、异常等）。
+   - select会阻塞当前进程，直到有文件描述符就绪或超时等事件发生，然后返回就绪文件描述符的数量，应用程序需要遍历就绪文件描述符进行处理。
+2. **poll**：
+   - poll是对select的改进，在Linux系统中更常见，也可以同时监视多个文件描述符的IO事件。
+   - 使用poll时，将需要监视的文件描述符加入到pollfd结构体数组中，并指定监视的IO事件类型。
+   - poll调用会阻塞当前进程，直到有文件描述符就绪或超时等事件发生，然后返回就绪文件描述符的数量，应用程序需要遍历就绪文件描述符进行处理。
+3. **epoll**：
+   - epoll是Linux特有的高性能IO多路复用机制，相比select和poll具有更好的性能。
+   - epoll使用基于事件驱动的方式，通过epoll_create创建一个epoll句柄，将需要监听的文件描述符加入到epoll句柄中。
+   - 当有IO事件发生时，epoll_wait系统调用不会阻塞整个进程，而是立即返回就绪的文件描述符列表，应用程序只需处理这些就绪文件描述符。
+   - epoll还支持边缘触发（EPOLLET）和水平触发（EPOLLONESHOT）两种工作模式，可以进一步提高IO效率。
+
+# problems__select模型和poll模型epoll模型.md
+
+下面只是一个简单的介绍，比较适合面试的时候概括：
+1. **select模型**：这是最古老的一种IO多路复用模型。它的主要功能是**监视多个文件描述符**（在网络编程中，文件描述符通常代表一个socket连接），**直到其中一个文件描述符准备好进行某种IO操作（如读或写）为止。**使用select模型的**优点是跨平台性好**，基本上所有的操作系统都支持。但是它有一些明显的**缺点，如单个进程能够监视的文件描述符数量有限（通常是1024），处理效率较低**（每次调用select都需要遍历所有的文件描述符），以及它不能随着连接数的增加而线性扩展。
+2. **poll模型**：**poll模型和select模型非常相似，但它没有最大文件描述符数量的限制**。和select一样，poll每次调用时也需要遍历所有的文件描述符，同样不能随着连接数的增加而线性扩展。
+3. **epoll模型**：这是一个在Linux 2.6及以后版本中引入的新型IO多路复用模型。与select和poll相比，epoll在处理大量并发连接时更高效。它默认使用了一个事件驱动的方式（ET），**以红黑树作为底层的数据结构**，只有当某个文件描述符准备好进行IO操作时，它才会将这个文件描述符添加到就绪列表中，这避免了遍历所有文件描述符的开销。另外，epoll没有最大文件描述符数量的限制，因此它可以处理更多的并发连接。
+
+每种模型都有其优点和缺点，选择哪种模型取决于你的具体应用和环境。
+
+# problems__socket什么情况下可读？.md
+
+在网络编程中，`socket` 可读的情况通常指的是套接字上存在可供读取的数据或者在某些特定情况下表明套接字的状态发生了变化。以下是几种情况下一个套接字可能被认为是可读的：
+
+1. **数据到达**：远程发送方向本地套接字发送了数据，并且这些数据已经到达本地缓冲区，等待被读取。
+2. **连接建立**：对于非阻塞的套接字，在执行`connect()`操作后，当连接成功建立时，套接字变为可读。
+3. **监听套接字**：对于处于监听状态的服务器套接字（例如，执行了`listen()`调用的TCP服务器），当有新的连接请求到达时，套接字变为可读。
+4. **连接关闭**：当远程端点关闭了连接，即发送了FIN包，本地套接字会收到一个空的数据段，此时套接字可读以允许本地程序识别到关闭事件。
+5. **错误或中断**：如果在套接字上发生了错误或者其他异常情况，它可能也会被标记为可读，以便应用程序可以通过检查套接字的状态或者进行错误处理。
+6. **紧急数据**：对于支持OutOf-Band（OOB）数据的协议（如TCP），当有紧急数据到达时，套接字也可能被标记为可读。
+
+要检测一个套接字是否可读，可以使用多种方法，包括使用`select()`、`poll()`或`epoll()`等系统调用，在给定的一组套接字上等待事件发生，从而在非阻塞的情况下有效地管理多个连接。这些调用都可以告诉你哪些套接字是可读的，哪些是可写的，以及是否有任何异常情况需要注意。
+
+# problems__socket服务端的实现，select和epoll的区别.md
+
+#### **Socket服务端示例：**
+
+一般来讲，我们要实现socket的时候，有五个关键的的步骤：
+
+- 创建socket：使用`socket()`系统调用创建一个新的socket文件描述符。
+- 绑定socket：使用`bind()`系统调用将新创建的socket绑定到一个地址和端口上。对于服务器程序来说，这个地址通常是服务器的IP地址，端口是你希望服务器监听的端口。
+- 监听连接：使用`listen()`系统调用使得socket进入监听模式，等待客户端的连接请求。
+- 接受连接：当一个客户端连接请求到来时，可以使用`accept()`系统调用接受这个连接，并获取一个新的socket文件描述符，这个描述符代表了服务器与客户端之间的连接。
+- 读写数据：通过`read()`和`write()`或者`send()`、`recv()`系统调用在连接上读取或写入数据。
+
+以上就是一个最基本的Socket服务器的工作流程。当然，在实际的应用开发中，根据应用的需要，可能还会使用更多的系统调用和库函数，例如使用`select()`, `poll()` 或 `epoll()` 处理多个并发连接，使用线程或进程来并行处理多个连接等。
+
+
+
+一个简单的示例：
+
+```c++
+#include <iostream>
+#include <string.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+
+#define MAX_BUFFER_SIZE 4096
+#define PORT 8080
+
+int main() {
+    int server_fd, new_socket;
+    struct sockaddr_in address;
+    int opt = 1;
+    int addrlen = sizeof(address);
+    char buffer[MAX_BUFFER_SIZE] = {0};
+
+    // 创建 socket 文件描述符
+    if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
+        std::cerr << "socket failed" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    // 绑定 socket 到 localhost 的 8080 端口
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = INADDR_ANY;
+    address.sin_port = htons(PORT);
+
+    if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) < 0) {
+        std::cerr << "bind failed" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    // 使服务器开始监听，这里我们设定最大待处理连接数为 3
+    if (listen(server_fd, 3) < 0) {
+        std::cerr << "listen failed" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    while(1) {
+        std::cout << "\nWaiting for a connection..." << std::endl;
+
+        // 接受客户端连接
+        if ((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen))<0) {
+            std::cerr << "accept failed" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+
+        // 清空 buffer
+        memset(buffer, 0, MAX_BUFFER_SIZE);
+
+        // 读取客户端发送的数据
+        int valread = read(new_socket , buffer, MAX_BUFFER_SIZE);
+        std::cout << "Client says: " << buffer << std::endl;
+
+        // 向客户端发送消息
+        send(new_socket , "Hello from server" , strlen("Hello from server") , 0 );
+    }
+
+    return 0;
+}
+
+```
+
+
+
+#### select、poll和epoll的区别
+
+当有多个计算机对我们的服务端发起链接请求的时候，我们需要处理这些请求，于是我们就有了这些处理的方法，当然，他们是最常见的，面试常考的
+
+1. select:
+   - **select工作方式是轮询检查**用户所关心的**socket是否就绪**，然后进行处理。由于每次调用select都要在用户态和内核态之间进行切换，且需要重新传递数据结构，所以效率较低。
+   - **select对socket数量也有限制，默认是1024个**，因为它使用了位图的方式来存储socket信息。
+   - select无法扩展到大规模并发连接，主要是因为它采用线性遍历的方式来处理事件，同时每次调用select都需要遍历全部的文件描述符。
+2. poll：
+   - **poll没有最大文件描述符数量的限制**。在select中，由于它使用了位图的方式来存储文件描述符，所以默认的最大数目是1024。而**poll使用链表来存储**，所以理论上只受限于系统内存。
+   - poll提供了更多的事件类型，并且它的事件类型是通过结构体的方式进行传递的，这远比select的位操作要清晰很多。
+   - 当文件描述符就绪时，select需要重新设置所有文件描述符，但poll只需要关注那些就绪的文件描述符。
+3. epoll
+   - **epoll是Linux特有的I/O多路复用机制，相比于select和poll，通过使用基于红黑树的底层数据结构使得epoll更加灵活且没有最大并发限制。**
+   - epoll使用一个文件描述符管理多个事件，通过系统调用epoll_ctl注册fd，然后epoll_wait获取已经准备好的描述符。
+   - epoll中的系统调用会将所有监听的socket进行逻辑上的分组，应用程序只需要检查已经就绪的socket。这样在实际开发中，可以根据应用程序的实际需求，只监听并处理那些真正需要关注的事件，而无需像select和poll那样每次都进行全量的轮询。
+   - epoll的效率比select高，主要体现在大量并发连接的处理上。
+
+# problems__time_wait，close_wait状态产生原因，keepalive.md
+
+`TIME_WAIT`和`CLOSE_WAIT`是TCP连接处于关闭过程中的两种状态。下面分别解释它们产生的原因以及TCP Keepalive机制。
+
+**TIME_WAIT**
+
+`TIME_WAIT`状态发生在四次挥手过程的最后阶段。当一方（如客户端）收到另一方发送的具有FIN标志的TCP包，它会发送一个带有ACK标志的TCP包作为确认，并进入`TIME_WAIT`状态。之所以存在这个状态，主要有以下原因：
+
+1. 确保对方收到最后一个带有ACK标志的TCP包。如果对方没有收到这个包，它会重新发送FIN包。在`TIME_WAIT`状态期间，如果收到重发的FIN包，可以再次发送ACK包进行确认。
+2. 避免老的数据包干扰新连接。由于网络延迟等原因，已结束连接的数据包可能在网络上滞留一段时间。`TIME_WAIT`状态能够阻止新连接在短时间内使用相同的源和目标IP地址及端口号，从而避免旧数据包干扰新连接。
+
+`TIME_WAIT`状态默认持续2倍Maximum Segment Lifetime（MSL），通常为1-4分钟。经过这段时间后，连接被彻底关闭。
+
+**CLOSE_WAIT**
+
+`CLOSE_WAIT`状态出现在接收到对方发送的带有FIN标志的TCP包时。当一方（如服务器）收到请求关闭连接的FIN包后，它会发送一个带有ACK标志的TCP包进行确认，并进入`CLOSE_WAIT`状态。然后，这一方需要等待应用程序关闭套接字，之后才能发送自己的FIN包并进入`LAST_ACK`状态。
+
+如果某个连接长时间停留在`CLOSE_WAIT`状态，通常表示应用程序没有正确关闭套接字。这可能导致资源泄漏和性能问题。为解决这个问题，需要检查应用程序逻辑确保套接字被正确关闭。
+
+**TCP Keepalive**
+
+TCP Keepalive是一种可选的心跳机制，用于检测对方是否仍然活跃。当连接在一定时间内没有数据传输时，Keepalive能够确定对方是否仍然可达，从而避免因对方意外断开而导致的长时间无响应。
+
+在Keepalive启用的情况下，系统会在连接空闲期间周期性地发送探测包。如果连续发送多个探测包都没有得到ACK响应，则认为连接已断开，并将其关闭。Keepalive参数（如空闲时间、探测间隔和失败尝试次数）可以根据实际需求进行配置。**一般为八小时**
+
+需要注意的是，并非所有场景都需要启用Keepalive。在一些情况下，如HTTP长轮询或WebSockets，应用层协议自身就具备类似的心跳检测功能，此时不必启用Keepalive。
+
+# problems__为什么DNS会使用UDP而不使用TCP呢？.md
+
+DNS（域名系统）主要使用UDP（用户数据报协议）而不是TCP（传输控制协议）出于以下几个原因：
+
+1. **效率和速度**：DNS请求通常非常小，只需要一个小的查询包和响应。UDP不像TCP那样需要建立连接，这意呀着使用UDP可以更快完成查询。没有三次握手的过程，减少了通信延迟。
+2. **资源消耗较少**：UDP是无连接的，服务器不需要维持连接状态（例如，连接的建立、存活、终止等），这就减少了服务器的资源消耗。对于高频率访问的DNS服务来说，这一点尤其重要。
+3. **简单性**：UDP的协议比TCP简单得多，处理起来更为直接和轻量级。对于标准的DNS查询，这种简洁性意味着实现起来更加容易且高效。
+4. **广泛兼容**：DNS设计之初就是基于UDP的，因此大部分网络设备和系统都默认支持通过UDP进行DNS查询。这保证了它的广泛兼容性和可靠性。
+
+然而，也存在一些情况下DNS会使用TCP，比如：
+
+- **当响应数据超过512字节时**：标准的DNS通过UDP响应有大小限制（通常是512字节）。如果响应数据超过这个限制，就会使用TCP传输，因为TCP可以处理更大的数据包。
+- **区域传输（AXFR/IXFR）**：在DNS服务器之间同步数据库（区域文件）时，会使用TCP，因为这些信息通常远大于UDP所能支持的大小。
+- **DNS安全考虑（DNSSEC）**：DNSSEC提供了对DNS响应的验证，以确保它们未被篡改。由于DNSSEC增加了响应体积，因此可能需要使用TCP来传输更大的响应数据。
+
+# problems__为什么需要三次握手，两次不行？.md
+
+1. **确认双方的接收与发送能力**：
+   - 第一次握手：客户端发送一个SYN包（同步序列编号），告诉服务器它想建立连接，并且客户端能发送数据。
+   - 第二次握手：服务器回应一个SYN-ACK包，确认收到了客户端的SYN包，同时告知客户端它也愿意建立连接，并且服务器能接收数据。
+   - 第三次握手：客户端再次发送ACK包响应服务器的SYN-ACK包，这次确认后，客户端和服务器都确认双方的发送和接收能力正常。
+2. **防止失效的连接请求突然又传送到了服务器端，造成资源浪费**： 如果只有两次握手，那么只要服务器端发送了ACK包确认，就会建立连接。假设这个时候存在一个失效的连接请求延迟到达服务器，服务器处理这个错误的请求并打开连接，等待客户端发送数据，但客户端并没有实际发出这个请求或者已经不需要这个连接了，这就导致了服务器白白浪费资源等待一个不存在的发送方。
+3. **可靠性协议的要求**： TCP作为一个可靠性传输协议，不仅要保证数据的完整性，还要保证连接的稳定性。通过三次握手的流程，可以更好地抵御如同步SYN Flood Attack这样的网络攻击。
+
+# problems__什么是IP地址？可以简单介绍下吗？.md
+
+IP地址是用于在网络中唯一标识和定位设备的一种地址。IP地址是网络层协议中使用的一种地址，它分为IPv4地址和IPv6地址两种类型。
+
+1. IPv4地址：IPv4地址是32位的二进制地址，通常用点分十进制表示，如192.168.1.1。IPv4地址由四个8位字节组成，每个字节范围从0到255之间，共计可表示约42亿个不同的地址。然而，由于IPv4地址资源有限，目前已经出现了地址枯竭的问题。
+2. IPv6地址：为了解决IPv4地址资源枯竭的问题，IPv6地址被引入并取代了IPv4地址。IPv6地址是128位的地址，采用冒号分隔的八组十六进制数表示，如2001:0db8:85a3:0000:0000:8a2e:0370:7334。IPv6地址提供了极其庞大的地址空间，理论上可以支持几乎无限数量的设备连接到互联网。
+
+IP地址的作用是在互联网上唯一标识一个设备或主机，使得数据包能够准确地被发送到目的地。在TCP/IP协议中，IP地址与MAC地址结合使用，实现了设备之间的通信和数据传输。
+
+# problems__什么是mac地址？可以简单介绍下吗？.md
+
+MAC地址是网络设备在数据链路层中使用的物理地址，用于唯一标识网络设备。每个网络设备都有一个唯一的MAC地址，通常由48位二进制数表示，分为6个十六进制数对，用冒号或短横线分隔，如00:1A:2B:3C:4D:5E。
+
+MAC地址主要用于通过局域网传输数据时，帮助网络设备进行识别和寻址。与IP地址不同，MAC地址是固定的且与硬件设备绑定，不会因为设备连接到不同网络而改变。当数据包在局域网内传输时，源设备将目标设备的MAC地址作为目标地址写入数据包头部，以确保数据包能够准确地从发送者传输到接收者。
+
+需要注意的是，MAC地址是在数据链路层中使用的标识符，只在局域网范围内有效。在互联网通信中，数据包最终是通过IP地址来路由和传递的，而在局域网中则是通过MAC地址来实现设备之间的直接通信。MAC地址与IP地址结合起来，共同协助实现了数据在网络中的正确传输和交换。
+
+# problems__什么是大小端，他在计算机网络中都有什么应用呢.md
+
+大小端是指字节的排列方式或者说存储顺序，主要有大端模式和小端模式两种。
+
+1. 大端模式：数据的高字节存储在低地址中，低字节存储在高地址中。
+2. 小端模式：与大端模式相反，数据的低字节存储在低地址中，高字节存储在高地址中。
+
+大端模式和小端模式的应用：
+
+- **计算机硬件设备**：不同的硬件设备可能采用不同的端模式。例如，Intel的x86架构处理器使用小端模式，而IBM的Power Architecture处理器使用大端模式。这在硬件设计和编程时需要特别注意。
+- **网络通信**：在网络协议如TCP/IP中，数字都是以网络字节序发送的，也就是大端模式。因此，如果本地系统使用的是小端模式，在进行网络传输时就需要将其转换为大端模式，这个过程称为字节序转换。
+- **文件存储**：在一些文件格式或数据库中，也可能规定了特定的字节序。比如，Java的class文件、UTF-16文本文件等就规定了特定的字节序。
+
+# problems__什么是拆包和粘包？.md
+
+在网络通信中，拆包指的是将一个完整的数据包拆分成多个小包发送，而粘包则是将多个小包合并成一个完整的数据包接收。
+
+拆包和粘包常常出现在基于流传输协议（如TCP）的网络通信中。由于TCP是面向流的协议，发送方可以将数据按照任意大小的数据块划分为多个段发送，接收方也可能一次性接收到多个数据段，从而导致拆包和粘包问题。
+
+拆包问题会导致接收方无法正确解析数据，因为一个完整的数据包被分割成了多个部分；而粘包问题则会使接收方难以区分多个数据包的边界，造成数据解析错误。
+
+为避免拆包和粘包问题，通常可采用以下方法：
+
+1. 在数据包中增加长度字段，让接收方根据长度字段来解析数据包。
+2. 使用分隔符或者特殊标记来标识数据包的边界。
+3. 对数据包进行序列化和反序列化，确保数据的完整性和正确性。
+4. 应用层协议设计时考虑消息头和消息体的格式，规范数据的传输方式。
+
+通过以上方法，可以有效地解决拆包和粘包问题，确保数据在网络传输中能够正确解析和处理。
+
+# problems__什么是数字签名？.md
+
+数字签名是一种用于验证数字信息完整性和来源的技术，它利用密码学原理来模拟物理签名的功能。数字签名能够保证一个数字文件或者数据传输过程中没有被篡改，并且可以确认数据的发送方是可信的。
+
+数字签名通常基于非对称加密算法（如RSA、ECDSA等）实现。在非对称加密中，有两个密钥：一个私钥和一个公钥。私钥是保密的，仅被数据的发送方所持有；公钥则可以公开，任何人都可以使用它来验证签名。
+
+数字签名的创建和验证过程大致如下：
+
+1. **生成密钥对**：首先，发送方会生成一对密钥（即上述的私钥和公钥）。私钥用于签名，而公钥用于验证签名。
+2. **签名过程**：
+   - 发送方将消息（例如电子文档、软件或交易信息）通过哈希函数处理，生成一个固定长度的哈希值（摘要）。
+   - 然后，发送方使用自己的私钥对这个哈希值进行加密，生成数字签名。
+   - 这个数字签名随着原始消息一起发送给接收方。
+3. **验证过程**：
+   - 接收方收到消息和数字签名后，使用相同的哈希函数处理消息，生成一个新的哈希值。
+   - 接收方还会使用发送方的公钥对数字签名进行解密，得到一个哈希值。
+   - 如果这两个哈希值相同，则说明消息在传输过程中未被更改，签名也证明了消息确实是由持有相应私钥的发送方所发出的。
+
+数字签名的安全性依赖于私钥的保密性。如果私钥不小心泄露，任何人都可以伪造签名。因此，私钥的管理和存储需要非常谨慎。
+
+数字签名广泛用于多种场合，包括但不限于软件分发、电子邮件、电子商务和各类在线交易，以及其他需要高度安全性的通信和数据交换场景。
+
+# problems__什么是数字证书？.md
+
+数字证书是一种用于确认实体身份的电子文档，它利用公钥加密的原理来建立一个可信任的身份验证机制。数字证书通常由受信任的第三方机构，即证书颁发机构（Certificate Authority, CA）签发。它包含了证书持有者的信息以及与之关联的公钥，并且由CA用其自己的私钥进行签名。
+
+数字证书主要包含以下几个关键部分：
+
+1. **证书持有者的信息**：包括名称、组织和其他标识信息。
+2. **证书持有者的公钥**：用于在公钥基础设施（PKI）中验证持有者的私钥签名，并且用于加密信息，只有持有对应私钥的持有者才能解密。
+3. **证书颁发机构（CA）的信息**：提供了签发该证书的CA的识别信息。
+4. **有效期限**：证书的开始和结束有效日期。
+5. **证书序列号**：证书的唯一标识符。
+6. **数字签名**：CA使用其私钥产生的对上述所有信息的数字签名。
+
+数字证书的作用如下：
+
+- **认证身份**：证明一个公钥确实属于其声称的实体，比如一个人、服务器或组织。
+- **建立信任关系**：在开展电子交易或通信时，帮助建立起参与各方之间的信任关系，因为证书是由权威的CA签发的。
+- **数据加密**：提供加密通信所需的公钥，确保信息安全传输。
+- **安全通信**：在TLS/SSL协议中使用，确保网络通信如HTTPS等的安全。
+
+当你访问一个网站时，如果网站使用了SSL/TLS安全协议，你的浏览器会自动检查该网站的SSL证书是否有效，是否由受信任的CA颁发，以及是否与网站域名匹配。如果一切正常，浏览器就会建立安全连接；否则，可能显示警告信息。
+
+数字证书的有效性依赖于颁发证书的CA的可信度。如果CA遭到破坏或不再被信任，则通过该CA签发的所有证书都可能变得不可靠。因此，维护CA的安全性和可靠性是数字证书体系中至关重要的一环。
+
+# problems__什么是滑动窗口，超时重传.md
+
+**滑动窗口**
+
+滑动窗口是TCP和其他网络协议中用于控制数据传输的一种技术。它的主要目的是防止发送方发送过多数据，从而导致接收方无法处理。
+
+在TCP中，滑动窗口由发送窗口和接收窗口组成，**它们分别代表了发送方可以发出的数据量和接收方可以接受的数据量。每次数据传输后，窗口会“滑动”以适应新的数据流。**滑动窗口的大小根据网络拥塞情况、接收方处理能力等因素动态调整，从而实现TCP的流量控制和拥塞控制。
+
+**超时重传**
+
+**超时重传是TCP中用于保证数据可靠传输的一种机制。**当发送方发出一个数据包后，它会启动一个定时器等待接收方的确认。如果在定时器超时之前接收到确认，则表示数据包已成功传送；否则发送方会认为该数据包在网络中丢失，需要进行重传。
+
+超时重传能够确保即使在网络环境不理想的情况下，数据也能最终被接收到。这是TCP提供可靠传输服务的关键机制之一。然而，由于超时重传可能增加网络拥塞，所以TCP还配备了拥塞控制机制来避免过度重传。
+
+需要注意的是，**TCP的超时时间并非固定，而是根据Round-Trip Time（往返时间）动态调整**。这样可以更好地适应不同的网络条件，提高效率。
+
+# problems__介绍下Socket编程.md
+
+Socket编程是一种网络编程技术，用于在计算机网络上实现进程间的通信。通过Socket编程，程序员可以利用TCP/IP协议族中的套接字(Socket)接口，实现客户端和服务器之间的数据交换。
+
+下面是Socket编程的基本流程：
+
+1. **创建Socket**：
+   - 在编写网络应用程序时，首先需要创建一个Socket对象。Socket是通信的端点，用于标识网络上的一个地址和端口。
+2. **绑定Socket**：
+   - 服务器程序需要将Socket绑定到特定的IP地址和端口号上，以便客户端能够连接到服务器。
+3. **监听连接**：
+   - 服务器Socket调用listen()函数开始监听来自客户端的连接请求。
+4. **接受连接**：
+   - 服务器Socket调用accept()函数接受客户端的连接请求，与客户端建立连接。
+5. **发送和接收数据**：
+   - 客户端和服务器可以通过send()和recv()等函数进行数据的发送和接收操作，实现通信。
+6. **关闭连接**：
+   - 通信结束后，客户端和服务器分别调用close()函数关闭连接，释放资源。
+
+# problems__从本地读取一个文件通过网络发送到另一端，中间涉及几次拷贝.md
+
+1. **从本地读取文件**：
+   - 首先，在本地计算机上打开待发送的文件，并从文件中读取数据。
+   - 读取数据时，通常会将数据存储在内存中的缓冲区中。
+2. **发送数据到网络**：
+   - 接下来，将内存中的数据通过网络发送到目标计算机的服务器端。
+   - 在发送数据之前，可能需要将内存中的数据进行分段、封装成数据包等操作。
+3. **接收数据到目标计算机**：
+   - 目标计算机的服务器端接收到数据后，将数据存储在内存中的缓冲区中。
+4. **将数据写入目标文件**：
+   - 最后，目标计算机上的程序将接收到的数据写入到目标文件中。
+
+在这个过程中，涉及到的数据拷贝包括：
+
+- 本地文件数据到内存缓冲区的拷贝：从文件系统读取数据到内存中。
+- 内存缓冲区数据到网络发送缓冲区的拷贝：将内存中的数据复制到网络发送缓冲区。
+- 网络接收缓冲区到内存缓冲区的拷贝：从网络接收数据到内存中。
+- 内存缓冲区数据到目标文件的拷贝：将内存中的数据写入到目标文件中。
+
+# problems__列举你所知道的tcp选项.md
+
+TCP选项是TCP首部中的一部分，用来指定一些可选的协议参数或功能。除了常见的大小和头部信息，以下是一些常见的功能性TCP选项：
+
+1. **MSS**：这个选项用于指定TCP数据段的最大长度。它在建立连接时由双方协商确定，以适应网络环境并避免IP包的分片。
+2. **窗口缩放**：窗口缩放选项使得TCP可以使用更大的接收窗口，从而提高数据传输效率。它通过指定一个缩放因子，该因子用于将16位的窗口字段左移以得到实际的接收窗口大小。
+3. **时间戳）**：时间戳选项为每个TCP包添加发送和接收的时间信息，用于RTT（往返时延）测量和PAWS（防止旧分片）等功能。
+4. **选择性确认**：SACK选项允许接收方只确认收到的非连续数据段，而不是确认收到的最后一个连续数据段。这样可以减少网络拥塞情况下不必要的重传。
+5. **NOP：NOP选项没有任何操作，主要用于填充空间，确保其他选项可以在32位边界上对齐。
+6. **结束**：这个选项表示TCP选项列表的结束，通常用于当选项列表未能填充满整个TCP首部时的填充。
+
+
+# problems__同步，异步，阻塞和非阻塞的概念.md
+
+1. 同步：在同步操作中，调用者会等待操作完成后才返回。例如，在进行磁盘读写或者网络数据传输时，如果使用同步方式，那么在整个读写或者传输过程完成之前，调用者会一直等待。
+2. 异步：在异步操作中，调用者发起操作后不会立刻等待结果，而是可以继续做其他事情。当操作完成后，通过某种机制通知调用者。这样，异步操作可以帮助提高程序的并发性和响应性。
+3. 阻塞：在阻塞状态下，调用者在等待操作完成期间无法进行其他操作，必须等待当前操作完成后才能继续，它会导致程序暂停执行。
+4. 非阻塞：在非阻塞状态下，即使操作还没有完成，调用者也能立即返回，进行其他操作。如果操作未完成，调用者可能需要定期检查操作状态，或者通过某种机制接收操作完成的通知。
+
+这四种概念往往会成对出现，例如“同步阻塞”和“异步非阻塞”。一个典型的例子就是网络编程中的I/O模型，其中包括同步阻塞I/O、同步非阻塞I/O、异步阻塞I/O和异步非阻塞I/O。
+
+# problems__在TCP三次握手的时候，如果网络情况非常好且百分百不会发生拥塞，不会重传，不会有历史链接问题，那么三次握手可以改为两次吗？.md
+
+即便在网络状况非常好，且不存在拥塞、重传或历史链接问题的理想情况下，TCP三次握手通常也不能简化为两次握手。这是因为三次握手不仅仅是为了应对网络问题，它还解决了一些关键的协议设计问题，尤其是确保双方都准备好进行数据传输，并且同步序列号。
+
+
+
+TCP三次握手的核心目的在于**双向确认通信双方的接收能力**。在第二次握手时，服务器只是让客户端知道“我已经准备好接收你的数据”；而第三次握手则是客户端告诉服务器“我知道你已准备好接收我的数据，同时请注意，我也已准备好接收你的数据”。如果只有两次握手，则无法确保这种双向确认。
+
+# problems__在TCP拥塞控制中，使用了什么样的算法？.md
+
+在TCP拥塞控制中，常用的算法包括慢启动（Slow Start）、拥塞避免（Congestion Avoidance）、快重传（Fast Retransmit）和快恢复（Fast Recovery）等。这些算法帮助TCP适应网络拥塞情况，调整发送速率以保证网络的稳定性和可靠性。
+
+1. 慢启动（Slow Start）：在连接刚建立时，TCP发送方会以指数增长的速率增加发送窗口，即每收到一个确认就将发送窗口大小翻倍，直到达到拥塞窗口阈值（cwnd），从而快速填充网络的带宽。
+2. 拥塞避免（Congestion Avoidance）：一旦发送窗口大小达到拥塞窗口阈值，TCP发送方将进入拥塞避免状态，在该状态下发送窗口线性增长，即每收到一个确认就将发送窗口大小加1，以缓慢增加发送速率，避免引起网络拥塞。
+3. 快重传（Fast Retransmit）：当发送方连续收到三个相同的重复确认时，表明有报文段丢失，发送方会立即重传该丢失的报文段，而不必等待超时重传计时器。
+4. 快恢复（Fast Recovery）：在进行快重传后，TCP发送方会将拥塞窗口大小减半，并进入快恢复状态，此时发送方会继续以线性增长的速率增加发送窗口，直到重新达到拥塞窗口阈值。
+
+这些算法共同作用于TCP拥塞控制机制，通过动态调整发送窗口大小、重传机制和拥塞控制状态，使得TCP能够有效地适应网络中的拥塞情况，保证数据传输的可靠性和稳定性。
+
+# problems__对称加密和非对称加密的区别都有那些？.md
+
+#### 密钥
+
+- **对称加密**：使用同一个密钥进行加密和解密。这意味着加密方和解密方必须事先共享同一个密钥，并且保证这个密钥的安全。
+- **非对称加密**：使用一对密钥，一个公开密钥（公钥）用于加密，一个私有密钥（私钥）用于解密。公钥可以公开分享，而私钥必须保持私密。
+
+#### 加密速度
+
+- **对称加密**：通常更快，因为它使用较简单的算法来处理大量数据。
+- **非对称加密**：由于其复杂的数学运算，尤其是在处理大量数据时，比对称加密慢得多。
+
+#### 安全性
+
+- **对称加密**：虽然对称加密算法通常很难破解，但密钥的管理和分发过程可能导致安全漏洞。
+- **非对称加密**：提供了更高的安全性，因为即使公钥被公开，没有私钥也无法解密信息。不过，实现上更为复杂，需要更小心地保护私钥。
+
+#### 使用场景
+
+- **对称加密**：适用于需要快速处理大量数据的场景，如文件加密、数据库加密、网络数据传输加密等。
+- **非对称加密**：常用于安全敏感的通信中，如数字签名、SSL/TLS证书验证、安全电子邮件等。由于其速度较慢，通常用于加密少量数据或用于加密对称加密中使用的密钥。
+
+#### 典型算法
+
+- **对称加密算法**：AES（高级加密标准）、DES（数据加密标准）、3DES（三重数据加密算法）、RC4等。
+- **非对称加密算法**：RSA、ECC（椭圆曲线密码学）、Diffie-Hellman密钥交换协议、ElGamal等。
+
+# problems__局域网的IP分配策略是什么？它是怎么实现的？.md
+
+1. 静态IP分配： 在静态IP分配中，网络管理员手动为每台设备指定一个**唯一**的IP地址。这个过程通常涉及到在网络设备（如计算机、打印机等）的设置界面中手动配置IP地址、子网掩码、默认网关以及DNS服务器地址等参数。静态IP分配通常用于确保特定设备始终拥有相同的IP地址，这对于服务器、网络打印机或其他需要稳定IP地址的设备来说非常重要。
+2. 动态IP分配： 动态IP分配则是**通过动态主机配置协议自动完成的**。在这种策略下，设备启动时会向网络发送广播消息，请求IP地址信息。局域网中的DHCP服务器接收到请求后，从其配置的地址池中分配一个IP地址给该设备，并将此信息连同子网掩码、默认网关和DNS服务器地址等通过DHCP响应包发送给设备。
+
+实现动态IP分配的步骤一般包括以下几个阶段：
+
+- DHCP发现（DHCPDISCOVER）：客户端发送广播消息，寻找可用的DHCP服务器。
+- DHCP提供（DHCPOFFER）：DHCP服务器响应客户端的请求，并提供IP地址租约信息。
+- DHCP请求（DHCPREQUEST）：客户端选择接受其中一个提供的IP地址，并再次以广播的方式发送确认请求。
+- DHCP确认（DHCPACK）：DHCP服务器确认IP地址租约，并将最终确认信息和其他网络配置参数发送给客户端。
+
+优点和缺点：
+
+- 静态IP分配可以提供稳定性和确定性，便于管理和网络访问控制，但它不够灵活并且难以扩展到大量设备，尤其是当网络规模变化时，手动配置工作量很大。
+- 动态IP分配非常灵活，易于管理大量设备，特别适合设备经常变动的网络环境。然而，由于IP地址可能会变化，对于需要固定IP地址的设备（如某些服务器），动态分配可能不是最佳选择。
+
+# problems__说说你对TCP流量控制的理解？.md
+
+TCP流量控制是指通过调整发送方的发送速率，使其不会发送过多数据导致接收方无法及时处理或网络拥塞的机制。TCP流量控制主要通过滑动窗口来实现。
+
+在TCP通信中，每个TCP报文段都包含一个窗口字段，表示接收方当前能够接收的字节数。发送方根据接收方通知的窗口大小来确定发送数据的数量，如果窗口大小为0，则发送方暂停发送数据，等待接收方处理完数据后再次通知窗口大小。
+
+通过不断调整窗口大小，TCP流量控制可以实现以下目标：
+
+1. 避免发送方发送过多数据导致接收方缓冲区溢出；
+2. 避免网络拥塞，保证网络传输的稳定性和可靠性；
+3. 优化网络资源利用率，提高数据传输效率。
+
+TCP流量控制是TCP协议的重要特性之一，它能够保证数据在网络传输过程中按序、可靠地到达目的地，并且有效地调节发送端和接收端之间的数据交换速率，从而保证了网络通信的质量和性能。
+
+# problems__说说你对TCP滑动窗口的理解？.md
+
+TCP滑动窗口是一种流量控制和拥塞控制的机制，用于优化数据传输的效率。在TCP通信中，发送方和接收方之间维护一个窗口大小，表示接收方可以接收的数据量。
+
+发送方根据接收方通知的窗口大小来确定发送数据的数量，发送数据后等待接收方确认，确认后再发送下一批数据。如果接收方准备好接收更多数据，它会增大窗口大小，如果接收方暂时无法处理更多数据，它会减小窗口大小或者发送窗口关闭通知。
+
+通过调整滑动窗口大小，TCP可以实现有效的流量控制，避免发送过多数据导致网络拥塞，同时也可以提高数据传输的效率，使数据在网络上能够快速、稳定地传输。
+
+# problems__请你介绍一下http1.0.md
+
+#### 简单请求-响应模型
+
+HTTP/1.0 遵循一种简单的请求-响应模型。客户端（如 Web 浏览器）向服务器发送一个 HTTP 请求，然后服务器返回一个响应。请求和响应都包含起始行、头部字段和可选的消息主体。
+
+#### 无状态协议
+
+与所有 HTTP 版本一样，HTTP/1.0 是一种无状态协议。这意味着每个请求都是独立的，服务器不会保留之前请求的任何状态信息。虽然这简化了服务器的设计，但也限制了某些应用场景，比如用户身份验证和会话管理。
+
+#### 连接的非持久性
+
+在 HTTP/1.0 中，默认情况下每个请求/响应对都需要一个新的 TCP 连接。这意味着客户端和服务器之间的每次交互都要经历建立连接的开销，包括三次握手延迟和增加的资源消耗。这种非持久连接导致了所谓的 "C10k 问题"（同时处理成千上万的连接）以及性能问题，尤其是在加载资源多的网页时。
+
+#### 方法、状态码和头部
+
+HTTP/1.0 引入了多种请求方法，例如 GET、POST 和 HEAD，使得客户端可以执行不同类型的操作，比如获取资源、提交表单数据等。它还定义了一系列状态码，让服务器能够告知客户端请求是否成功，或者如果失败了是因为什么原因。此外，通过请求和响应头部，客户端和服务器可以交换附加信息，比如内容类型、缓存策略等。
+
+#### 缺点
+
+由于非持久连接和无状态的特性，HTTP/1.0 效率相对较低。每个资源的请求都需要单独的 TCP 连接，增加了传输延迟。此外，HTTP/1.0 不支持像 Host 头这样的现代 HTTP 功能，这意味着每个 IP 地址只能托管一个网站，限制了虚拟主机的使用。
+
+# problems__请你介绍一下http1.1.md
+
+HTTP/1.1相比其前身HTTP/1.0引入了许多改进和新特性，旨在提高效率、减少延迟，并更有效地利用网络资源。主要特性包括：
+
+1. **持久连接**：HTTP/1.1默认启用持久连接（也称为连接复用），这意味着在一个TCP连接上可以传输多个HTTP请求和响应，而不需要为每个请求/响应对打开一个新的连接，从而减少了连接建立的开销和延迟。
+2. **管道化**：HTTP/1.1支持请求的管道化，允许客户端在收到前一个响应之前发送多个请求。这可以进一步减少通信延迟，尽管在实践中由于各种原因（如服务器和代理不完全支持等），这一特性并未广泛使用。
+3. **分块传输编码**：这允许服务器动态生成内容并在完全生成内容之前开始发送响应，从而减少了首字节的延迟时间。
+4. **缓存控制**：HTTP/1.1引入了更加复杂和强大的缓存控制机制，包括通过`Cache-Control`头部字段进行精细控制，这有助于减少客户端重复请求同一资源的情况，降低服务器负载以及减少网络拥塞。
+5. **内容协商**：允许客户端和服务器就响应的最佳格式进行交流。例如，根据Accept语言头部信息选择合适的语言版本的资源。
+6. **错误处理与状态代码扩展**：HTTP/1.1增加了许多新的状态代码，为错误处理提供了更多的上下文信息。
+
+# problems__请你介绍一下http2.0.md
+
+HTTP/2引入了若干关键改进来优化数据传输，提高效率和速度，其中包括：
+
+1. **二进制帧层**：HTTP/2采用二进制格式传输数据，而不是HTTP/1.x的文本格式。这种改变使得请求和响应可以被分割成更小、易于管理的帧，这些帧隶属于一个流，每个流有一个唯一的标识符。二进制协议也更加高效，易于解析和减少错误。
+2. **多路复用（Multiplexing）**：在HTTP/1.x中，每个请求都需要一个单独的TCP连接，或者通过管道化来尝试解决这个问题，但存在队头阻塞问题。HTTP/2允许在单个连接上同时发送多个请求和响应，无需等待前一个传输完成，大大减少了延迟并提高了页面加载速度。
+3. **服务器推送（Server Push）**：HTTP/2允许服务器在客户端需要之前就主动将资源推送给客户端，这样可以进一步减少等待时间，提高性能。例如，当客户端请求一个HTML文件时，服务器可以预测客户端接下来会请求的CSS文件和JavaScript文件，并主动发送这些资源。
+4. **头部压缩**：HTTP/2使用HPACK压缩格式减小了头部大小。由于HTTP/1.x的头部数据每次请求几乎都是重复的，因此这种压缩显著减少了传输的数据量。
+5. **优先级和流控制**：HTTP/2允许设置数据流、消息和帧的优先级，使得管理数据流的顺序和资源分配更加高效。此外，流控制机制防止任何单个数据流消耗所有可用带宽。
+
+# problems__请你介绍一下http3.0.md
+
+HTTP/3的关键改进包括：
+
+1. **减少连接建立时间**：通过将传输层安全性（TLS）握手直接集成到连接建立过程中，HTTP/3可以减少建立新连接所需的往返次数，特别是在已经与服务器有过交互的客户端再次连接时。
+2. **避免队头阻塞**：HTTP/3通过使用QUIC协议，使得即便某一数据包丢失，也不会阻塞其它数据包的处理和传输，从而避免了HTTP/2在TCP基础上存在的队头阻塞问题。
+3. **连接迁移**：QUIC还支持连接ID的概念，这允许即便底层IP地址或端口发生变化（例如用户的移动设备从Wi-Fi切换到4G网络），连接也能够继续保持，这对于移动环境下的性能和稳定性是一个重大改进。
+4. **内置加密**：QUIC内置了加密支持，TLS 1.3是其安全基础，这使得所有基于HTTP/3的通信默认都是加密的，增强了数据传输的安全性。
+5. **流优先级和控制**：与HTTP/2类似，HTTP/3支持流的概念，但通过QUIC提供了更有效的流优先级设置和流量控制机制，允许更精细地管理数据流和资源分配。
+
+# problems__针对于ipv4地址不够用的情况，我们是如何解决的？.md
+
+针对IPv4地址不够用的情况，互联网工程任务组（IETF）提出了IPv6协议作为解决方案。IPv6是IPv4的后继版本，采用128位地址长度，远远超过IPv4的32位地址长度，为互联网提供了更加广阔和充足的地址空间。
+
+IPv6相较于IPv4有以下优势和特点：
+
+1. 更大的地址空间：IPv6采用128位地址长度，可以提供约340亿亿亿亿个地址，远超过IPv4的42亿个地址，几乎可以满足未来无限连接设备的需求。
+2. 更好的安全性：IPv6在设计上考虑了安全性，包括内置IPSec支持、地址隐私功能等，提高了网络通信的安全性。
+3. 简化的头部格式：IPv6简化了数据包头部的格式，减少了路由器在处理数据包时的负担，提高了网络传输效率。
+4. 支持多播和任播：IPv6原生支持多播和任播，能够更好地满足不同应用场景下的需求。
+
+目前，IPv6已经逐渐被部署并广泛应用于互联网中，以解决IPv4地址枯竭问题。大多数现代操作系统和网络设备都已经支持IPv6，各大互联网服务提供商也在逐步推动IPv6的部署和普及，以确保互联网能够持续发展并支持更多的设备连接。
+
+# problems__长连接和短连接.md
+
+在计算机网络和通信中，"长连接"和"短连接"是指客户端和服务器之间的连接持续时间的两种不同模式。
+
+**短连接**:
+
+- 每次通信都需要建立一个新的连接。
+- 客户端向服务器发送请求后，服务器响应请求，数据发送完成之后，立即断开连接。
+- 短连接适用于请求-响应模式，常见于HTTP/1.0协议的交互。
+- 短连接由于频繁地进行TCP三次握手和四次挥手过程，对于服务器资源消耗较大，但可以较好地释放资源，适用于轻量级的、偶尔的数据交换。
+- 短连接通常用于处理瞬间高并发的场景。
+
+**长连接**:
+
+- 一旦建立，连接会保持开放，直到客户端或服务器明确地关闭它。
+- 客户端与服务器建立连接后，可以进行多次的数据传输，直到任一方主动关闭连接。
+- 长连接减少了因为建立和关闭连接而产生的额外开销，适用于需要频繁交换数据的应用。
+- 在HTTP/1.1协议中，默认使用长连接，通过`Connection: keep-alive`头部实现。
+- 长连接适用于需要维持持久状态或频繁通信的场景，如数据库连接、文件传输、实时通信等。
+- 心跳机制常用于维护长连接，确保连接的活性，并能及时发现异常断开。
+
+**如何选择**:
+
+- 应用场景：如果客户端与服务器之间的交云频繁且持续，长连接可以减少因建立和关闭连接而产生的开销。如果交互是偶尔的，可能短连接更合适。
+- 资源消耗：长连接可以减少CPU和网络的消耗，但会占用更多的内存资源，因为连接需要保持状态。短连接会增加
