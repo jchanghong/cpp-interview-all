@@ -10,6 +10,8 @@
 6. [数据结构与算法](#数据结构与算法)
 7. [算法刷题题解](#算法刷题题解)
 8. [设计模式与项目实践](#设计模式与项目实践)
+9. [系统设计与分布式](#系统设计与分布式)
+10. [AI与LLM面试追问](#ai与llm面试追问)
 
 ---
 
@@ -5813,6 +5815,52 @@ int main( void )
 
 ---
 
+# problems__如何在main函数前执行代码？.md
+
+### 如何在 main 函数前执行代码？
+
+**方法一：全局对象的构造函数（C++ 方式）**
+
+```cpp
+#include <iostream>
+struct BeforeMain {
+    BeforeMain() { std::cout << "before main\n"; }
+};
+BeforeMain g_before;  // 全局对象，构造在 main 之前执行
+
+int main() {
+    std::cout << "main\n";
+}
+```
+
+**方法二：`__attribute__((constructor))`（GCC/Clang）**
+
+```c
+#include <stdio.h>
+__attribute__((constructor)) void before_main() {
+    printf("before main\n");
+}
+int main() { printf("main\n"); }
+```
+
+**方法三：MSVC `#pragma init_seg`**
+
+```cpp
+#pragma init_seg(lib)
+struct BeforeMain { BeforeMain() { /* 在 main 前执行 */ } };
+BeforeMain g_before;
+```
+
+**面试标准答案：**
+
+> 在 C++ 中可以通过全局对象的构造函数在 main 前执行代码，因为全局/静态对象的初始化发生在 `main()` 被调用之前（在程序的静态初始化阶段）。GCC/Clang 还支持 `__attribute__((constructor))` 标记函数在 main 前自动执行。MSVC 可以使用 `#pragma init_seg` 控制初始化顺序。
+>
+> **注意**：不同编译单元的全局对象初始化顺序是未定义的，应避免依赖初始化顺序。执行顺序：全局对象构造 → main → 全局对象析构。
+>
+> **实际应用场景**：注册插件、初始化日志系统、加载配置文件等初始化操作。
+
+---
+
 # 进阶C++与标准库
 
 > 说明：当前目录仅保留 README.md，正文为 CAS / 智能指针 / STL / OOP 等历史文档合并后的知识点汇总；若出现旧文件名式标题，表示章节来源，不代表当前目录存在对应文件。
@@ -5885,7 +5933,118 @@ int main( void )
 - **范围库增强**：`views::enumerate`、`views::zip`、`views::adjacent`
 - **`std::optional` 与范围交互增强**
 
-# Interview__CAS__README.md
+---
+
+# problems__noexcept详解.md
+
+### noexcept 是什么？有什么作用？
+
+`noexcept` 是 C++11 引入的关键字，有两种用法：
+
+1. **`noexcept` 说明符**：声明函数不会抛出异常
+2. **`noexcept` 运算符**：编译期检查表达式是否可能抛出异常
+
+```cpp
+void func1() noexcept;            // 承诺不抛异常
+void func2() noexcept(true);      // 等价
+void func3() noexcept(false);     // 可能抛异常
+void func4() noexcept(noexcept(T()));  // 条件 noexcept
+```
+
+**为什么重要？**
+
+1. **移动优化**：`std::vector` 扩容时，如果元素的移动构造函数是 `noexcept`，会使用移动而非拷贝（`std::move_if_noexcept`）
+2. **编译器优化**：noexcept 允许编译器生成更高效的代码（跳过异常处理栈展开逻辑）
+3. **接口承诺**：明确表达函数不会抛异常，调用者可以简化错误处理
+
+**何时使用？**
+
+> 移动构造函数、移动赋值运算符、swap 函数、析构函数应尽可能标记为 `noexcept`。如果函数内部不抛异常且不调用可能抛异常的函数，考虑标记 `noexcept`。
+
+```cpp
+class MyClass {
+public:
+    MyClass(MyClass&& other) noexcept : data_(other.data_) {  // ✅ 移动构造 noexcept
+        other.data_ = nullptr;
+    }
+    ~MyClass() noexcept { delete[] data_; }  // ✅ 析构默认 noexcept
+};
+```
+
+---
+
+# problems__thread_local详解.md
+
+### thread_local 是什么？和 static 有什么区别？
+
+`thread_local` 是 C++11 引入的存储期关键字，**每个线程拥有变量的独立实例**。生命周期等于线程的生命周期。
+
+| 特性 | `static` | `thread_local` |
+|------|---------|---------------|
+| 实例数 | 整个程序 1 份 | 每个线程 1 份 |
+| 初始化 | 首次执行到时 | 每个线程首次访问时 |
+| 可见性 | 遵循声明作用域 | 每个线程独立可见 |
+| 销毁 | 程序结束时 | 线程退出时 |
+
+```cpp
+thread_local int counter = 0;  // 每个线程有自己的 counter
+
+void increment() {
+    counter++;  // 线程安全，操作的是本线程的副本
+    std::cout << std::this_thread::get_id() << ": " << counter << "\n";
+}
+```
+
+**典型使用场景：**
+- 替代全局 `errno`（每个线程独立错误码）
+- 线程级缓存（避免频繁加锁）
+- 随机数生成器（每个线程维护独立状态）
+- 数据库连接池的线程局部连接
+
+**面试标准答案：**
+
+> `thread_local` 使得变量在每个线程中有独立副本，生命周期与线程一致。与 `static` 的关键区别：`static` 全局共享一份，多线程访问需要同步；`thread_local` 天然线程安全，每个线程操作自己的副本。底层实现通常通过 TLS（Thread Local Storage）机制，在 TLS 段分配空间。
+
+---
+
+# problems__emplace_back和push_back有什么区别？.md
+
+### emplace_back 和 push_back 有什么区别？
+
+| 特性 | `push_back` | `emplace_back` |
+|------|------------|---------------|
+| 参数 | 接受已有对象（触发拷贝/移动） | 接受构造函数参数（原地构造） |
+| 临时对象 | 会产生临时对象 | 不产生临时对象 |
+| 性能 | 多一次移动/拷贝 | 直接构造，更高效 |
+| C++版本 | C++98 | C++11 |
+
+```cpp
+struct Point {
+    int x, y;
+    Point(int x, int y) : x(x), y(y) {
+        std::cout << "Point(" << x << "," << y << ")\n";
+    }
+    Point(const Point& other) : x(other.x), y(other.y) {
+        std::cout << "copy\n";
+    }
+};
+
+std::vector<Point> v;
+
+// push_back：先构造临时对象，再拷贝/移动到容器
+v.push_back(Point(1, 2));  // 输出: Point(1,2) + copy
+
+// emplace_back：直接在容器内存中构造，无临时对象
+v.emplace_back(1, 2);      // 输出: Point(1,2)
+```
+
+**面试标准答案：**
+
+> `emplace_back` 直接在容器内存中原地构造对象，接受构造参数而非已构造对象，避免了临时对象的创建和额外的拷贝/移动。`push_back` 需要传入已构造的对象或临时对象。
+>
+> **建议**：构造新元素时优先用 `emplace_back`；传递已有对象时用 `push_back`。注意：`emplace_back` 不会阻止隐式类型转换，可能导致意外行为（如 `v.emplace_back(42)` 对 `vector<string>` 是合法的但可能不是你想要的结果）。
+
+---
 
 ## CAS
 
@@ -12260,10 +12419,115 @@ bigint  8个字节
 * 查看机器 内存和CPU
 * 在看日志
 
+---
+
+# problems__cacheline和伪共享（false-sharing）.md
+
+### 什么是 cacheline？什么是伪共享？
+
+**cacheline（缓存行）** 是 CPU 缓存的最小读写单位，通常为 **64 字节**（x86-64）。CPU 每次从内存加载一整行到 L1/L2/L3 缓存。
+
+**伪共享（false sharing）** 是多线程编程中的隐蔽性能杀手：两个线程修改**不同的变量**，但这些变量恰好落在**同一个 cacheline** 中，导致 CPU 间频繁的缓存一致性协议（MESI）通信。
+
+```
+线程 A 写 var_a  ←→  线程 B 写 var_b
+       ↓                      ↓
+    [var_a | var_b | ... ] ← 同一个 64 字节 cacheline！
+```
+
+每次任一线程写入，都会使另一个线程的缓存行失效（invalidate），迫使对方重新加载——尽管它们操作的是**不同变量**。
+
+**影响有多大？** 伪共享可能使并行性能退化到甚至不如单线程。在高频写入场景（无锁队列、线程本地计数器）中尤为明显。
+
+### 如何避免伪共享？
+
+```cpp
+#include <new>  // std::hardware_destructive_interference_size (C++17)
+
+// C++17 方式：利用硬件干扰大小进行填充
+struct alignas(std::hardware_destructive_interference_size) Counter {
+    std::atomic<int64_t> value{0};
+};
+
+// 手动方式：填充至 64 字节
+struct Counter {
+    alignas(64) std::atomic<int64_t> value{0};
+    // 确保每个 Counter 独占一个 cacheline
+};
+
+Counter counters[MAX_THREADS];  // 每个线程用不同下标
+```
+
+**面试标准答案：**
+
+> cacheline 是 CPU 缓存的最小读写单位（通常 64 字节）。伪共享是指多个线程修改的不同变量位于同一 cacheline，导致缓存一致性协议频繁失效，性能严重退化。
+>
+> 避免方法：
+> 1. 用 `alignas(64)` 或 `std::hardware_destructive_interference_size`（C++17）让变量独占 cacheline
+> 2. 每个线程操作独立的 cacheline 对齐的数据（线程本地存储或填充 padding）
+> 3. 将高频写入的共享数据分散到不同 cacheline
 
 ---
 
-# 计算机网络
+# problems__无锁队列原理.md
+
+### 无锁队列如何实现？ABA 问题是什么？
+
+无锁队列基于 **CAS（Compare-And-Swap）** 原子操作，不使用互斥锁即可在多线程间安全传递数据。
+
+**简单 SPSC 无锁队列（单生产者单消费者）：**
+
+```cpp
+template<typename T, size_t N>
+class LockFreeQueue {
+    std::array<T, N> buffer_;
+    std::atomic<size_t> head_{0};  // 消费者下标
+    std::atomic<size_t> tail_{0};  // 生产者下标
+
+public:
+    bool push(const T& item) {
+        size_t t = tail_.load(std::memory_order_relaxed);
+        size_t next = (t + 1) % N;
+        if (next == head_.load(std::memory_order_acquire))
+            return false;  // 队列满
+        buffer_[t] = item;
+        tail_.store(next, std::memory_order_release);
+        return true;
+    }
+    bool pop(T& item) {
+        size_t h = head_.load(std::memory_order_relaxed);
+        if (h == tail_.load(std::memory_order_acquire))
+            return false;  // 队列空
+        item = buffer_[h];
+        head_.store((h + 1) % N, std::memory_order_release);
+        return true;
+    }
+};
+```
+
+**ABA 问题：**
+
+线程 A 读到值 X，被调度走；线程 B 将 X 改为 Y，再改回 X；线程 A 回来执行 CAS 时，发现值仍然是 X，CAS 成功——但实际上状态已变化。
+
+```cpp
+// ABA 问题示意（使用带 tag 的指针避免）
+// 解决：使用 double-width CAS（如 128 位 CAS）
+struct TaggedPtr {
+    Node* ptr;
+    uintptr_t tag;  // 每次修改递增，防止 ABA
+};
+std::atomic<TaggedPtr> head_;  // 需平台支持 128 位 CAS
+```
+
+**面试标准答案：**
+
+> 无锁队列通过 CAS 原子操作实现入队/出队，避免互斥锁的开销。MPSC（多生产者单消费者）需要额外处理多个生产者竞争 tail 的问题。
+>
+> ABA 问题：线程在 CAS 期间，目标值可能被其他线程改为其他值又改回原值，导致 CAS 误判"未变化"。解决方案是使用带版本号的指针（tagged pointer）或 double-width CAS。
+>
+> 生产环境推荐使用成熟的无锁库（如 `boost::lockfree::queue`、`folly::MPMCQueue`）而非手写。
+
+---
 
 # Interview__Network__README.md
 
@@ -14441,6 +14705,89 @@ Redis集群是用于横向扩展和提高Redis性能的分布式解决方案。R
 **乐观锁**：乐观锁假定冲突发生的几率很小，因此在数据操作前并不会加锁，但会在进行更新等操作时检查是否有其他线程对数据进行了修改。如果有，则操作失败；没有，则操作成功。乐观锁一般适用于读多写少的场景。
 
 **悲观锁**：悲观锁假设冲突发生的几率很大，所以在每次读写数据前都会先加锁。这种方式虽然保证了数据的一致性，但也可能造成资源的浪费。悲观锁主要通过数据库提供的锁机制实现，例如行级锁、表级锁等。
+
+---
+
+# problems__MySQL-online-DDL详解.md
+
+### MySQL online DDL 是什么？有哪些算法？
+
+MySQL 5.6+ 支持 online DDL，允许在修改表结构时**不阻塞 DML 操作**（INSERT/UPDATE/DELETE）。通过 `ALGORITHM` 子句指定实现方式：
+
+| 算法 | 原理 | 是否阻塞读写 | 适用场景 |
+|------|------|-------------|---------|
+| **INSTANT** (8.0+) | 仅修改数据字典元数据 | 不阻塞 | 添加列、修改默认值 |
+| **INPLACE** | 在原表上重建（不复制全表） | 不阻塞（短暂元数据锁） | 添加/删除索引、修改列类型 |
+| **COPY** | 创建新表 + 复制数据 + 重命名 | 阻塞写入 | 不支持 INPLACE 的操作 |
+
+```sql
+-- 查看 DDL 是否支持 online
+ALTER TABLE t ADD COLUMN c INT, ALGORITHM=INPLACE, LOCK=NONE;
+-- LOCK=NONE: 不阻塞读写; LOCK=SHARED: 允许读阻塞写; LOCK=DEFAULT
+```
+
+**并发控制三阶段：**
+1. **Prepare**：获取元数据锁（MDL），短暂阻塞
+2. **Execute**：执行 DDL（日志记录变更，DML 可正常进行）
+3. **Commit**：重放日志，再次获取 MDL，提交元数据变更
+
+**面试标准答案：**
+
+> MySQL online DDL 通过 `ALGORITHM` 和 `LOCK` 子句控制在修改表结构时对 DML 的影响。INSTANT（8.0+）最快，仅修改数据字典；INPLACE 在原表上操作，不阻塞读写；COPY 需要全表复制，阻塞写入。原理是在 DDL 期间将 DML 操作记录到日志，最后重放到新表中。
+
+---
+
+# problems__MySQL-EXPLAIN执行计划详解.md
+
+### MySQL EXPLAIN 执行计划怎么看？如何判断索引是否合理？
+
+`EXPLAIN SELECT ...` 返回查询的执行计划，关键字段：
+
+| 字段 | 含义 | 优化信号 |
+|------|------|---------|
+| **id** | 查询序号，越大越先执行 | 多个 id 表示有子查询或 UNION |
+| **select_type** | SIMPLE / PRIMARY / SUBQUERY / DERIVED 等 | DERIVED 表示临时表，可优化 |
+| **type** | **访问类型（最重要！）** | 从好到差：system > const > eq_ref > ref > range > index > ALL |
+| **key** | 实际使用的索引 | 与 possible_keys 对比，确认走了期望索引 |
+| **rows** | 预估扫描行数 | 越小越好，与总行数比例决定效率 |
+| **Extra** | 额外信息 | Using filesort / Using temporary 是坏信号 |
+
+**type 字段详解（从优到劣）：**
+
+| type | 含义 | 示例 |
+|------|------|------|
+| **const** | 主键/唯一索引等值匹配，最多一行 | `WHERE id = 1` |
+| **eq_ref** | JOIN 时用主键/唯一索引关联 | `ON a.pk = b.fk` |
+| **ref** | 非唯一索引等值匹配 | `WHERE name = 'Alice'` |
+| **range** | 索引范围扫描 | `WHERE age BETWEEN 18 AND 30` |
+| **index** | 全索引扫描（比 ALL 好，但仍慢） | 覆盖索引但无过滤 |
+| **ALL** | 全表扫描（最差，必须优化） | 无可用索引 |
+
+**Extra 关键信息：**
+
+```
+Using index          → 覆盖索引，不需要回表 ✅
+Using where          → 在存储引擎层过滤 ✅
+Using index condition → 索引条件下推（ICP） ✅
+Using filesort       → 需要额外排序，考虑加索引 ⚠️
+Using temporary      → 使用临时表，性能差 ❌
+Using join buffer    → JOIN 未走索引，需优化 ❌
+```
+
+**实战示例：**
+
+```sql
+EXPLAIN SELECT * FROM orders WHERE user_id = 100 AND status = 'paid' ORDER BY create_time DESC;
+
+-- 如果 type=ALL，rows=1000000：没有用到索引，需在 (user_id, status) 上建联合索引
+-- 如果 Extra 含 "Using filesort"：排序列 create_time 未走索引，考虑加入联合索引
+```
+
+**面试标准答案：**
+
+> EXPLAIN 的核心是 **type** 列（访问方式）和 **Extra** 列（附加操作）。type 从好到差：const > eq_ref > ref > range > index > ALL。看到 ALL 全表扫描必须优化，出现 Using filesort / Using temporary 需要检查索引是否可以覆盖排序和分组操作。rows 列是估算扫描行数，与返回行数的比值越大说明索引选择性越差。
+>
+> **判断索引是否合理**：如果 type 是 ref 或以上、key 走了预期的索引、Extra 无 filesort/temporary，通常是合理的。
 
 ---
 
@@ -26577,3 +26924,299 @@ ctest --test-dir build --output-on-failure
 
 
 > "面试鸭"React+Node.js 项目文档已移除（与 C++ 面试主题无关）。
+
+---
+
+# 系统设计与分布式
+
+> 2025-2026 年社招高频新增：短链系统、限流组件、断点续传等系统设计题频繁出现。分布式方向常见 Raft 共识、LSM Tree、分布式事务。
+
+# problems__短链系统设计.md
+
+### 短链系统怎么设计？（写入百万、查询千万、10ms 响应）
+
+**核心功能：** 长 URL → 短码 → 重定向到原 URL。
+
+**短码生成：**
+1. **哈希法**：对长 URL 做 MD5/SHA1，取前 N 位 → 需要处理哈希冲突
+2. **自增 ID + Base62**：用发号器生成唯一 ID，转 62 进制 → 短码可反向解析
+3. **预生成池**：提前生成一批短码放入池中，服务直接取用
+
+**关键设计点：**
+
+| 组件 | 方案 |
+|------|------|
+| 发号器 | Snowflake / 数据库自增 / Redis INCR（需持久化） |
+| 存储 | MySQL（ID → 长 URL 映射）+ Redis 缓存热数据 |
+| 重定向 | 查询 Redis → 命中返回 302；miss 查 MySQL → 回写 Redis |
+| 高并发 | 读：Redis 集群；写：消息队列削峰 + 异步落库 |
+| 短码长度 | 7 位 Base62 = 62^7 ≈ 3.5万亿，足够 |
+
+**面试标准答案：**
+
+> 短链系统核心是短码生成和重定向。短码用自增 ID + Base62 编码，保证唯一且无冲突。存储用 MySQL 做持久化，Redis 做热数据缓存（LRU 淘汰）。读链路：用户访问短链 → 查 Redis → 命中返回 302 重定向 → miss 查 MySQL 回写 Redis。写链路：长链转短链 → 查是否已存在 → 不存在则发号生成短码 → 写 MySQL + Redis。
+
+---
+
+# problems__限流组件设计.md
+
+### 如何设计限流组件？令牌桶和滑动窗口有什么区别？
+
+**常见限流算法对比：**
+
+| 算法 | 原理 | 优点 | 缺点 |
+|------|------|------|------|
+| **固定窗口** | 每个时间窗口计数，超阈值拒绝 | 实现简单 | 临界突刺问题 |
+| **滑动窗口** | 记录每个请求时间戳，滑动统计 | 精确控制 | 内存开销大（需维护时间戳列表） |
+| **漏桶** | 请求先进桶，以固定速率流出 | 恒定输出速率 | 无法应对突发流量 |
+| **令牌桶** | 以固定速率放入令牌，请求需获取令牌 | **允许突发流量** | 实现稍复杂 |
+
+**令牌桶实现（最常用）：**
+
+```cpp
+class TokenBucket {
+    std::atomic<int64_t> tokens_;
+    int64_t capacity_;     // 桶容量（最大突发）
+    int64_t rate_;         // 每秒生成令牌数
+    std::chrono::steady_clock::time_point last_refill_;
+
+public:
+    bool try_consume() {
+        auto now = std::chrono::steady_clock::now();
+        auto elapsed = std::chrono::duration<double>(now - last_refill_).count();
+        int64_t new_tokens = std::min(capacity_,
+            tokens_.load() + static_cast<int64_t>(elapsed * rate_));
+        tokens_.store(new_tokens);
+        last_refill_ = now;
+
+        int64_t expected = tokens_.load();
+        while (expected > 0) {
+            if (tokens_.compare_exchange_weak(expected, expected - 1))
+                return true;
+        }
+        return false;  // 限流
+    }
+};
+```
+
+**面试标准答案：**
+
+> 令牌桶是最常用的限流算法：以恒定速率生成令牌，请求消费令牌，桶满后丢弃多余令牌。特点：允许短期突发（桶容量内），长期限制速率。Redis 实现方式：用 Lua 脚本原子执行 `INCR + EXPIRE` 做固定窗口，或用 sorted set 做滑动窗口。生产环境推荐直接使用成熟的限流库如 Sentinel、RateLimiter。
+
+---
+
+# problems__海量数据TopK统计.md
+
+### 10 亿个 IP，找出访问次数 Top 10 的 IP（内存有限）
+
+**方案一：Hash 分桶 + 堆（标准解法）**
+
+```
+1. Hash 分桶：将 10 亿 IP hash(id) % 1000 → 1000 个小文件
+   确保相同 IP 落在同一文件
+2. 每个文件统计：HashMap<IP, count> 读入内存
+3. 每个文件 Top 10：维护 10 大小的小顶堆
+4. 1000 个文件的 Top 10 合并 → 再取最终 Top 10
+```
+
+**方案二：MapReduce**
+
+Map 阶段：将 IP 作为 key，计为 1；Reduce 阶段：合并相同 IP 计数，最终排序取 Top 10。
+
+**面试标准答案：**
+
+> 海量数据 TopK 的核心思路是**分治 + 堆**。通过 Hash 分桶将数据切成能放进内存的小块，每个块内用 HashMap 统计 + 小顶堆求 TopK，最后合并所有块的 TopK 取最终结果。时间复杂度 O(N*logK)，空间复杂度取决于分桶大小。
+
+---
+
+# problems__断点续传设计.md
+
+### 断点续传怎么设计？CRC/MD5 校验有什么用？
+
+**核心设计：**
+
+```
+1. 客户端请求上传 → 服务端返回 upload_id
+2. 客户端将文件分片（chunk），每片带 index + md5
+3. 上传分片 → 服务端记录分片状态：{upload_id: {total_chunks, received: [0,1,2,...]}}
+4. 中断恢复 → 客户端查询 received 列表 → 跳过已完成分片 → 续传剩余
+5. 全部分片完成后 → 服务端合并分片 → 校验完整文件 MD5
+```
+
+**关键点：**
+- **分片大小**：太小请求多 → 1MB 左右合适
+- **校验**：每个分片 CRC 校验 → 防传输错误；全文件 MD5 → 防篡改
+- **分片顺序**：乱序分片编号，服务端按 index 拼接
+- **并发上传**：多个分片并发上传 → 用线程池或异步 IO
+
+**面试标准答案：**
+
+> 断点续传通过分片上传 + 状态追踪实现。客户端查询已上传分片列表，跳过已完成的分片续传剩余部分。每个分片带 CRC 校验防止传输错误，最终合并后用 MD5 验证完整文件。服务端维护 `{upload_id, chunk_status[]}` 的状态映射，支持查询和恢复。
+
+---
+
+# problems__Raft共识算法.md
+
+### Raft 共识算法原理？选主和日志复制怎么实现？
+
+Raft 将共识问题分解为三个子问题：**选主、日志复制、安全性**。
+
+**选主（Leader Election）：**
+
+```
+1. 每个节点有三种状态：Leader / Follower / Candidate
+2. Follower 在选举超时（150-300ms 随机）后变为 Candidate，term++
+3. Candidate 向其他节点发送 RequestVote，获得多数票即当选 Leader
+4. Leader 定期发送心跳（AppendEntries）维持地位
+5. 如果两个 Candidate 平分选票 → 重新选举（随机超时避免活锁）
+```
+
+**日志复制（Log Replication）：**
+
+```
+1. 客户端请求 → Leader 将操作追加到本地日志
+2. Leader 发送 AppendEntries 给所有 Follower
+3. 多数 Follower 确认后 → Leader 提交（commit）→ 应用到状态机
+4. Leader 响应客户端
+5. Follower 下次心跳时获知 commitIndex，应用日志
+```
+
+**关键保证：** Leader 的日志一定包含所有已提交的日志条目；日志匹配属性确保一致性。
+
+**面试标准答案：**
+
+> Raft 是强 Leader 的共识算法，核心机制包括：1）选主：节点超时后发起选举，获得多数票成为 Leader（term 递增）；2）日志复制：Leader 将操作通过 AppendEntries 复制到 Follower，多数确认后提交；3）安全性：通过 term 和 index 确保日志一致性，只有拥有最新已提交日志的节点才能当选 Leader。
+
+---
+
+# problems__LSM-Tree原理.md
+
+### LSM Tree 是什么？读写放大如何优化？
+
+LSM Tree（Log-Structured Merge Tree）是写优化的存储结构，核心思想：**将随机写转为顺序写**。
+
+**基本结构：**
+```
+写入 → MemTable（内存，有序结构如跳表）
+         ↓ 满了
+       SSTable（磁盘，不可变有序文件）
+         ↓ 多个 SSTable
+       Compaction（合并压缩）
+```
+
+**写放大 vs 读放大：**
+
+| | 写放大 | 读放大 |
+|------|--------|--------|
+| 产生原因 | Compaction 时旧数据被重复读写 | 读取需遍历多个 SSTable |
+| 优化方法 | 分层 Compaction（减少跨层合并） | Bloom Filter（快速排除不存在的 key） |
+| 典型值 | LevelDB: 10-30x; RocksDB: 可优化到 3-5x | 使用 Bloom Filter 可降至接近 1x |
+
+**Compaction 策略：**
+- **Leveled**（LevelDB）：每层大小固定（10x），写放大高但空间利用率好
+- **Tiered**（Cassandra）：每层允许多个 SSTable，写放大低但读放大高
+- **Universal**（RocksDB）：类 Tiered，适合写多读少
+
+**面试标准答案：**
+
+> LSM Tree 通过内存写入 + 批量刷盘将随机写转为顺序写，写入性能远优于 B+ 树。代价是读放大（需查多个 SSTable）和写放大（Compaction 时重复读写）。RocksDB 通过分层 Compaction、Bloom Filter、block cache 等优化，在实际工程中做到读写平衡。适用于写多读少场景（如日志存储、时序数据库、消息队列持久化）。
+
+---
+
+# problems__分布式事务.md
+
+### 分布式事务如何实现？2PC 和 TCC 有什么区别？
+
+| 方案 | 原理 | 优点 | 缺点 |
+|------|------|------|------|
+| **2PC** | 协调者+参与者，Prepare → Commit 两阶段 | 强一致性 | 同步阻塞、协调者单点、数据不一致风险 |
+| **TCC** | Try → Confirm → Cancel，业务层实现 | 不阻塞、性能好 | 业务侵入性强，需实现三接口 |
+| **消息最终一致性** | 本地事务 + 消息表 + 定时补偿 | 高可用、最终一致 | 延迟不可控 |
+
+**2PC 流程：**
+
+```
+协调者                   参与者
+  │                       │
+  ├── Prepare ──────────→ │ 写 undo/redo log，返回 Yes/No
+  │                       │
+  ├── Commit/Rollback ──→ │ 根据协调者决定提交或回滚
+  │                       │
+```
+
+**2PC 的问题：** 如果协调者在发送 Commit 后宕机，部分参与者在收到 Commit 前也宕机 → 重启后不知道事务状态 → 需要回查协调者。
+
+**面试标准答案：**
+
+> 分布式事务的核心是在多个独立数据库/服务间保证 ACID。2PC 通过两阶段提交实现强一致，但存在同步阻塞和协调者单点问题。TCC 将事务拆为 Try-Confirm-Cancel 三个步骤，业务自行实现，性能好但有侵入性。实践中大规模分布式系统更倾向**最终一致性**方案：本地事务 + 消息表 + 定时补偿 + 幂等设计。
+
+---
+
+# AI与LLM面试追问
+
+> 2025-2026 年新趋势：部分 C++ 社招面试开始追问 AI/LLM 项目经验（尤其腾讯、快手等大厂）。
+
+# problems__大模型接入选型.md
+
+### 大模型怎么接入？如何选型？
+
+**接入方式：**
+
+| 方式 | 适用场景 | 优点 | 缺点 |
+|------|---------|------|------|
+| **API 调用**（OpenAI/Claude/国产） | 快速验证 | 零部署成本 | 延迟不可控、数据安全风险 |
+| **本地部署**（vLLM/Ollama） | 数据敏感、高并发 | 低延迟、数据不外泄 | 显存/硬件成本高 |
+| **混合部署** | 一般场景走 API，敏感走本地 | 灵活 | 架构复杂 |
+
+**选型考虑因素：** 延迟要求（<200ms?）、并发量、数据安全等级、成本预算、中文能力。
+
+> **面试回答模板**："我们根据业务场景选择：通用问答用 API，敏感数据处理用本地部署的 Qwen/Llama。推理框架选 vLLM（高吞吐），部署在 A100/H800 机器上。"
+
+---
+
+# problems__RAG原理与优化.md
+
+### RAG 为什么能优化大模型？核心流程是什么？
+
+RAG（Retrieval-Augmented Generation）在生成回答前**先从知识库检索相关文档**，将文档拼入 prompt 再让模型回答。
+
+```
+用户问题 → Embedding 向量化 → 向量数据库检索 Top-K 文档
+                                            ↓
+用户 ← 最终回答 ← LLM 生成 ← [问题 + 检索到的文档] 拼成 prompt
+```
+
+**RAG 解决的核心问题：**
+1. **知识时效性**：知识库可随时更新，无需重训模型
+2. **幻觉缓解**：有参考来源，减少凭空捏造
+3. **领域知识**：注入企业私有文档，无需微调
+
+**优化要点：**
+- **文档切分**：chunk 大小 512-1024 tokens，语义边界切分（非硬截断）
+- **检索质量**：混合检索（向量 + 关键词 BM25）+ Rerank 二次排序
+- **Prompt 设计**：明确要求"基于提供的文档回答，不要编造"
+
+---
+
+# problems__LLM幻觉问题与解决方案.md
+
+### LLM 幻觉是什么？怎么解决？
+
+**幻觉（Hallucination）**：模型生成的内容与事实不符，听起来合理但实际错误。
+
+**常见类型：**
+- 事实错误：编造不存在的 API、事件、人名
+- 逻辑矛盾：前后推理不一致
+- 过度自信：对不确定的内容使用肯定语气
+
+**解决方案：**
+
+| 方法 | 原理 | 效果 |
+|------|------|------|
+| **RAG** | 提供权威参考文档 | 显著降低 |
+| **精细 Prompt** | "如果你不确定，请说不知道" | 中等 |
+| **Few-shot CoT** | 给示例引导推理过程 | 中等 |
+| **输出校验** | 规则/正则/模型二次验证 | 较高 |
+| **Human-in-the-loop** | 关键输出人工审核 | 最高但成本高 |
+
+> **面试要点**：在工程中通常组合使用 RAG + 输出校验，如代码生成后用 AST 解析验证语法正确性，确保生成的 C++ 代码可编译。
